@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{ title }}</title>
+        {% load staticfiles %}
+        <link href="{% static 'login/main.css' %}" type="text/css" rel="stylesheet">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    </head>
+    <body>
+        <!--<input type="text" value="{{ username }}"/>-->
+        <div class="wrapper">
+            <img src="{% static 'login/logo-b-c.png' %}" alt="{{ title }}" class="logo"/>
+            <div class="container">
+                <p class="form-title">Login to ChatGuard</p>
+                <div class="input-container">
+                    <div class="input-body"></div>
+                </div>
+                <div class="input-container">
+                    <div class="input-body"></div>
+                </div>
+                <div class="input-container">
+                    <div class="input-body"></div>
+                </div>
+            </div>
+            <p class="note">By using this service you agree to the <a href="" target="_blank">terms and conditions</a>, <a href="" target ="_blank">privacy policy</a> and <a href="" target="_blank">cookies policy.</a></p>
+        </div>
+
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="message-{{ message.tags }}">{% autoescape off %}{{ message }}{% endautoescape %}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </body>
+</html>
