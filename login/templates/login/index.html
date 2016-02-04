@@ -8,30 +8,46 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
     </head>
     <body>
-        <!--<input type="text" value="{{ username }}"/>-->
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <p class="message message-{{ message.tags }}">{% autoescape off %}{{ message }}{% endautoescape %}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
         <div class="wrapper">
             <img src="{% static 'login/logo-b-c.png' %}" alt="{{ title }}" class="logo"/>
             <div class="container">
-                <p class="form-title">Login to ChatGuard</p>
-                <div class="input-container">
-                    <div class="input-body"></div>
-                </div>
-                <div class="input-container">
-                    <div class="input-body"></div>
-                </div>
-                <div class="input-container">
-                    <div class="input-body"></div>
-                </div>
-            </div>
-            <p class="note">By using this service you agree to the <a href="" target="_blank">terms and conditions</a>, <a href="" target ="_blank">privacy policy</a> and <a href="" target="_blank">cookies policy.</a></p>
-        </div>
 
-        {% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                    <li class="message-{{ message.tags }}">{% autoescape off %}{{ message }}{% endautoescape %}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+                <!-- FORM TITLE -->
+                <p class="form-title">Login to {{ projectname }}</p>
+
+                <form action="/login" method="post" novalidate>{% csrf_token %}
+                    <!-- EMAIL ADDRESS -->
+                    <div class="input-container">
+                        <p class="input-title">Email Address</p>
+                        <div class="input-body">
+                            <input class="input" type="email" spellcheck="false" name="email" value="{{ email }}"/>
+                        </div>
+                    </div>
+
+                    <!-- PASSWORD -->
+                    <div class="input-container">
+                        <p class="input-title">Password</p>
+                        <div id="password-input" class="input-body">
+                            <input class="input" type="password" spellcheck="false" name="password"/>
+                        </div>
+                        <a href="/reset" class="input-note">Forgot Password?</a>
+                    </div>
+
+                    <!-- MATERIAL BUTTONS -->
+                    <div class="btn-material-bar">
+                        <input type="submit" class="btn-material" value="Login">
+                    </div>
+                </form>
+                <p class="register-note">Don't have an account? <a href="/register">Create one.</a></p>
+            </div>
+            <p class="note">By using this service you agree to the <a href="/docs/terms" target="_blank">terms and conditions</a>, <a href="/docs/privacy" target ="_blank">privacy policy</a> and <a href="/docs/cookies" target="_blank">cookies policy.</a></p>
+        </div>
     </body>
 </html>
