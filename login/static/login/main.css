@@ -1,0 +1,315 @@
+/*
+Static stylesheet for login page
+
+TODO Create a background image that uses dark geometry.
+*/
+
+/* Fonts */
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,700);
+@import url(BebasKai-Regular.css);
+
+/* Document Body */
+body{
+    /* Background pattern from subtlepatterns.com */
+    background-image: url(escheresque_ste.png);
+    margin: 0;
+}
+
+/* DIV which holds form, title and footer */
+.wrapper{
+    /* Positioning */
+    /*position: absolute;*/
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 1em auto;
+
+    /* Appearance */
+    width: 90%;
+    max-width: 450px;
+}
+
+/* Main Logo */
+.logo{
+    width: 100%;
+}
+
+/* Footer note for users without accounts */
+.note{
+    color: white;
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.8em;
+    width: 90%;
+    margin: 1em auto;
+    margin-top: 1.5em;
+}
+
+/* Styling of footer links */
+.note a{
+    color: white;
+}
+
+/* Title for form */
+.form-title{
+    font-family: 'BebasKai-Regular';
+    font-size: 25px;
+    color: white;
+    width: 100%;
+    margin: 0;
+    padding: 10px;
+    padding-bottom: 5px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+/* DIV which holds the form */
+.container{
+    width: 100%;
+    margin-top: 10px;
+
+    /* Appearance */
+    background-color: #E84C3C;
+    border-radius: 3px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+/* Prevents input bodies crossing */
+.input-container{
+    width: 100%;
+    padding: 0 15px;
+    padding-bottom: 10px;
+    box-sizing: border-box;
+}
+
+/* Wraps up an input */
+.input-body{
+    width: 100%;
+    height: 30px;
+    border-radius: 3px;
+    background-color: #F2F3F4;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+/* Title of input */
+.input-title{
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    font-size: 12px;
+    margin: 0;
+    margin-bottom: 3px;
+}
+
+/* Note of Input */
+.input-note{
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    font-size: 12px;
+}
+
+.input{
+    outline: none;
+    border: none;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+    font-size: 12px;
+    background-color: transparent;
+    padding: 0 6px;
+}
+
+/* bar holding material buttons */
+.btn-material-bar{
+    width: 100%;
+    padding: 0 15px;
+    box-sizing: border-box;
+}
+
+.btn-material{
+    background-color: #CF4335;
+    text-align: center;
+    color: white;
+    font-family: 'BebasKai-Regular';
+    font-size: 17px;
+    padding: 6px 25px;
+    margin-top: 4px;
+    cursor: pointer;
+    height: 100%;
+    border: none;
+    border-radius: 3px;
+    outline: none;
+}
+
+#password-input{
+    margin-bottom: 3px;
+}
+
+.register-note{
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    font-size: 12px;
+    width: 100%;
+    padding: 15px;
+    padding-top: 2px;
+    padding-bottom: 15px;
+    box-sizing: border-box;
+}
+
+.register-note a{
+    color: white;
+}
+
+.messages{
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    background-color: #E84C3C;
+}
+
+.message{
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    font-size: 12px;
+    margin: 0;
+}
+
+.message a{
+    color: white;
+}
+
+.message-error::before{
+    content: "Error: ";
+}
+
+.message-info::before{
+    content: "Info: ";
+}
+
+/* For landscape mobile phones and up */
+@media screen and (min-width: 28.75em){
+    .wrapper{
+        margin-top: 0.5em;
+        width: 75%;
+    }
+
+    .container{
+        margin-top: 8px;
+    }
+
+    .form-title{
+        font-size: 36px;
+        padding-bottom: 10px;
+    }
+
+    .input-container{
+        padding: 0 20px;
+        padding-bottom: 12px;
+    }
+
+    .input-body{
+        height: 35px;
+    }
+
+    .input-title{
+        font-size: 14px;
+    }
+
+    .input-note{
+        font-size: 14px;
+    }
+
+    .input{
+        font-size: 14px;
+        padding: 0 10px;
+    }
+
+    .btn-material-bar{
+        padding: 0 20px;
+    }
+
+    .btn-material{
+        font-size: 20px;
+        padding: 8px 35px;
+    }
+
+    .register-note{
+        font-size: 14px;
+        padding: 20px;
+        padding-top: 2px;
+    }
+
+    .messages{
+        padding: 10px;
+    }
+
+    .message{
+        font-size: 14px;
+    }
+}
+
+/* For Desktops and some tablets only */
+@media screen and (min-width: 40.5em){
+    .wrapper{
+        margin-top: 2em;
+        width: 450px;
+    }
+
+    .container{
+        margin-top: 20px;
+    }
+
+    .form-title{
+        padding: 20px;
+        padding-bottom: 10px;
+        font-size: 40px;
+    }
+
+    .input-container{
+        padding: 0 30px;
+        padding-bottom: 12px;
+    }
+
+    .input-body{
+        height: 40px;
+    }
+
+    .input-title{
+        font-size: 16px;
+    }
+
+    .input-note{
+        font-size: 16px;
+    }
+
+    .note{
+        margin-top: 2em;
+    }
+
+    .btn-material-bar{
+        padding: 0 30px;
+    }
+
+    .btn-material{
+        font-size: 25px;
+    }
+
+    #password-input{
+        margin-bottom: 5px;
+    }
+
+    .register-note{
+        font-size: 16px;
+        padding: 30px;
+        padding-top: 0px;
+    }
+
+    .messages{
+        padding: 10px;
+    }
+
+    .message{
+        font-size: 16px;
+    }
+}
