@@ -88,7 +88,7 @@ body{
     height: 30px;
     border-radius: 3px;
     background-color: #F2F3F4;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
+    /*box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);*/
     overflow: hidden;
 }
 
@@ -118,7 +118,38 @@ body{
     font-size: 12px;
     background-color: transparent;
     padding: 0 6px;
+    /*padding-right: 30px;*/
 }
+
+.input-error{
+    width: 100%;
+    background-color: #CF4335;
+    margin: 0;
+    padding: 6px;
+    box-sizing: border-box;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+
+    font-family: 'Roboto', sans-serif;
+    font-size: 12px;
+    color: white;
+}
+
+.input-error li{
+    margin: 0;
+    list-style: none;
+}
+
+/*.input-info-icon{
+    height: 30px;
+    width: 30px;
+    padding: 5px;
+    box-sizing: border-box;
+    cursor: help;
+    float: right;
+    transform: translateY(-30px);
+    opacity: 0;
+}*/
 
 /* bar holding material buttons */
 .btn-material-bar{
@@ -134,16 +165,12 @@ body{
     font-family: 'BebasKai-Regular';
     font-size: 17px;
     padding: 6px 25px;
-    margin-top: 4px;
+    margin-top: 7px;
     cursor: pointer;
     height: 100%;
     border: none;
     border-radius: 3px;
     outline: none;
-}
-
-#password-input{
-    margin-bottom: 3px;
 }
 
 .register-note{
@@ -188,6 +215,15 @@ body{
     content: "Info: ";
 }
 
+/*#input-username:hover + #input-username-icon,
+#input-username-icon:hover,
+#input-email:hover + #input-email-icon,
+#input-email-icon:hover,
+#input-password:hover + #input-password-icon,
+#input-password-icon:hover{
+    opacity: 1;
+}*/
+
 /* For landscape mobile phones and up */
 @media screen and (min-width: 28.75em){
     .wrapper{
@@ -224,6 +260,18 @@ body{
     .input{
         font-size: 14px;
         padding: 0 10px;
+        /*padding-right: 35px;*/
+    }
+
+    .input-error{
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .input-info-icon{
+        height: 35px;
+        width: 35px;
+        transform: translateY(-35px);
     }
 
     .btn-material-bar{
@@ -282,6 +330,22 @@ body{
 
     .input-note{
         font-size: 16px;
+    }
+
+    /*.input{
+        padding-right: 40px;
+    }*/
+
+    .input-error{
+        font-size: 15px;
+        padding: 10px;
+    }
+
+    .input-info-icon{
+        height: 40px;
+        width: 40px;
+        padding: 7px;
+        transform: translateY(-40px);
     }
 
     .note{

@@ -1,56 +1,43 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.contrib.auth import get_user_model
+from django.contrib.auth.password_validation import validate_password, password_validators_help_text_html
 
+from accounts.forms import RegistrationForm
 import cr_config
 
 def index(request):
-    # Check if the user is logged in
-    if request.user.is_authenticated():
-        return redirect("/")
+    if request.user.is_authenticated(): # Check if the user is logged in
+        return redirect("/") # User is logged in, return them to index
 
-    # Credentials
-    # Fields that are fed back into the template must be initialised
-    # with "" rather than None.
-    cr_username = ""
-    cr_email = ""
-    cr_password = ""
-    cr_password_repeat = ""
+    if request.POST: # Some data was posted
+        # Create a form instance and populate it with the Post data
+        form = RegistrationForm(request.POST)
+        # Check whether the form is valid.
+        if form.is_valid():
+            # Form data is valid, send a verification email.
+            next_dir = ""
+            if "next" in request.GET:
+                next_dir="?next=" + request.GET["next"]
+            return redirect("/register/done" + next_dir)
 
-    next_dir = "" # Directory to send user to after they have logged in.
+        # Form data was invalid, render the page
+        return renderIndex(request, form=form)
 
-    # Get Credentials from POST data
-    if "username" in request.POST:
-        cr_username = request.POST["username"]
-    if "email" in request.POST:
-        cr_email = request.POST["email"]
-    if "password" in request.POST:
-        cr_password = request.POST["password"]
-    if "password_repeat" in request.POST:
-        cr_password_repeat = request.POST["password_repeat"]
-    if "next" in request.GET:
-        next_dir = request.GET["next"]
+    else: # No data was posted, render a regular page
+        next_dir = ""
+        if "next" in request.GET:
+            next_dir=request.GET["next"]
+        return renderIndex(request, next_dir=next_dir)
 
-    # Check if data is missing
-    if cr_username == "" and cr_email == "" and cr_password == "" and cr_password_repeat == "":
-        # No data was posted, render a regular register page
-        return renderIndex(request, next_dir)
-    elif cr_username == "" or cr_email == "" or cr_password == "" or cr_password_repeat == "":
-        # Only some data was posted, render a register page with an error message
-        messages.add_message(request, messages.ERROR, "Please fill out all fields.")
-        return renderIndex(request, next_dir, username=cr_username, email=cr_email)
-    elif len(cr_password) < 6:
-        # Password was too short
-        messages.add_message(request, messages.ERROR, "Passwords must be atleast six (6) characters long.")
-        return renderIndex(request, next_dir, username=cr_username, email=cr_email)
-    elif not cr_password == cr_password_repeat:
-        # The passwords didn't match
-        messages.add_message(request, messages.ERROR, "Passwords don't match.")
-        return renderIndex(request, next_dir, username=cr_username, email=cr_email)
-
-
-def renderIndex(request, next_dir, username="", email=""):
+# renderIndex(request, next_dir, username="", email="")
+# Gathers and formats any data that needs to be passed to the template.
+# It then returns an HttpResponse object with the compiled template to
+# be sent to the client.
+def renderIndex(request, next_dir="", form=RegistrationForm()):
     PAGE_NAME = "Register" # Name of page, used to format the title
-    # Make sure URL is kept if the user decides to register
+
+    # Make sure URL is formatted in case the form is regenerated.
     if not next_dir == "":
         next_dir = "?next=" + next_dir
 
@@ -58,6 +45,5 @@ def renderIndex(request, next_dir, username="", email=""):
         "projectname": cr_config.TITLE,
         "title": (cr_config.TITLE_FORMAT % PAGE_NAME),
         "next_dir": next_dir,
-        "username": username,
-        "email": email,
+        "form": form,
     })

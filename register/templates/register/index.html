@@ -6,12 +6,17 @@
         <link href="{% static 'login/main.css' %}" type="text/css" rel="stylesheet">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+        <link rel="icon" type="image/ico" href="{% static 'login/favicon.ico' %}">
+        <!--<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">-->
     </head>
     <body>
-        {% if messages %}
+        {% if messages or form.non_field_errors %}
             <div class="messages">
                 {% for message in messages %}
-                    <p class="message message-{{ message.tags }}">{% autoescape off %}{{ message }}{% endautoescape %}</p>
+                <p class="message message-{{ message.tags }}">{{ message|escape }}</p>
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                <p class="message message-error">{{ error }}</p>
                 {% endfor %}
             </div>
         {% endif %}
@@ -22,37 +27,76 @@
                 <!-- FORM TITLE -->
                 <p class="form-title">Join {{ projectname }}</p>
 
-                <form action="/register{{ next_dir }}" method="post" novalidate>{% csrf_token %}
+                <form action="/register{{ next_dir }}" method="post" novalidate>
+                    {% csrf_token %}
+
                     <!-- USERNAME -->
                     <div class="input-container">
                         <p class="input-title">Username</p>
-                        <div class="input-body">
-                            <input class="input" type="text" spellcheck="false" name="username" value="{{ username }}"/>
+                        <div class="input-body" id="input-username">
+                            <input class="input" maxlength="32" type="text" spellcheck="false" name="username" value="{{ form.username.value|default_if_none:"" }}"/>
                         </div>
+                        <!--<svg class="input-info-icon" id="input-username-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path fill="#CF4335" d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"></path>
+                        </svg>-->
+                        {% if form.username.errors %}
+                        <ul class="input-error">
+                            {% for error in form.username.errors %}
+                            <li>{{ error|escape }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
                     </div>
 
                     <!-- EMAIL ADDRESS -->
                     <div class="input-container">
                         <p class="input-title">Email Address</p>
-                        <div class="input-body">
-                            <input class="input" type="email" spellcheck="false" name="email" value="{{ email }}"/>
+                        <div class="input-body" id="input-email">
+                            <input class="input" type="email" spellcheck="false" name="email" value="{{ form.email.value|default_if_none:"" }}"/>
                         </div>
+                        <!--<svg class="input-info-icon" id="input-email-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path fill="#CF4335" d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"></path>
+                        </svg>-->
+                        {% if form.email.errors %}
+                        <ul class="input-error">
+                            {% for error in form.email.errors %}
+                            <li>{{ error|escape }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
                     </div>
 
                     <!-- PASSWORD -->
                     <div class="input-container">
                         <p class="input-title">Password</p>
-                        <div class="input-body">
+                        <div class="input-body" id="input-password">
                             <input class="input" type="password" spellcheck="false" name="password"/>
                         </div>
+                        <!--<svg class="input-info-icon" id="input-password-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path fill="#CF4335" d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"></path>
+                        </svg>-->
+                        {% if form.password.errors %}
+                        <ul class="input-error">
+                            {% for error in form.password.errors %}
+                            <li>{{ error|escape }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
                     </div>
 
                     <!-- PASSWORD REPEAT -->
                     <div class="input-container">
                         <p class="input-title">Repeat Password</p>
-                        <div id="password-input" class="input-body">
+                        <div class="input-body">
                             <input class="input" type="password" spellcheck="false" name="password_repeat"/>
                         </div>
+                        {% if form.password_repeat.errors %}
+                        <ul class="input-error">
+                            {% for error in form.password_repeat.errors %}
+                            <li>{{ error|escape }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
                     </div>
 
                     <!-- MATERIAL BUTTONS -->
