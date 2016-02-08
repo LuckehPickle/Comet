@@ -11,7 +11,8 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import logout as logout_user
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import login as login_user
+from django.contrib.auth import authenticate
 from django.utils.translation import ugettext_lazy as _
 
 # Other Imports
@@ -56,7 +57,7 @@ def login(request):
                 # Check if the account is active (not suspended)
                 if user.is_active:
                     # Everything went well, log the user in
-                    login(request, user)
+                    login_user(request, user)
 
                     next_dir = ""
                     if "next" in request.GET:
@@ -122,6 +123,14 @@ def register(request):
                 username=data["username"],
                 password=data["password"],
             )
+
+            # Authenticate
+            user = authenticate(
+                username=data["email"],
+                password=data["password"],
+            )
+            login_user(request, user) # Log the user in.
+
             next_dir = ""
             if "next" in request.GET:
                 next_dir="?next=" + request.GET["next"]
