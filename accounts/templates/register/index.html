@@ -32,7 +32,7 @@
 
                     <!-- USERNAME -->
                     <div class="input-container">
-                        <p class="input-title">Username</p>
+                        <p class="input-title">{{ form.username.label }}</p>
                         <div class="input-body" id="input-username">
                             <input class="input" maxlength="32" type="text" spellcheck="false" name="username" value="{{ form.username.value|default_if_none:"" }}"/>
                         </div>
@@ -50,7 +50,7 @@
 
                     <!-- EMAIL ADDRESS -->
                     <div class="input-container">
-                        <p class="input-title">Email Address</p>
+                        <p class="input-title">{{ form.email.label }}</p>
                         <div class="input-body" id="input-email">
                             <input class="input" type="email" spellcheck="false" name="email" value="{{ form.email.value|default_if_none:"" }}"/>
                         </div>
@@ -68,7 +68,7 @@
 
                     <!-- PASSWORD -->
                     <div class="input-container">
-                        <p class="input-title">Password</p>
+                        <p class="input-title">{{ form.password.label }}</p>
                         <div class="input-body" id="input-password">
                             <input class="input" type="password" spellcheck="false" name="password"/>
                         </div>
@@ -86,7 +86,7 @@
 
                     <!-- PASSWORD REPEAT -->
                     <div class="input-container">
-                        <p class="input-title">Repeat Password</p>
+                        <p class="input-title">{{ form.password_repeat.label }}</p>
                         <div class="input-body">
                             <input class="input" type="password" spellcheck="false" name="password_repeat"/>
                         </div>

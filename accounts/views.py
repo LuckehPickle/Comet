@@ -1,3 +1,154 @@
-from django.shortcuts import render
+# [Accounts] VIEWS.PY - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
+# Powered by Django (https://www.djangoproject.com/)
+#
+# This file contains all accounts related views. The views contained
+# within this file include:
+#   - /logout
+#   - /login
+#   - /register
 
-# Create your views here.
+# Django Imports
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth import logout as logout_user
+from django.contrib.auth import authenticate, login
+from django.utils.translation import ugettext_lazy as _
+
+# Other Imports
+from accounts.forms import AuthenticationForm, RegistrationForm
+from accounts.models import User
+import cr_config
+
+# LOGOUT
+# Pretty self explanatory. Logs out a user if they go to this URL whilst
+# logged in. Note: The message seems to sit on the request if the user is
+# sent to an error page. Waiting for the next successful page.
+def logout(request):
+    if request.user.is_authenticated(): # Check if the user is logged in
+        logout_user(request) # Log out the user
+        messages.add_message(request, messages.INFO, _("Successfully logged out.")) # Add translated message
+    return redirect("/") # Redirect to index TODO Update this to use reverse() when index is complete
+
+# LOGIN
+# Handles login requests. Note: This function actually doubles as a form,
+# accepting inputs from itself if they exist. The majority of this function
+# is dedicated to handling the login process from the POST data.
+# TODO Clean up and comment
+def login(request):
+    if request.user.is_authenticated(): # Check if the user is logged in
+        return redirect("/")
+
+    if request.POST: # Some data was posted
+        # Create a form instance and populate it with the Post data
+        form = AuthenticationForm(request.POST)
+
+        # Check whether the form is valid
+        if form.is_valid():
+            # Form data is valid
+            data = form.cleaned_data
+            user = authenticate(
+                username=data["email"],
+                password=data["password"],
+            )
+
+            # Check if the credentials match an account
+            if user is not None:
+                # Check if the account is active (not suspended)
+                if user.is_active:
+                    # Everything went well, log the user in
+                    login(request, user)
+
+                    next_dir = ""
+                    if "next" in request.GET:
+                        next_dir=request.GET["next"]
+                    # Need to find a way to redir to the next_dir
+                    return redirect("/")
+                else:
+                    # Account has been suspended. Alert the user and render the page.
+                    messages.add_message(request, messages.ERROR, "Sorry, this account has been suspended. <a href='#'>Find out more.</a>")
+            else:
+                # Invalid credentials where entered
+                messages.add_message(request, messages.ERROR, "Username or password is incorrect.")
+        # Form data was invalid, render the page w/ error messages
+        next_dir = ""
+        if "next" in request.GET:
+            next_dir=request.GET["next"]
+        return renderLogin(request, next_dir=next_dir, form=form)
+    else: # No data was posted, render a regular page
+        next_dir = ""
+        if "next" in request.GET:
+            next_dir=request.GET["next"]
+        return renderLogin(request, next_dir=next_dir)
+
+# renderLogin(request, next_dir, [form])
+# Gathers and formats any data that needs to be passed to the authentication
+# template. It then returns an HttpResponse object with the compiled template
+# to be sent to the client.
+def renderLogin(request, next_dir="", form=AuthenticationForm()):
+    PAGE_NAME = "Login" # Name of page, used to format the title
+
+    # Make sure URL is kept if the user decides to register
+    if not next_dir == "":
+        next_dir = "?next=" + next_dir
+
+    return render(request, "login/index.html", {
+        "projectname": cr_config.TITLE,
+        "title": (cr_config.TITLE_FORMAT % PAGE_NAME),
+        "next_dir": next_dir,
+        "form": form,
+    })
+
+# REGISTER
+# Handles registration requests. Note: This function actually doubles as a form,
+# accepting inputs from itself if they exist. The majority of this function
+# is dedicated to handling the registration process from the POST data.
+# TODO Clean up and comment
+def register(request):
+    if request.user.is_authenticated(): # Check if the user is logged in
+        return redirect("/") # User is logged in, return them to index
+
+    if request.POST: # Some data was posted
+        # Create a form instance and populate it with the Post data
+        form = RegistrationForm(request.POST)
+
+        # Check whether the form is valid.
+        if form.is_valid():
+            # Form data is valid, send a verification email.
+            data = form.cleaned_data
+            # You need to call user.objects.create_user rather than accessing
+            # the user manager directly.
+            User.objects.create_user(
+                email=data["email"],
+                username=data["username"],
+                password=data["password"],
+            )
+            next_dir = ""
+            if "next" in request.GET:
+                next_dir="?next=" + request.GET["next"]
+            return redirect("/register/done" + next_dir)
+
+        # Form data was invalid, render the page w/ error messages
+        return renderRegister(request, form=form)
+    else: # No data was posted, render a regular page
+        next_dir = ""
+        if "next" in request.GET:
+            next_dir=request.GET["next"]
+        return renderRegister(request, next_dir=next_dir)
+
+# renderRegister(request, next_dir, [form])
+# Gathers and formats any data that needs to be passed to the Registration
+# template. It then returns an HttpResponse object with the compiled template
+# to be sent to the client.
+def renderRegister(request, next_dir="", form=RegistrationForm()):
+    PAGE_NAME = "Register" # Name of page, used to format the title
+
+    # Make sure URL is formatted in case the form is regenerated.
+    if not next_dir == "":
+        next_dir = "?next=" + next_dir
+
+    return render(request, "register/index.html", {
+        "projectname": cr_config.TITLE,
+        "title": (cr_config.TITLE_FORMAT % PAGE_NAME),
+        "next_dir": next_dir,
+        "form": form,
+    })

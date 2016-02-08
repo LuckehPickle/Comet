@@ -255,6 +255,9 @@ body{
 
     .input-note{
         font-size: 14px;
+        display: block;
+        display: -moz-box;
+        margin-top: 4px;
     }
 
     .input{
@@ -268,11 +271,11 @@ body{
         padding: 10px;
     }
 
-    .input-info-icon{
+    /*.input-info-icon{
         height: 35px;
         width: 35px;
         transform: translateY(-35px);
-    }
+    }*/
 
     .btn-material-bar{
         padding: 0 20px;
@@ -341,12 +344,12 @@ body{
         padding: 10px;
     }
 
-    .input-info-icon{
+    /*.input-info-icon{
         height: 40px;
         width: 40px;
         padding: 7px;
         transform: translateY(-40px);
-    }
+    }*/
 
     .note{
         margin-top: 2em;
@@ -358,10 +361,6 @@ body{
 
     .btn-material{
         font-size: 25px;
-    }
-
-    #password-input{
-        margin-bottom: 5px;
     }
 
     .register-note{

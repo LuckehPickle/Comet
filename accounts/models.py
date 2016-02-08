@@ -1,21 +1,29 @@
-import uuid
+# [Accounts] MODELS.PY - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
+# Powered by Django (https://www.djangoproject.com/)
+#
+# This file contains all accounts related models. The models contained
+# within this file include:
+#   - CustomUserManager
+#   - User
 
+# Django Imports
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.utils.translation import ugettext_lazy as _
 
-# Custom User Manager class
-# This Custom User Manager seems to play an essential role in
-# bridging the gap between the Custom User and the rest of Django.
-# I need to understand this further. Most of my knowledge comes
-# from the source code.
-# ERROR: 'NoneType' object is not callable ln 18
+# Other Imports
+import uuid
+
+# CustomUserManager Class
+# This Custom User Manager plays an essential role in bridging the gap
+# between the Custom User and the rest of Django.
+# TODO Clean up and comment
 class CustomUserManager(BaseUserManager):
     # Local Create User function
     def _create_user(self, email, username, password, **extra_fields):
         if not email:
-            raise ValueError("Email address is required.")
+            raise ValueError(_("Email address is required."))
         email = self.normalize_email(email)
         user = self.model(email=email, username=username, **extra_fields)
         user.set_password(password)
@@ -23,22 +31,23 @@ class CustomUserManager(BaseUserManager):
         return user
 
     def create_user(self, email, username, password, **extra_fields):
-        extra_fields.setdefault("is_staff", False)
+        extra_fields.setdefault("is_verified", False)
         extra_fields.setdefault("is_super_user", False)
         return self._create_user(email, username, password, **extra_fields)
 
     def create_superuser(self, email, username, password, **extra_fields):
-        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_verified", True)
         extra_fields.setdefault("is_super_user", True)
         return self._create_user(email, username, password, **extra_fields)
 
-# Custom User class
+# User Class
 # By adding a custom user class we can allow users to log in
 # with an email address rather than a username. This is a huge
 # step forward but will still pose a porblem later on. It
 # will be difficult to implement an email changing system.
+# TODO Clean up and comment
 class User(AbstractBaseUser):
-    userid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(
         _("Email Address"),
         unique=True,
@@ -48,8 +57,8 @@ class User(AbstractBaseUser):
     )
     username = models.CharField(_("Username"), max_length=32,)
     date_joined = models.DateTimeField(default=timezone.now)
+    is_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
     is_super_user = models.BooleanField(default=False)
 
     objects = CustomUserManager()

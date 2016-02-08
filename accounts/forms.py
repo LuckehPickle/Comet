@@ -1,20 +1,38 @@
+# [Accounts] FORMS.PY - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
+# Powered by Django (https://www.djangoproject.com/)
+#
+# This file contains all accounts related forms. The forms contained
+# within this file include:
+#   - Registration Form
+#   - Authentication Form
+
+# Django Imports
 from django import forms
 from .models import User
+from django.utils.translation import ugettext as _
 
+# RegistrationForm Class
+# Contains information and a cleaning function for the registration
+# form. Note that this is where error messages for particular fields
+# can be defined.
 class RegistrationForm(forms.ModelForm):
-    # Username Field
+
+    # USERNAME FIELD
+    # Note that the maximum length restriction will no be imposed in
+    # the template because of how the template handles forms. However,
+    # it will still be used during the validation process.
     username = forms.CharField(
-        label="Username",
+        label="Username", # The text that shows up above a field
         min_length=5,
         max_length=32,
         error_messages={
-            "required": "Please enter a username.",
+            "required": "Please enter a username.", # Field was not filled out
             "min_length": "Usernames must be atleast five (5) characters long.",
             "max_length": "Usernames must be less than 32 characters long.",
         },
     )
 
-    # Email Field
+    # EMAIL FIELD
     email = forms.EmailField(
         label="Email Address",
         error_messages={
@@ -23,7 +41,7 @@ class RegistrationForm(forms.ModelForm):
         },
     )
 
-    # Password Field
+    # PASSWORD FIELD
     password = forms.CharField(
         label="Password",
         widget=forms.PasswordInput,
@@ -34,7 +52,7 @@ class RegistrationForm(forms.ModelForm):
         },
     )
 
-    # Password Repeat
+    # PASSWORD REPEAT FIELD
     password_repeat = forms.CharField(
         label="Repeat Password",
         widget=forms.PasswordInput,
@@ -43,18 +61,25 @@ class RegistrationForm(forms.ModelForm):
         }
     )
 
+    # Meta class is necessary for ModelForms.
     class Meta:
-        model = User
+        model = User # Model to fill the form for
         fields = ["username", "email", "password", "password_repeat"]
 
-    # Verifies data
+    # CLEAN
+    # This function simply checks if the passwords match. Regular data
+    # cleaning/validation takes place in the super class.
     def clean(self):
-        cleaned_data = super(RegistrationForm, self).clean()
+        cleaned_data = super(RegistrationForm, self).clean() # Get clean data from super
         if "password" in self.cleaned_data and "password_repeat" in self.cleaned_data:
+            # Check if the cleaned values are identical.
             if self.cleaned_data["password"] != self.cleaned_data["password_repeat"]:
-                raise forms.ValidationError("Your passwords did not match.")
+                # Raise an error if they are not the same.
+                raise forms.ValidationError("Please enter matching passwords.")
         return self.cleaned_data
 
+    # SAVE
+    # This function saves the data to the database.
     def save(self, commit=True):
         user = super(RegistrationForm, self).save(commit=False)
         user.set_password(self.cleaned_data["password"])
@@ -62,15 +87,30 @@ class RegistrationForm(forms.ModelForm):
             user.save()
         return user
 
+# AuthenticationForm Class
+# Contains information and fields for the Authentication form. Note: that this
+# is where error messages for particular fields can be defined.
+# Note x2: Some comments from the above form apply here.
 class AuthenticationForm(forms.Form):
+
+    # EMAIL FIELD
     email = forms.EmailField(
         label="Email Address",
+        error_messages={
+            "required": "Please enter your email address.",
+        },
     )
 
+    # PASSWORD FIELD
     password = forms.CharField(
         label="Password",
         widget=forms.PasswordInput,
+        error_messages={
+            "required": "Please enter your password.",
+        },
     )
 
+    # This may be unnecessary.
     class Meta:
+        model = User
         fields = ["email", "password"]
