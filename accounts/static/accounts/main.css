@@ -19,7 +19,6 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:400,700);
 @import url(BebasKai-Regular.css);
 
-/* Document Body */
 body{
     /* Background pattern from subtlepatterns.com */
     background-image: url(escheresque_ste.png);
@@ -28,14 +27,10 @@ body{
 
 /* DIV which holds form, title and footer */
 .wrapper{
-    /* Positioning */
-    /*position: absolute;*/
     top: 0;
     left: 0;
     right: 0;
     margin: 1em auto;
-
-    /* Appearance */
     width: 90%;
     max-width: 450px;
 }
@@ -78,8 +73,6 @@ body{
 .container{
     width: 100%;
     margin-top: 10px;
-
-    /* Appearance */
     background-color: #E84C3C;
     border-radius: 3px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -99,8 +92,21 @@ body{
     height: 30px;
     border-radius: 3px;
     background-color: #F2F3F4;
-    /*box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);*/
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
     overflow: hidden;
+}
+
+/* Styling for Form inputs */
+.input-body input{
+    outline: none;
+    border: none;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+    font-size: 12px;
+    background-color: transparent;
+    padding: 0 6px;
 }
 
 /* Title of input */
@@ -119,19 +125,6 @@ body{
     font-size: 12px;
 }
 
-.input{
-    outline: none;
-    border: none;
-    width: 100%;
-    height: 100%;
-    box-sizing: border-box;
-    font-family: 'Roboto', sans-serif;
-    font-size: 12px;
-    background-color: transparent;
-    padding: 0 6px;
-    /*padding-right: 30px;*/
-}
-
 .input-error{
     width: 100%;
     background-color: #CF4335;
@@ -140,7 +133,6 @@ body{
     box-sizing: border-box;
     border-bottom-left-radius: 3px;
     border-bottom-right-radius: 3px;
-
     font-family: 'Roboto', sans-serif;
     font-size: 12px;
     color: white;
@@ -150,17 +142,6 @@ body{
     margin: 0;
     list-style: none;
 }
-
-/*.input-info-icon{
-    height: 30px;
-    width: 30px;
-    padding: 5px;
-    box-sizing: border-box;
-    cursor: help;
-    float: right;
-    transform: translateY(-30px);
-    opacity: 0;
-}*/
 
 /* bar holding material buttons */
 .btn-material-bar{
@@ -226,15 +207,6 @@ body{
     content: "Info: ";
 }
 
-/*#input-username:hover + #input-username-icon,
-#input-username-icon:hover,
-#input-email:hover + #input-email-icon,
-#input-email-icon:hover,
-#input-password:hover + #input-password-icon,
-#input-password-icon:hover{
-    opacity: 1;
-}*/
-
 /* For landscape mobile phones and up */
 @media screen and (min-width: 28.75em){
     .wrapper{
@@ -271,22 +243,15 @@ body{
         margin-top: 4px;
     }
 
-    .input{
+    .input-body input{
         font-size: 14px;
         padding: 0 10px;
-        /*padding-right: 35px;*/
     }
 
     .input-error{
         font-size: 14px;
         padding: 10px;
     }
-
-    /*.input-info-icon{
-        height: 35px;
-        width: 35px;
-        transform: translateY(-35px);
-    }*/
 
     .btn-material-bar{
         padding: 0 20px;
@@ -346,21 +311,10 @@ body{
         font-size: 16px;
     }
 
-    /*.input{
-        padding-right: 40px;
-    }*/
-
     .input-error{
         font-size: 15px;
         padding: 10px;
     }
-
-    /*.input-info-icon{
-        height: 40px;
-        width: 40px;
-        padding: 7px;
-        transform: translateY(-40px);
-    }*/
 
     .note{
         margin-top: 2em;
