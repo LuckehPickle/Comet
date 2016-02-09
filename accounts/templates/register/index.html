@@ -29,6 +29,23 @@
 
                 <form action="/register{{ next_dir }}" method="post" novalidate>
                     {% csrf_token %}
+                    <!-- FIELDS --
+                    {% for field in form %}
+                    <div class="input-container">
+                        <p class="input-title">{{ field.label }}</p>
+                        <div class="input-body">
+                            {{ field }} <!-- Need to find a way to add a class to this --
+                        </div>
+                        <!-- FIELD ERRORS --
+                        {% if field.errors %}
+                        <ul class="input-error">
+                            {% for error in field.errors %}
+                            <li>{{ error|escape }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                    {% endfor %} -->
 
                     <!-- USERNAME -->
                     <div class="input-container">
