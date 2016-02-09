@@ -6,7 +6,7 @@
         <link href="{% static 'accounts/main.css' %}" type="text/css" rel="stylesheet">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
-        <link rel="icon" type="image/ico" href="{% static 'accounts/favicon.ico' %}">
+        <link rel="icon" type="image/ico" href="{% static 'frontpage/favicon.ico' %}">
         <!--<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">-->
     </head>
     <body>
@@ -21,7 +21,9 @@
             </div>
         {% endif %}
         <div class="wrapper">
-            <img src="{% static 'accounts/logo-b-c.png' %}" alt="{{ title }}" class="logo"/>
+            <a href="{% url 'frontpage' %}">
+                <img src="{% static 'accounts/logo-b-c.png' %}" alt="{{ title }}" class="logo"/>
+            </a>
             <div class="container">
                 <!-- FORM TITLE -->
                 <p class="form-title">Join {{ projectname }}</p>
@@ -51,7 +53,7 @@
                         <input type="submit" class="btn-material" value="Sign up">
                     </div>
                 </form>
-                <p class="register-note">Already have an account? <a href="/login{{ next_dir }}">Sign in.</a></p>
+                <p class="register-note">Already have an account? <a href="{% url 'login' %}{{ next_dir }}">Sign in.</a></p>
             </div>
             <p class="note">By using this service you agree to the <a href="/docs/terms" target="_blank">terms and conditions</a>, <a href="/docs/privacy" target ="_blank">privacy policy</a> and <a href="/docs/cookies" target="_blank">cookies policy.</a></p>
         </div>

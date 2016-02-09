@@ -40,42 +40,37 @@ def logout(request):
     if request.user.is_authenticated(): # Check if the user is logged in
         logout_user(request) # Log out the user
         messages.add_message(request, messages.INFO, _("Successfully logged out.")) # Add translated message
-    return redirect("/") # Redirect to index TODO Update this to use reverse() when index is complete
+    return redirect("frontpage") # Redirect to frontpage
 
 # LOGIN
 # Handles login requests. Note: This function actually doubles as a form,
 # accepting inputs from itself if they exist. The majority of this function
 # is dedicated to handling the login process from the POST data.
-# TODO Clean up and comment
 def login(request):
     if request.user.is_authenticated(): # Check if the user is logged in
         return redirect("/")
 
-    if request.POST: # Some data was posted
+    if request.POST: # Check if there is any POST data.
         # Create a form instance and populate it with the Post data
         form = AuthenticationForm(request.POST)
-
         # Check whether the form is valid
         if form.is_valid():
-            # Form data is valid
-            data = form.cleaned_data
-            user = authenticate(
+            data = form.cleaned_data # Get cleaned data from the form
+            user = authenticate( # Authenticate the user credentials against the db
+                # The email field is called 'username' because the of how the auth backend works.
                 username=data["email"],
                 password=data["password"],
             )
 
-            # Check if the credentials match an account
-            if user is not None:
-                # Check if the account is active (not suspended)
-                if user.is_active:
-                    # Everything went well, log the user in
-                    login_user(request, user)
-
+            if user is not None: # Check if the credentials match an account
+                if user.is_active: # Check if the account is active (not suspended)
+                    login_user(request, user) # Log the user in
+                    # Redirect to front page
                     next_dir = ""
                     if "next" in request.GET:
                         next_dir=request.GET["next"]
-                    # Need to find a way to redir to the next_dir
-                    return redirect("/")
+                    # TODO Need to find a way to redir to the next_dir
+                    return reverse("frontpage")
                 else:
                     # Account has been suspended. Alert the user and render the page.
                     messages.add_message(request, messages.ERROR, "Sorry, this account has been suspended. <a href='#'>Find out more.</a>")

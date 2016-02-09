@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{ title }}</title>
+        {% load staticfiles %}
+        <link href="{% static 'frontpage/main.css' %}" type="text/css" rel="stylesheet">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+        <link rel="icon" type="image/ico" href="{% static 'frontpage/favicon.ico' %}">
+    </head>
+    <body>
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <p class="message message-{{ message.tags }}">{{ message|escape }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="menu">
+            
+        </div>
+    </body>
+</html>
