@@ -70,7 +70,7 @@ def login(request):
                     if "next" in request.GET:
                         next_dir=request.GET["next"]
                     # TODO Need to find a way to redir to the next_dir
-                    return reverse("frontpage")
+                    return redirect("frontpage")
                 else:
                     # Account has been suspended. Alert the user and render the page.
                     messages.add_message(request, messages.ERROR, "Sorry, this account has been suspended. <a href='#'>Find out more.</a>")
