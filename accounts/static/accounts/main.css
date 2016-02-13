@@ -17,7 +17,7 @@
 
 /* Fonts */
 @import url(https://fonts.googleapis.com/css?family=Roboto:400,700);
-@import url(BebasKai-Regular.css);
+@import url(/static/shared/BebasKai-Regular.css);
 
 body{
     /* Background pattern from subtlepatterns.com */
@@ -92,7 +92,7 @@ body{
     height: 30px;
     border-radius: 3px;
     background-color: #F2F3F4;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
+    /*box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);*/
     overflow: hidden;
 }
 

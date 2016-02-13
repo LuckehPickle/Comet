@@ -1,0 +1,175 @@
+/*
+# [Messages] MAIN.CSS - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
+# Powered by Django (https://www.djangoproject.com/)
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+# TODO Set register and login forms input font to Roboto Condensed
+*/
+
+/* Fonts */
+@import url(https://fonts.googleapis.com/css?family=Oxygen);
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,700);
+@import url(/static/shared/BebasKai-Regular.css);
+
+body{
+    margin: 0;
+}
+
+/* A container for message containers. Yo dawg. */
+.messages{
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Contains a messages elements */
+.message-container{
+    background-color: #2ECC71;
+    border-color: #239B56;
+    border-width: 20px;
+    border-left-style: solid;
+    overflow: hidden;
+}
+
+.message{
+    font-family: 'Oxygen', sans-serif;
+    font-size: 12px;
+    margin: 8px;
+    color: #333;
+    margin-right: 30px;
+}
+
+/* Overrides default message properties */
+.message-error, .message-error a{
+    color: #641E16;
+}
+
+.message-error::before{
+    content: "Error: ";
+}
+
+.message-info, .message-info a{
+    color: #1B4F72;
+}
+
+.message-info::before{
+    content: "Info: ";
+}
+
+.message-warning, .message-warning a{
+    color: #7D6608;
+}
+
+.message-warning::before{
+    content: "Warning: ";
+}
+
+/* Overrides default container properties */
+.message-container-error{
+    background-color: #EC7063;
+    border-color: #C0392B;
+}
+
+.message-container-info{
+    background-color: #5DADE2;
+    border-color: #2980B9;
+}
+
+.message-container-warning{
+    background-color: #F7DC6F;
+    border-color: #F1C40F;
+}
+
+.message-close{
+    float: right;
+    height: 30px;
+    width: 30px;
+    margin-top: 2px;
+    margin-right: 2px;
+    padding: 9px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.message-close-error path{
+    fill: #641E16;
+}
+
+.message-close-info path{
+    fill: #1B4F72;
+}
+
+.message-close-warning path{
+    fill: #7D6608;
+}
+
+.noselect{
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none;   /* Chrome/Safari/Opera */
+    -khtml-user-select: none;    /* Konqueror */
+    -moz-user-select: none;      /* Firefox */
+    -ms-user-select: none;       /* IE/Edge */
+    user-select: none;
+    cursor: default;
+}
+
+.menu{
+    width: 100%;
+    height: 45px;
+    background-color: #E84C3C;
+}
+
+.header{
+    width: 100%;
+    height: 150px;
+    background-color: #EE5C4C;
+}
+
+/* For landscape mobile phones and up */
+@media screen and (min-width: 28.75em){
+    .messages{
+        position: absolute;
+        top: 30px; /* TODO Update this to sit just below menu height */
+        left: auto;
+        width: 400px;
+    }
+
+    .message-container{
+        border-radius: 3px;
+        margin: 3px;
+    }
+
+    .message{
+        font-size: 13px;
+    }
+}
+
+/* For Desktops and some tablets only */
+@media screen and (min-width: 40.5em){
+    .messages{
+        top: 48px;
+        margin-right: 3px;
+    }
+
+    /*.message-container{
+        border-radius: 3px;
+        margin: 3px;
+    }*/
+
+    .message{
+        font-size: 15px;
+    }
+}

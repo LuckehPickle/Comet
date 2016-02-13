@@ -16,20 +16,25 @@
 # Django Imports
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.contrib import messages
 
 # Other Imports
+import cr_config
 from chatproject.decorators import login_required_message
 
 # INDEX
 # Currently just renders the messenger interface from the template.
 @login_required_message
 def index(request):
-    return HttpResponse("Hello World")
+    return render(request, "messages/index.html", {
+        "title": (cr_config.TITLE_FORMAT % "Messages"),
+    })
 
 # PRIVATE
 # Renders a page that allows you to interact with a specific user.
 # Note: Will provide an error if you are not on the users contacts list
 # and the user has "only_from_contacts" setting set to TRUE.
+# IDEA: Allow users to set unique alliases for their URL.
 @login_required_message
 def private(request, identifier=None):
     return HttpResponse("Private message with " + identifier)

@@ -17,7 +17,7 @@
 
 /* Fonts */
 @import url(https://fonts.googleapis.com/css?family=Roboto:400,700);
-@import url(/static/accounts/BebasKai-Regular.css);
+@import url(/static/shared/BebasKai-Regular.css);
 
 body{
     margin: 0;
