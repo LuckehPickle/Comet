@@ -48,7 +48,7 @@ def logout(request):
 # is dedicated to handling the login process from the POST data.
 def login(request):
     if request.user.is_authenticated(): # Check if the user is logged in
-        return redirect("/")
+        return redirect("frontpage")
 
     if request.POST: # Check if there is any POST data.
         # Create a form instance and populate it with the Post data
@@ -66,11 +66,9 @@ def login(request):
                 if user.is_active: # Check if the account is active (not suspended)
                     login_user(request, user) # Log the user in
                     # Redirect to front page
-                    next_dir = ""
                     if "next" in request.GET:
-                        next_dir=request.GET["next"]
-                    # TODO Need to find a way to redir to the next_dir
-                    return redirect("frontpage")
+                        return redirect(request.GET["next"])
+                    return redirect("messages")
                 else:
                     # Account has been suspended. Alert the user and render the page.
                     messages.add_message(request, messages.ERROR, "Sorry, this account has been suspended. <a href='#'>Find out more.</a>")
@@ -113,7 +111,7 @@ def renderLogin(request, next_dir="", form=AuthenticationForm()):
 # TODO Clean up and comment
 def register(request):
     if request.user.is_authenticated(): # Check if the user is logged in
-        return redirect("/") # User is logged in, return them to index
+        return redirect("frontpage") # User is logged in, return them to index
 
     if request.POST: # Some data was posted
         # Create a form instance and populate it with the Post data
@@ -138,10 +136,10 @@ def register(request):
             )
             login_user(request, user) # Log the user in.
 
-            next_dir = ""
+            messages.add_message(request, messages.INFO, "Your account has been created. <a href='/verify'>Click here to verify your email.</a>")
             if "next" in request.GET:
-                next_dir="?next=" + request.GET["next"]
-            return redirect("/register/done" + next_dir)
+                return redirect(request.GET["next"])
+            return redirect("messages")
 
         # Form data was invalid, render the page w/ error messages
         return renderRegister(request, form=form)

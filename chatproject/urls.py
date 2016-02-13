@@ -1,4 +1,4 @@
-# [FrontPage] VIEWS.PY - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
+# [ChatProject] URLS.PY - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
 # Powered by Django (https://www.djangoproject.com/) - Not endorsed by Django
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,16 +12,23 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
+#
+# https://docs.djangoproject.com/en/1.9/topics/http/urls/
 
 # Django Imports
-from django.shortcuts import render
+from django.conf.urls import include, url
+from django.contrib import admin
 
 # Other Imports
-import cr_config
+from accounts import views as accounts
+from frontpage import views as front
 
-# FRONTPAGE
-# Currently just renders the front page from the template.
-def index(request):
-    return render(request, "frontpage/index.html", {
-        "title": cr_config.TITLE,
-    })
+# URL Patterns
+urlpatterns = [
+    url(r'^$', front.index, name="frontpage"),
+    url(r'^register', accounts.register, name="register"),
+    url(r'^login', accounts.login, name="login"),
+    url(r'^logout', accounts.logout, name="logout"),
+    url(r'^messages/', include("messages_app.urls")),
+    url(r'^admin/', admin.site.urls),
+]

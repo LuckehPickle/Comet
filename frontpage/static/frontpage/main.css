@@ -41,6 +41,14 @@ body{
     height: 40px;
 }
 
+.menu a{
+    padding: 3px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    color: white;
+    text-decoration: none;
+}
+
 .menu-bg{
     background-color: #27AE60;
 }
@@ -97,6 +105,7 @@ body{
     font-family: 'BebasKai-Regular';
     font-size: 30px;
     color: white;
+    padding-right: 5px;
 }
 
 .footer-note{
@@ -123,6 +132,10 @@ body{
 
     .menu, .menu-bg{
         height: 50px;
+    }
+
+    .menu a{
+        font-size: 16px;
     }
 
     .jumbo{

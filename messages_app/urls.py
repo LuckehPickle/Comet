@@ -1,4 +1,4 @@
-# [FrontPage] VIEWS.PY - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
+# [Messages_App] URLS.PY - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
 # Powered by Django (https://www.djangoproject.com/) - Not endorsed by Django
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,14 +14,13 @@
 #   limitations under the License.
 
 # Django Imports
-from django.shortcuts import render
+from django.conf.urls import url
 
 # Other Imports
-import cr_config
+from . import views
 
-# FRONTPAGE
-# Currently just renders the front page from the template.
-def index(request):
-    return render(request, "frontpage/index.html", {
-        "title": cr_config.TITLE,
-    })
+urlpatterns = [
+    url(r'^$', views.index, name="messages"),
+    url(r'^user/(?P<identifier>[a-zA-Z0-9]+)$', views.private),
+    url(r'^(?P<identifier>[a-zA-Z0-9]+)$', views.group),
+]
