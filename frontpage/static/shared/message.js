@@ -33,6 +33,7 @@ for(var i = 0; i < messages.length; i++){ //Iterate over messages
             duration: 300,
             onUpdate: function(progress){
                 source.style.height = ((1 - easingPath(progress)) * start_height) + "px";
+                source.style.marginBottom = ((1 - easingPath(progress)) * 3) + "px";
             },
             onComplete: function(){
                 source.style.display = "none";

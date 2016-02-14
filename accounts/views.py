@@ -67,6 +67,8 @@ def login(request):
                     login_user(request, user) # Log the user in
                     # Redirect to front page
                     messages.add_message(request, messages.WARNING, "This project is still in development. If you have any issues or find any bugs, please submit them to our <a href='/issues' target='_blank'>issue tracker</a>.<br> Thankyou for being a part of the BETA!")
+                    if not user.is_verified:
+                        messages.add_message(request, messages.INFO, "Your email address has not been verified yet. <a href='/verify'>Click here to verify your email.</a> You have 24 hours remaining.")
                     if "next" in request.GET:
                         return redirect(request.GET["next"])
                     return redirect("messages")
