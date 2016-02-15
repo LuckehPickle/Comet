@@ -13,7 +13,7 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 #
-# Note: Thissection  is based off of the source code from the login_required
+# Note: This section is based off of the source code from the login_required
 # decorator. Source code can be found here:
 # https://docs.djangoproject.com/en/1.9/_modules/django/contrib/auth/decorators/
 
