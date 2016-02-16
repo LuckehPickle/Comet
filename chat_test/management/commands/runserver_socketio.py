@@ -12,10 +12,6 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
-#
-# ISSUE: Syntax Error in SocketIOServer ln 108.
-# Atleast thats what the stacktrace says. This surely must be something I
-# have done wrong...
 
 # Django Imports
 from django.conf import settings
@@ -29,7 +25,7 @@ from socketio.server import SocketIOServer
 
 # Other Imports
 from re import match
-from thread import start_new_thread
+import threading # Updated for Python 3.X
 from time import sleep
 from os import getpid, kill, environ
 from signal import SIGINT
@@ -54,8 +50,8 @@ class Command(BaseCommand):
             from django.contrib.staticfiles.handlers import StaticFilesHandler
         except ImportError:
             return handler
-        use_static_handler = options.get("use_static_handler", True)
-        insecure_serving = options.get("insecure_serving", False)
+        use_static_handler = kwargs.get("use_static_handler", True)
+        insecure_serving = kwargs.get("insecure_serving", False)
         if (settings.DEBUG and use_static_handler) or (use_static_handler and insecure_serving):
             handler = StaticFilesHandler(handler)
         return handler
@@ -74,11 +70,16 @@ class Command(BaseCommand):
 
         environ["DJANGO_SOCKETIO_PORT"] = str(self.port)
 
-        start_new_thread(reload_watcher, ())
+        # Python 2.X - start_new_thread(reload_watcher, ())
+        thread = threading.Thread(target=reload_watcher) # For Python 3.X
+        thread.setDaemon(True)
+        thread.start()
         try:
             bind = (self.addr, int(self.port))
             print()
-            print("SocketISServer running on %s:%s" % bind)
+            print("SocketIOServer running on %s:%s" % bind)
+            print("Development site accessible at http://127.0.0.0:8000/")
+            print("Quit the server with CTRL-BREAK")
             print()
             handler = self.get_handler(*args, **kwargs)
             server = SocketIOServer(bind, handler, resource="socket.io", policy_server=True)
