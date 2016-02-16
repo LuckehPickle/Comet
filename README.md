@@ -30,3 +30,5 @@ __Note:__ In order to use gevent-socketio with Python 3.X you must fix some sour
 * __socketio.packet__ 
   * line 156 "except ValueError, e:" ==> "except ValueError as e:"
   * line 15, 23 & 29 "x.iteritems()" ==> "x.items()"
+* __socketio.sdjango__
+  * line 6 "from django.utils.importlib import import_module" ==> "from importlib import import_module" 
