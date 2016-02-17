@@ -17,7 +17,7 @@
 import logging
 
 # Socketio Imports
-from socketio.namespace import BaseNameSpace
+from socketio.namespace import BaseNamespace
 from socketio.mixins import RoomsMixin, BroadcastMixin
 from socketio.sdjango import namespace
 
@@ -26,7 +26,7 @@ from socketio.sdjango import namespace
 # the gevent-socketio django chat example, found here:
 # https://github.com/abourget/gevent-socketio/tree/master/examples/django_chat/chat
 @namespace("/chat")
-class ChatNamespace(BaseNameSpace, RoomsMixin, BroadcastMixin):
+class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
     nicknames = []
 
     def initialize(self):

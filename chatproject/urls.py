@@ -19,6 +19,10 @@
 from django.conf.urls import include, url
 from django.contrib import admin
 
+# Socketio Imports
+import socketio.sdjango
+socketio.sdjango.autodiscover()
+
 # Other Imports
 from accounts import views as accounts
 from frontpage import views as front
@@ -32,5 +36,6 @@ urlpatterns = [
     url(r'^logout', accounts.logout, name="logout"),
     url(r'^messages/', include("messages_app.urls")),
     url(r'^chat-test/', include("chat_test.urls")),
+    url(r'^socket\.io/', include(socketio.sdjango.urls)),
     url(r'^admin/', admin.site.urls),
 ]

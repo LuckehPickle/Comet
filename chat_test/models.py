@@ -44,7 +44,7 @@ class ChatRoom(models.Model):
 class ChatUser(models.Model):
     name = models.CharField(max_length=20)
     session = models.CharField(max_length=20)
-    room = models.ForeignKey("chat.Chatroom", related_name="users")
+    room = models.ForeignKey("chat_test.Chatroom", related_name="users")
 
     class Meta:
         ordering = ("name",)

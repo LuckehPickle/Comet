@@ -14,19 +14,13 @@
 #   limitations under the License.
 
 # Django Imports
-from django.conf.urls import url
-
-# Socketio Imports
-import socketio.sdjango
-
-socketio.sdjango.autodiscover()
+from django.conf.urls import include, url
 
 # Other Imports
 from . import views
 
 # URL Patterns
 urlpatterns = [
-    url(r'socket\.io', include(socketio.sdjango.urls)),
     url(r'^$', views.rooms, name="rooms"),
     url(r'^create/$', views.create, name="create"),
     url(r'^(?P<slug>.*)$', views.room, name="room"),
