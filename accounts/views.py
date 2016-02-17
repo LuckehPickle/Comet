@@ -78,16 +78,13 @@ def login(request):
             else:
                 # Invalid credentials where entered
                 messages.add_message(request, messages.ERROR, "Username or password is incorrect.")
-        # Form data was invalid, render the page w/ error messages
-        next_dir = ""
-        if "next" in request.GET:
-            next_dir=request.GET["next"]
-        return renderLogin(request, next_dir=next_dir, form=form)
-    else: # No data was posted, render a regular page
-        next_dir = ""
-        if "next" in request.GET:
-            next_dir=request.GET["next"]
-        return renderLogin(request, next_dir=next_dir)
+
+    # If the function reaches this point, then we simply need to render
+    # a new page, taking the next direcory into account.
+    next_dir = ""
+    if "next" in request.GET:
+        next_dir=request.GET["next"]
+    return renderLogin(request, next_dir=next_dir)
 
 # renderLogin(request, next_dir, [form])
 # Gathers and formats any data that needs to be passed to the authentication
@@ -111,7 +108,6 @@ def renderLogin(request, next_dir="", form=AuthenticationForm()):
 # Handles registration requests. Note: This function actually doubles as a form,
 # accepting inputs from itself if they exist. The majority of this function
 # is dedicated to handling the registration process from the POST data.
-# TODO Clean up and comment
 def register(request):
     if request.user.is_authenticated(): # Check if the user is logged in
         return redirect("frontpage") # User is logged in, return them to index
@@ -145,8 +141,11 @@ def register(request):
                 return redirect(request.GET["next"])
             return redirect("messages")
 
-        # Form data was invalid, render the page w/ error messages
-        return renderRegister(request, form=form)
+        # Form data was invalid, render the page with error messages
+        next_dir = ""
+        if "next" in request.GET:
+            next_dir=request.GET["next"]
+        return renderRegister(request, next_dir=next_dir, form=form)
     else: # No data was posted, render a regular page
         next_dir = ""
         if "next" in request.GET:

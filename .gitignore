@@ -236,3 +236,6 @@ manage.py
 messages_app/admin.py
 messages_app/apps.py
 messages_app/tests.py
+accounts/apps.py
+accounts/admin.py
+chat_test/admin.py
