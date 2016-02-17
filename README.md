@@ -32,3 +32,6 @@ __Note:__ In order to use gevent-socketio with Python 3.X you must fix some sour
   * line 15, 23 & 29 "x.iteritems()" ==> "x.items()"
 * __socketio.sdjango__
   * line 6 "from django.utils.importlib import import_module" ==> "from importlib import import_module" 
+* __socketio.namespace__
+  * line 170 "print "ERROR: ... ackId %s" % packet['ackId']" ==> "print("ERROR: ... ackId %s" % packet['ackId'])"
+  * line 177 "print "Unprocessed packet", packet" ==> "print("Unprocessed packet", packet)"
