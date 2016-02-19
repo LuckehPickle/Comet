@@ -1,9 +1,0 @@
-language: python
-python:
-    - "3.5"
-# Command to install dependencies
-install:
-    - pip install Django
-    - pip install gevent-socketio
-# command to run tests
-script: python manage.py runserver
