@@ -15,6 +15,7 @@
 
 # Django Imports
 from django.shortcuts import render
+from django.contrib import messages
 
 # Other Imports
 import cr_config
@@ -22,6 +23,7 @@ import cr_config
 # FRONTPAGE
 # Currently just renders the front page from the template.
 def index(request):
+    messages.add_message(request, messages.INFO, "This is an highly informative message.")
     return render(request, "frontpage/index.html", {
         "title": cr_config.TITLE,
     })

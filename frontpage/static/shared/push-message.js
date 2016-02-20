@@ -16,7 +16,7 @@
 */
 
 // Variables
-var messages = document.querySelectorAll(".message-close"); //Get all message objects
+var messages = document.querySelectorAll(".pmessage-close"); //Get all message objects
 var easingPath = mojs.easing.path('M0,100 Q0,0 100,0');
 
 // Init

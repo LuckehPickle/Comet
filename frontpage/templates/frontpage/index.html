@@ -25,11 +25,18 @@
         <link rel="icon" type="image/ico" href="{% static 'shared/favicon.ico' %}">
     </head>
     <body>
+        <script src="{% static 'shared/mo.min.js' %}"></script>
         {% if messages %}
-        <div class="messages">
+        <div class="pmessages">
             {% for message in messages %}
-            <p class="message message-{{ message.tags }}">{{ message|escape }}</p>
+            <div class="pmessage-container pmessage-container-{{ message.tags }}">
+                <svg class="pmessage-close pmessage-close-{{ pmessage.tags }}" viewBox="0 0 20 20">
+                    <path d="M0 3 L3 0 L10 7 L17 0 L20 3 L13 10 L20 17 L17 20 L10 13 L3 20 L0 17 L7 10 z">
+                </svg>
+                <p class="pmessage pmessage-{{ message.tags }}">{{ message|safe }}</p>
+            </div>
             {% endfor %}
+            <script src="{% static 'shared/push-message.js' %}"></script>
         </div>
         {% endif %}
 

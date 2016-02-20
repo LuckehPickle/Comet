@@ -28,7 +28,7 @@ class ChatRoom(models.Model):
     class Meta:
         ordering = ("name",)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     @models.permalink
@@ -49,5 +49,5 @@ class ChatUser(models.Model):
     class Meta:
         ordering = ("name",)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
