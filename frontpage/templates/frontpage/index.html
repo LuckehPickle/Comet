@@ -25,7 +25,7 @@
         <link rel="icon" type="image/ico" href="{% static 'shared/favicon.ico' %}">
     </head>
     <body>
-        <script src="{% static 'shared/mo.min.js' %}"></script>
+        <script src="http://cdn.jsdelivr.net/mojs/latest/mo.min.js"></script>
         {% if messages %}
         <div class="pmessages">
             {% for message in messages %}
@@ -72,7 +72,6 @@
             </div>
         </div>
 
-        <script src="http://cdn.jsdelivr.net/mojs/latest/mo.min.js"></script>
         <script src="{% static 'frontpage/bulk.js' %}"></script>
     </body>
 </html>
