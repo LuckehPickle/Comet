@@ -29,7 +29,7 @@
         <link rel="stylesheet" type="text/css" href="{% static 'frontend_utils/modal.css' %}">
     </head>
     <body>
-        <script src="http://cdn.jsdelivr.net/mojs/latest/mo.min.js"></script>
+        <script src="{% static 'shared/mo.min.js' %}"></script>
         {% if messages %}
         <div class="pmessages">
             {% for message in messages %}
@@ -78,8 +78,31 @@
             </div>
 
             <!-- Text Input -->
-            <div class="container col-ratio-1">
+            <div class="container col-ratio-3">
                 <button>I'm supposed to be a text input. This is the ultimate identity crisis.</button>
+            </div>
+
+            <!-- Toggle -->
+            <div class="container col-ratio-1">
+                <div class="toggle" style="align-self:center;"> <!-- Do not include this styles when in use -->
+                    <div class="toggle-on" style="opacity:0;">
+                        <img class="toggle-icon" src="{% static 'frontend_utils/svg/check_24px.svg' %}" onerror="this.src={% static 'frontend_utils/svg/fallbacks/check_24dp.png' %}">
+                    </div>
+                    <div class="toggle-off" style="opacity:1;">
+                        <img class="toggle-icon" src="{% static 'frontend_utils/svg/close_24px.svg' %}" onerror="this.src={% static 'frontend_utils/svg/fallbacks/close_24dp.png' %}">
+                    </div>
+                </div><input class="toggle-checkbox" type="checkbox" name="form.name"> <!-- Update this with form generate name -->
+                <script src="{% static 'frontend_utils/js/util-toggle.min.js' %}"></script>
+            </div>
+
+            <!-- Theme Toggle -->
+            <div class="container col-ratio-1">
+                <button>Click to toggle theme.</button>
+            </div>
+
+            <!-- Checkbox -->
+            <div class="container col-ratio-1">
+                <button>Click to check.</button>
             </div>
         </div>
     </body>
