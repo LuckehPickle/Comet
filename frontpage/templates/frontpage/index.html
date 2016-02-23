@@ -19,13 +19,14 @@
     <head>
         <title>{{ title }}</title>
         {% load staticfiles %}
-        <link href="{% static 'frontpage/main.css' %}" type="text/css" rel="stylesheet">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
         <link rel="icon" type="image/ico" href="{% static 'shared/favicon.ico' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'frontpage/main.css' %}">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     </head>
     <body>
-        <script src="http://cdn.jsdelivr.net/mojs/latest/mo.min.js"></script>
+        <script src="{% static 'shared/js/mo.min.js' %}"></script>
         {% if messages %}
         <div class="pmessages">
             {% for message in messages %}
@@ -36,15 +37,21 @@
                 <p class="pmessage pmessage-{{ message.tags }}">{{ message|safe }}</p>
             </div>
             {% endfor %}
-            <script src="{% static 'shared/push-message.js' %}"></script>
+            <script src="{% static 'shared/js/push-message.js' %}"></script>
         </div>
         {% endif %}
 
-        <div class="menu-bg"></div>
         <div class="menu">
             <div class="wrapper">
                 <div class="logo">{{ title }}</div>
-                <a href="/whoknows">NEWS</a>
+                <nav role="navigation">
+                    <ul>
+                        <li class="menu-item"><a href="/premium">Premium</a></li>
+                        <li class="menu-item"><a href="/docs">Documentation</a></li>
+                        <li class="menu-item"><a href="/about/changelog">Changelog</a></li>
+                        <li class="menu-item"><p>More</p><i class="material-icons">expand_more</i></li>
+                    </ul>
+                </nav>
             </div>
         </div>
 

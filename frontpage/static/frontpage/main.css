@@ -17,10 +17,11 @@
 
 /* Fonts */
 @import url(https://fonts.googleapis.com/css?family=Roboto:400,700);
+@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700);
 @import url(/static/shared/BebasKai-Regular.css);
 
 /* Stylesheets */
-@import url(/static/shared/push-messages.css);
+@import url(/static/shared/css/push-messages.css);
 
 body{
     margin: 0;
@@ -37,29 +38,53 @@ body{
     z-index: 2;
 }
 
-.menu, .menu-bg{
+.menu{
     position: fixed;
     top: 0;
     width: 100%;
     height: 40px;
+    background-color: #FEFEFE;
+    color: #1C87E5;
 }
 
-.menu a{
+.menu ul{
+    margin: 0;
+    margin-left: 10px; /* Seperate nav elements the the logo */
+    padding: 0;
+}
+
+.menu-item{
     padding: 3px;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: bold;
     font-size: 14px;
-    color: white;
-    text-decoration: none;
+    list-style: none;
+    color: #1C87E5;
+    cursor: pointer; /* This is needed for the More nav link */
+    display: inline-block;
+    vertical-align: middle;
 }
 
-.menu-bg{
-    background-color: #27AE60;
+.menu-item a{
+    text-decoration: none;
+    color: #1C87E5;
+}
+
+.menu-item p{
+    margin: 0;
+    vertical-align: middle; /* Aligns the icon with the font */
+    display: inline-block;
+}
+
+.menu .material-icons{
+    margin-left: -3px; /* Nudges the icon slightly closer to the text */
+    vertical-align: middle; /* Aligns the icon with the font */
 }
 
 .jumbo{
     width: 100%;
     height: 300px;
-    background-color: #2ECC71;
+    background-color: #FFFFFF;
 }
 
 .jumbo-footer{
@@ -107,7 +132,6 @@ body{
 .logo{
     font-family: 'BebasKai-Regular';
     font-size: 30px;
-    color: white;
     padding-right: 5px;
 }
 
@@ -121,7 +145,7 @@ body{
 
 /* For landscape mobile phones and up */
 @media screen and (min-width: 28.75em){
-    .menu, .menu-bg{
+    .menu{
         height: 45px;
     }
 }
@@ -138,11 +162,11 @@ body{
         max-width: 1300px;
     }
 
-    .menu, .menu-bg{
+    .menu{
         height: 50px;
     }
 
-    .menu a{
+    .menu-item{
         font-size: 16px;
     }
 
@@ -162,13 +186,5 @@ body{
 
     .logo{
         font-size: 35px;
-    }
-
-    .dark-footer{
-        height: 50px;
-    }
-
-    .footer-note{
-        font-size: 16px;
     }
 }

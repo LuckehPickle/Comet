@@ -26,7 +26,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
         <link rel="icon" type="image/ico" href="{% static 'shared/favicon.ico' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'frontend_utils/main.css' %}">
-        <link rel="stylesheet" type="text/css" href="{% static 'frontend_utils/modal.css' %}">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     </head>
     <body>
         <script src="{% static 'shared/mo.min.js' %}"></script>
@@ -54,7 +54,12 @@
 
             <!-- Dropdown -->
             <div class="container col-ratio-3">
-                <button>Click for dropdown.</button>
+                <div class="dropdown-container">
+                    TODO Redo this like <a href="http://semantic-ui.com/modules/dropdown.html">this</a>.
+                    <p class="dropdown">Hover over me for a dropdown.<i class="material-icons">expand_more</i></p>
+                    <ul class="dropdown-list"></ul>
+                </div> <!-- Do not need to include container in final version -->
+                <script src="{% static 'frontend_utils/js/util-dropdown.js' %}"></script>
             </div>
 
             <!-- Push Message -->
@@ -93,6 +98,7 @@
                     </div>
                 </div><input class="toggle-checkbox" type="checkbox" name="form.name"> <!-- Update this with form generate name -->
                 <script src="{% static 'frontend_utils/js/util-toggle.min.js' %}"></script>
+                <!-- TODO Animate & thicken SVG's -->
             </div>
 
             <!-- Theme Toggle -->

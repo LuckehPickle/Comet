@@ -21,6 +21,7 @@
 @import url(https://fonts.googleapis.com/css?family=Lobster);
 
 /* Stylesheets */
+@import url(/static/frontend_utils/util-dropdown.css);
 @import url(/static/frontend_utils/util-toggle.css);
 
 body{
@@ -32,6 +33,11 @@ body{
     text-align: center;
     font-family: 'Lobster', cursive;
     font-size: 50px;
+}
+
+.dropdown-container{
+    align-self: center;
+    display: block;
 }
 
 .utils-container{

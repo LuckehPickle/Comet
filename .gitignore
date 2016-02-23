@@ -56,3 +56,5 @@ frontpage/static/shared/mo.min.js
 */__pycache__/
 frontpage/models.py
 messages_app/models.py
+frontend_utils/static/frontend_utils/js/util-toggle.min.js
+frontpage/static/shared/js/mo.min.js
