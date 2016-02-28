@@ -101,19 +101,62 @@ body{
     flex-wrap: wrap;
     padding: 30px 0;
     box-sizing: border-box;
-    /* Background pattern from subtlepatterns.com 
+    /* Background pattern from subtlepatterns.com
     background-image: url(/static/shared/img/geometry2.png);*/
 }
 
 .about div{
     width: 200px;
-    height: 280px;
     margin: 20px;
     background-color: white;
     border-radius: 3px;
     border-color: #1C87E5;
     border-style: solid;
     border-width: 2.5px;
+    text-align: center;
+}
+
+.about-title{
+    font-family: 'BebasKai-Regular';
+    font-size: 32px;
+    margin: 0;
+}
+
+.about-summary{
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    box-sizing: border-box;
+    padding: 0 2em;
+}
+
+.about-learn-more{
+    /* Styling */
+    background-color: #1C87E5;
+    border-radius: 4px;
+    padding: 10px 20px;
+    margin-top: 10px;
+    margin-bottom: 30px;
+    cursor: pointer;
+    color: white;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 16px;
+
+    outline: none;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.about-icon{
+    width: 10%;
+    margin: 0 auto;
+    margin-top: -40px;
+    overflow: visible;
+}
+
+.icon-outline{
+    fill: white;
+    stroke: #1C87E5;
+    stroke-width: 2.5px;
 }
 
 .features{
@@ -159,7 +202,7 @@ body{
 @media screen and (min-width: 40.5em){
     .pmessages{
         position: fixed;
-        top: 54px;
+        top: 55px;
     }
 
     .wrapper{
@@ -185,7 +228,6 @@ body{
 
     .about div{
         width: 300px;
-        height: 400px;
         margin: 30px;
         margin-top: 40px;
     }
