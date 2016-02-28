@@ -16,17 +16,22 @@
 */
 
 // Variables
-var messages = document.querySelectorAll(".pmessage-close"); //Get all message objects
+var messages = document.querySelectorAll(".pmessage-container"); //Get all message objects
 var easingPath = mojs.easing.path('M0,100 Q0,0 100,0');
 
 // Init
 for(var i = 0; i < messages.length; i++){ //Iterate over messages
     var message = messages[i];
-    message.addEventListener("click", function(event){
+    slideIn(message); //Animate in
+
+    // Add Event Listener
+    message.children[0].addEventListener("click", function(event){
+
         var source = event.target; //Get event target
         while(source.tagName != "DIV"){ //Move up the element tree until you reach a div
             source = source.parentNode;
         }
+
         //Animate
         var start_height = source.offsetHeight;
         new mojs.Tween({
@@ -41,4 +46,19 @@ for(var i = 0; i < messages.length; i++){ //Iterate over messages
             },
         }).run();
     });
+}
+
+function slideIn(element){
+    var translateMagnitude = element.offsetWidth;
+    element.style.transform = "translateX(" + translateMagnitude + "px)";
+    new mojs.Tween({
+        duration: 325,
+        delay: (150 * i) + 100,
+        onUpdate: function(progress){
+            element.style.transform = "translateX(" + ((1 - easingPath(progress)) * translateMagnitude) + "px)";
+        },
+        onComplete: function(progress){
+            element.style.transform = "";
+        },
+    }).run();
 }

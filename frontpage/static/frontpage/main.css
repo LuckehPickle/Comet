@@ -101,12 +101,15 @@ body{
     flex-wrap: wrap;
     padding: 30px 0;
     box-sizing: border-box;
+    /* Background pattern from subtlepatterns.com 
+    background-image: url(/static/shared/img/geometry2.png);*/
 }
 
 .about div{
     width: 200px;
     height: 280px;
     margin: 20px;
+    background-color: white;
     border-radius: 3px;
     border-color: #1C87E5;
     border-style: solid;
@@ -184,6 +187,7 @@ body{
         width: 300px;
         height: 400px;
         margin: 30px;
+        margin-top: 40px;
     }
 
     .logo{

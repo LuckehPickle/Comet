@@ -18,6 +18,10 @@
 /* Fonts */
 @import url(https://fonts.googleapis.com/css?family=Oxygen);
 
+body{
+    overflow-x: hidden;
+}
+
 /* A container for message containers. Yo dawg. */
 .pmessages{
     position: fixed;
@@ -32,15 +36,31 @@
 .pmessage-container{
     background-color: #2ECC71;
     border-color: #239B56;
-    border-width: 20px;
+    border-width: 15px;
     border-left-style: solid;
     overflow: hidden;
+}
+
+/* Overrides default container properties */
+.pmessage-container-error{
+    background-color: #EC7063;
+    border-color: #C0392B;
+}
+
+.pmessage-container-info{
+    background-color: #039BE5;
+    border-color: #1C87E5;
+}
+
+.pmessage-container-warning{
+    background-color: #F7DC6F;
+    border-color: #F1C40F;
 }
 
 .pmessage{
     font-family: 'Oxygen', sans-serif;
     font-size: 12px;
-    margin: 8px;
+    margin: 12px;
     color: #333;
     margin-right: 30px;
 }
@@ -55,11 +75,7 @@
 }
 
 .pmessage-info, .pmessage-info a{
-    color: #1B4F72;
-}
-
-.pmessage-info::before{
-    content: "Info: ";
+    color: #E4E9EF;
 }
 
 .pmessage-warning, .pmessage-warning a{
@@ -68,22 +84,6 @@
 
 .pmessage-warning::before{
     content: "Warning: ";
-}
-
-/* Overrides default container properties */
-.pmessage-container-error{
-    background-color: #EC7063;
-    border-color: #C0392B;
-}
-
-.pmessage-container-info{
-    background-color: #5DADE2;
-    border-color: #2980B9;
-}
-
-.pmessage-container-warning{
-    background-color: #F7DC6F;
-    border-color: #F1C40F;
 }
 
 .pmessage-close{

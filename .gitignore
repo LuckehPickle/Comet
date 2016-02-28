@@ -58,3 +58,5 @@ frontpage/models.py
 messages_app/models.py
 frontend_utils/static/frontend_utils/js/util-toggle.min.js
 frontpage/static/shared/js/mo.min.js
+frontpage/static/shared/img/geometry2.png
+frontpage/static/shared/img/Legal.txt
