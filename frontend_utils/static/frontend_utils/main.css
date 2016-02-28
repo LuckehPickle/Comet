@@ -21,8 +21,9 @@
 @import url(https://fonts.googleapis.com/css?family=Lobster);
 
 /* Stylesheets */
-@import url(/static/frontend_utils/util-dropdown.css);
-@import url(/static/frontend_utils/util-toggle.css);
+@import url(/static/frontend_utils/css/util-dropdown.css);
+@import url(/static/frontend_utils/css/util-btn-sheen.css);
+@import url(/static/frontend_utils/css/util-toggle.css);
 
 body{
     margin: 30px;
@@ -33,11 +34,6 @@ body{
     text-align: center;
     font-family: 'Lobster', cursive;
     font-size: 50px;
-}
-
-.dropdown-container{
-    align-self: center;
-    display: block;
 }
 
 .utils-container{
@@ -58,6 +54,11 @@ body{
     display: flex;
     justify-content: center;
     align-content: center;
+}
+
+._{
+    display: block;
+    align-self: center;
 }
 
 .col-ratio-3{
