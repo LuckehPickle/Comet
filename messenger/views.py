@@ -26,6 +26,7 @@ from chatproject.decorators import login_required_message
 # Currently just renders the messenger interface from the template.
 @login_required_message
 def index(request):
+    messages.add_message(request, messages.INFO, "This is an informative message.")
     return render(request, "messages/index.html", {
         "title": (cr_config.TITLE_FORMAT % "Messages"),
     })

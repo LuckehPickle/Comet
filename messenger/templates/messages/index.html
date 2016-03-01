@@ -26,59 +26,23 @@
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     </head>
     <body>
-        <script src="{% static 'shared/mo.min.js' %}"></script>
-        <div class="menu"></div>
-        <div class="header"></div>
 
-        <div class="content-wrapper">
-
-            <div class="utils">
-                <a href="/messages/search/" class="util">
-                    <div class="util-tooltip"><p>Add Contact</p></div>
-                </a>
-                <a class="util">
-                    <div class="util-tooltip"><p>Create Group</p></div>
-                </a>
-                <a class="util">
-                    <div class="util-tooltip"><p>util.tooltip.placeholder</p></div>
-                </a>
-                <a class="util">
-                    <div class="util-tooltip"><p>util.tooltip.placeholder</p></div>
-                </a>
-                <script src="{% static 'messages/bulk.js' %}"></script>
-            </div>
-
-            <div class="contacts"></div>
-
-            <div class="chat">
-                <div class="chat-messages"></div>
-                <div class="chat-messages-input">
-                    <p>Morgan is typing...</p>
-                    <div class="chat-input-body">
-                        <input type="text">
-                        <div></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="footer"></div>
-
+        <script src="{% static 'shared/js/mo.min.js' %}"></script>
         {% if messages %}
+        <!-- Messages -->
         <div class="pmessages">
             {% for message in messages %}
             <div class="pmessage-container pmessage-container-{{ message.tags }}">
-                <svg class="pmessage-close pmessage-close-{{ message.tags }}" viewBox="0 0 20 20">
+                <svg class="pmessage-close pmessage-close-{{ pmessage.tags }}" viewBox="0 0 20 20">
                     <path d="M0 3 L3 0 L10 7 L17 0 L20 3 L13 10 L20 17 L17 20 L10 13 L3 20 L0 17 L7 10 z">
                 </svg>
                 <p class="pmessage pmessage-{{ message.tags }}">{{ message|safe }}</p>
             </div>
             {% endfor %}
-            <script src="{% static 'shared/push-message.js' %}"></script>
+            <script src="{% static 'shared/js/push-message.js' %}"></script>
         </div>
         {% endif %}
 
-        <script src="//code.jquery.com/jquery-1.8.0.min.js"></script>
-        <script src="{% static 'shared/jquery.address-1.5.js' %}"></script>
+
     </body>
 </html>

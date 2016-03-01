@@ -49,7 +49,7 @@ for(var i = 0; i < messages.length; i++){ //Iterate over messages
 }
 
 function slideIn(element){
-    var translateMagnitude = element.offsetWidth;
+    var translateMagnitude = element.offsetWidth + 50;
     element.style.transform = "translateX(" + translateMagnitude + "px)";
     new mojs.Tween({
         duration: 325,

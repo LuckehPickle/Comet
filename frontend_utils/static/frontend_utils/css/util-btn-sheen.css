@@ -34,27 +34,33 @@ body{
     padding: 16px 33px;
     line-height: 1;
     transition: background-color 1s;
-    /*overflow: hidden;*/
+    overflow: hidden;
 }
 
 .btn-sheen:hover{
     background-color: #3E93CB;
 }
 
-/* Crossing Sheen */
+/* Crossing Sheen 
+TODO Fix */
 .btn-sheen::after{
     content: "";
-    /*background-color: rgba(0, 0, 0, 0.5);*/
-    background-color: red;
+    position: absolute;
+    top: inherit;
+    left: inherit;
+    background-color: rgba(0, 0, 0, 0.5);
     height: 30px;
-    width: 100%;
+    width: 100px;
+    transform: translate3d(-100%, 0, 0);
+    transition: transform 0.4s;
+    transition-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
 }
 
 .btn-sheen:hover::after{
-
+    transform: translate3d(100%, 0, 0);
 }
 
-/* Crossing Light */
+/* Crossing Light
 .btn-sheen::before{
     content: "";
     position: absolute;
@@ -72,3 +78,4 @@ body{
 .btn-sheen:hover::before{
     transform: translate3d(100%, 0, 0);
 }
+*/

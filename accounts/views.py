@@ -46,6 +46,7 @@ def logout(request):
 # Handles login requests. Note: This function actually doubles as a form,
 # accepting inputs from itself if they exist. The majority of this function
 # is dedicated to handling the login process from the POST data.
+# TODO Put email verification timer in a code well/block
 def login(request):
     if request.user.is_authenticated(): # Check if the user is logged in
         return redirect("frontpage")
