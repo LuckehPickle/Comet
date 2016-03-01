@@ -22,63 +22,15 @@
 
 /* Stylesheets */
 @import url(/static/shared/css/push-messages.css);
+@import url(/static/shared/css/nav.css);
 
 body{
     margin: 0;
 }
 
-.wrapper{
-    width: 100%;
-    height: 100%;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    padding: 0 10px;
-    box-sizing: border-box;
-    z-index: 2;
-}
-
 .menu{
     position: fixed;
     top: 0;
-    width: 100%;
-    height: 40px;
-    background-color: #F5F5F5;
-    color: #1C87E5;
-}
-
-.menu ul{
-    margin: 0;
-    margin-left: 10px; /* Seperate nav elements the the logo */
-    padding: 0;
-}
-
-.menu-item{
-    padding: 3px;
-    font-family: 'Source Sans Pro', sans-serif;
-    font-weight: bold;
-    font-size: 14px;
-    list-style: none;
-    color: #1C87E5;
-    cursor: pointer; /* This is needed for the More nav link */
-    display: inline-block;
-    vertical-align: middle;
-}
-
-.menu-item a{
-    text-decoration: none;
-    color: #1C87E5;
-}
-
-.menu-item p{
-    margin: 0;
-    vertical-align: middle; /* Aligns the icon with the font */
-    display: inline-block;
-}
-
-.menu .material-icons{
-    margin-left: -3px; /* Nudges the icon slightly closer to the text */
-    vertical-align: middle; /* Aligns the icon with the font */
 }
 
 .jumbo{
@@ -208,14 +160,6 @@ body{
     .wrapper{
         width: 100%;
         max-width: 1300px;
-    }
-
-    .menu{
-        height: 50px;
-    }
-
-    .menu-item{
-        font-size: 16px;
     }
 
     .jumbo{

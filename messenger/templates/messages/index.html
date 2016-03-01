@@ -1,5 +1,5 @@
 <!--
- [Messages] INDEX.HTML - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
+ [Messenger] INDEX.HTML - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
  Powered by Django (https://www.djangoproject.com/) - Not endorsed by Django
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,6 +13,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
+   TODO Insert a link to the GitHub source code on minified version
 -->
 <!DOCTYPE html>
 <html>
@@ -26,7 +27,6 @@
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     </head>
     <body>
-
         <script src="{% static 'shared/js/mo.min.js' %}"></script>
         {% if messages %}
         <!-- Messages -->
@@ -43,6 +43,7 @@
         </div>
         {% endif %}
 
-
+        <!-- Menu -->
+        {% include "shared/nav.min.html" %}
     </body>
 </html>

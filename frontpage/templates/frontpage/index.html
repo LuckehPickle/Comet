@@ -41,19 +41,7 @@
         </div>
         {% endif %}
 
-        <div class="menu">
-            <div class="wrapper">
-                <div class="logo">{{ title }}</div>
-                <nav role="navigation">
-                    <ul>
-                        <li class="menu-item"><a href="/premium">Premium</a></li>
-                        <li class="menu-item"><a href="/docs">Documentation</a></li>
-                        <li class="menu-item"><a href="/about/changelog">Changelog</a></li>
-                        <li class="menu-item"><p>More</p><i class="material-icons">expand_more</i></li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
+        {% include "shared/nav.min.html" %}
 
         <div class="jumbo"></div>
 
