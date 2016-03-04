@@ -13,7 +13,8 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-   TODO Insert a link to the GitHub source code on minified version
+
+ Looking for source code? Check it out here: https://github.com/LuckehPickle/chat
 -->
 <!DOCTYPE html>
 <html>
@@ -28,22 +29,7 @@
     </head>
     <body>
         <script src="{% static 'shared/js/mo.min.js' %}"></script>
-        {% if messages %}
-        <!-- Messages -->
-        <div class="pmessages">
-            {% for message in messages %}
-            <div class="pmessage-container pmessage-container-{{ message.tags }}">
-                <svg class="pmessage-close pmessage-close-{{ pmessage.tags }}" viewBox="0 0 20 20">
-                    <path d="M0 3 L3 0 L10 7 L17 0 L20 3 L13 10 L20 17 L17 20 L10 13 L3 20 L0 17 L7 10 z">
-                </svg>
-                <p class="pmessage pmessage-{{ message.tags }}">{{ message|safe }}</p>
-            </div>
-            {% endfor %}
-            <script src="{% static 'shared/js/push-message.js' %}"></script>
-        </div>
-        {% endif %}
-
-        <!-- Menu -->
-        {% include "shared/nav.min.html" %}
+        {% include 'shared/push-messages.min.html' %}
+        {% include 'shared/nav.html' %}
     </body>
 </html>

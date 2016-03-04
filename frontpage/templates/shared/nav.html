@@ -14,22 +14,42 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 
- TODO Use url names and the URL tag
  TODO Add dropdown list on 'More'
+ TODO Work on User section
  Warning: Make sure to import the appropriate styles:
  @import url(/static/shared/css/nav.css);
 -->
 
+{% load staticfiles %}
 <div class="menu">
     <div class="wrapper">
         <div class="logo">Chatguard</div>
         <nav role="navigation">
-            <ul>
+            <ul id="nav-ul">
                 <li class="menu-item"><a href="/premium">Premium</a></li>
                 <li class="menu-item"><a href="/docs">Documentation</a></li>
                 <li class="menu-item"><a href="/about/changelog">Changelog</a></li>
-                <li class="menu-item"><p>More</p><i class="material-icons">expand_more</i></li>
+
+                <!-- More -->
+                <li class="menu-item">
+                    <p class="dropdown">More</p>
+                    <div class="dropdown-container">
+                        <ul>
+                            <li class="dropdown-content">Test</li>
+                            <li class="dropdown-content">Test</li>
+                        </ul>
+                    </div>
+                    {% comment 'Might not be necessary' %}
+                    <script src="{% static 'shared/js/dropdown.js' %}"></script>
+                    {% endcomment %}
+                </li>
             </ul>
         </nav>
+
+        {% if request.user.is_authenticated %}
+            <p class="username">{{ user.username }}</p>
+        {% else %}
+            <a class="sign-in" href="{% url 'login' %}">Sign In</a>
+        {% endif %}
     </div>
 </div>

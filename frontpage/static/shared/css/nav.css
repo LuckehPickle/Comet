@@ -1,19 +1,21 @@
 /*
-# [Shared] NAV.CSS - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
-# Powered by Django (https://www.djangoproject.com/)
-#
-#   Licensed under the Apache License, Version 2.0 (the "License");
-#   you may not use this file except in compliance with the License.
-#   You may obtain a copy of the License at
-#
-#       http://www.apache.org/licenses/LICENSE-2.0
-#
-#   Unless required by applicable law or agreed to in writing, software
-#   distributed under the License is distributed on an "AS IS" BASIS,
-#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#   See the License for the specific language governing permissions and
-#   limitations under the License.
+ [Shared] NAV.CSS - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
+ Powered by Django (https://www.djangoproject.com/)
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
 */
+
+@import url(/static/shared/css/dropdown.css);
 
 /*
 This essential does nothing on small screens, apart
@@ -39,44 +41,70 @@ of this DIV becomes evident on larger screens.
 }
 
 /* Nav elements */
-.menu ul{
+#nav-ul{
     margin: 0;
     margin-left: 10px; /* Seperate nav elements from the logo */
     padding: 0;
 }
 
-.menu-item{
+.menu-item,
+.sign-in,
+.username{
     padding: 3px;
     font-family: 'Source Sans Pro', sans-serif;
     font-weight: bold;
     font-size: 14px;
     list-style: none;
     color: #1C87E5;
+    transition: color 0.3s;
     cursor: pointer; /* This is needed for the More nav link */
     display: inline-block;
     vertical-align: middle;
 }
 
-.menu-item a{
+.menu-item a,
+.sign-in,
+.username{
     text-decoration: none;
     color: #1C87E5;
+    transition: color 0.3s;
+}
+
+.sign-in, .username{
+    margin-left: auto; /* Essentially float:right; for flexboxes */
 }
 
 .menu-item p{
     margin: 0;
-    vertical-align: middle; /* Aligns the icon with the font */
     display: inline-block;
-}
-
-.menu .material-icons{
-    margin-left: -3px; /* Nudges the icon slightly closer to the text */
-    vertical-align: middle; /* Aligns the icon with the font */
 }
 
 .logo{
     font-family: 'BebasKai-Regular';
     font-size: 30px;
     padding-right: 5px;
+}
+
+/* Acts as a wrapper for the dropdown */
+.dropdown-container{
+    padding: 0;
+    padding-top: 15px;
+}
+
+/* Dropdown itself */
+.dropdown-container ul{
+    background-color: #F5F5F5;
+    list-style: none;
+    padding: 0;
+    min-width: 210px;
+}
+
+.dropdown-content{
+    padding: 8px;
+}
+
+.dropdown-content:hover{
+    background-color: #EDE8E8;
 }
 
 /* For landscape mobile phones and up */
@@ -89,14 +117,14 @@ of this DIV becomes evident on larger screens.
 /* For Desktops and some tablets only */
 @media screen and (min-width: 40.5em){
     .wrapper{
-        max-width: 1300px;
+        max-width: 1500px;
     }
 
     .menu{
         height: 50px;
     }
 
-    .menu-item{
+    .menu-item, .sign-in, .username{
         font-size: 16px;
     }
 

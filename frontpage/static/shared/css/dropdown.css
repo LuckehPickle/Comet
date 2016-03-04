@@ -1,0 +1,48 @@
+/*
+ [Shared] DROPDOWN.CSS - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
+ Powered by Django (https://www.djangoproject.com/)
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+ Note: Dropdown styles should be handled in the local instance
+ not in this stylesheet.
+*/
+
+/*
+These styles handle what the container looks like
+after the transition has run.
+*/
+.dropdown:hover + .dropdown-container,
+.dropdown-container:hover{
+    opacity: 1;
+    visibility: visible;
+}
+
+.dropdown-container{
+    position: absolute;
+    top: inherit;
+    left: inherit;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+        opacity 0.2s,
+        visibility 0.2s;
+    /*
+    We have to transition visibility here as well for two reasons:
+     1) If we don't include a visibility attribute then you could
+        simply hover over the region where the dropdown is and
+        the dropdown would appear (not good).
+     2) If we don't transition the visibility then the dropdown will
+        dissapear before the opacity transition is even played.
+    */
+}
