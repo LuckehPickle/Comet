@@ -14,8 +14,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 
- TODO Add dropdown list on 'More'
- TODO Work on User section
+ TODO Make 'My Account' into a hamburger menu beside the profile pic
  Warning: Make sure to import the appropriate styles:
  @import url(/static/shared/css/nav.css);
 -->
@@ -50,6 +49,8 @@
     {% if request.user.is_authenticated %}
         <div class="user-info-container">
             <a href="{% url 'messages' %}user/{{ user.username }}">{{ user.username }}</a>
+            <p>{{ user_id }}</p>
+            {% comment 'improving' %}
             <div class="dropdown" id="account-drop">
                 <a>My Account</a>
                 <div class="dropdown-container">
@@ -60,8 +61,14 @@
                     </ul>
                 </div>
             </div>
+            {% endcomment %}
         </div>
         <div class="user-image"></div>
+
+        <svg class="user-menu-icon" viewBox="0 0 240 240">
+            <path d="M30 180 H210 V160 H30 V180 M30 130 H210 V110 H30 V130 M30 60 V80 H210 V60 H30 z"></path>
+        </svg>
+        <script src="{% static 'shared/js/hamburger.js' %}"></script>
     {% else %}
         <a class="sign-in" href="{% url 'login' %}">Sign In</a>
     {% endif %}

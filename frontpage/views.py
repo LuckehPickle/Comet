@@ -23,8 +23,11 @@ import cr_config
 # FRONTPAGE
 # Currently just renders the front page from the template.
 def index(request):
-    # messages.add_message(request, messages.INFO, "This is an highly informative message.")
+    user_id = None
+    if request.user.is_authenticated():
+        user_id = str(request.user.user_id)[:8]
     return render(request, "frontpage/index.html", {
         "title": cr_config.TITLE,
         "wrapped": True,
+        "user_id": user_id,
     })

@@ -46,12 +46,6 @@ body{
     height: calc(100% + 30px);
     width: 40px;
     transform: rotate(15deg);
-    transition: left 0.6s;
-    transition-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
-}
-
-.btn-sheen:hover::after{
-    left: calc(100% + 25px);
 }
 
 .btn-sheen::before{
@@ -63,10 +57,32 @@ body{
     height: calc(100% + 30px);
     width: 10px;
     transform: rotate(15deg);
-    transition: left 0.6s;
-    transition-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
 }
 
+/*
+These have to be handled with a css animation rather than
+a css transition. This is because transitions are not
+configurably enough to prevent the sheen from returning.
+*/
+.btn-sheen:hover::after{
+    animation-name: sheen-after;
+    animation-duration: 0.4s;
+    animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+}
+
+@keyframes sheen-after{
+    from{left: -50px;}
+    to{left: calc(100% + 25px);}
+}
+
+/* Animation for after sheen */
 .btn-sheen:hover::before{
-    left: calc(100% + 10px);
+    animation-name: sheen-before;
+    animation-duration: 0.4s;
+    animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+}
+
+@keyframes sheen-before{
+    from{left: -65px;}
+    to{left: calc(100% + 10px);}
 }
