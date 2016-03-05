@@ -18,7 +18,7 @@
 
 /* Fonts */
 @import url(https://fonts.googleapis.com/css?family=Roboto:400,700);
-@import url(https://fonts.googleapis.com/css?family=Roboto+Condensed);
+@import url(https://fonts.googleapis.com/css?family=Roboto+Slab:400,700);
 @import url(/static/shared/BebasKai-Regular.css);
 
 /* Stylesheets */
@@ -27,51 +27,6 @@
 
 body{
     margin: 0;
-    background-color: #FFFFFF;
+    background-color: #F5F5F5;
     overflow-x: hidden;
 }
-
-/*.util{
-    width: 38px;
-    height: 38px;
-    border-radius: 25px;
-    background-color: #3D3D3D;
-    box-sizing: border-box;
-    margin: 5px;
-    cursor: default;
-}
-
-.util-tooltip{
-    display: none;
-    position: absolute;
-    margin-top: 4px;
-    left: 55px;
-    background-color: #5DADE2;
-    border-radius: 3px;
-    border-color: #2980B9;
-    border-width: 10px;
-    border-left-style: solid;
-    align-items: center;
-}
-
-/* Arrow/Chevron/Carot that points towards the util
-.util-tooltip:after{
-    content: '';
-    position: absolute;
-    left: -15px;
-    top: 50%;
-    width: 10px;
-    height: 10px;
-    margin-top: -5px;
-    background-color: #2980B9;
-    -moz-transform:rotate(45deg);
-    -webkit-transform:rotate(45deg);
-    transform:rotate(45deg);
-}
-
-.util-tooltip p{
-    font-family: 'Oxygen', sans-serif;
-    font-size: 15px;
-    color: #1B4F72;
-    margin: 6px 8px;
-}*/

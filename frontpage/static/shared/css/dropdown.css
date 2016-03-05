@@ -18,11 +18,15 @@
  not in this stylesheet.
 */
 
+.dropdown{
+    position: relative;
+}
+
 /*
 These styles handle what the container looks like
 after the transition has run.
 */
-.dropdown:hover + .dropdown-container,
+.dropdown:hover .dropdown-container,
 .dropdown-container:hover{
     opacity: 1;
     visibility: visible;
@@ -30,8 +34,8 @@ after the transition has run.
 
 .dropdown-container{
     position: absolute;
-    top: inherit;
-    left: inherit;
+    top: 0;
+    left: 0;
     opacity: 0;
     visibility: hidden;
     transition:
@@ -42,7 +46,9 @@ after the transition has run.
      1) If we don't include a visibility attribute then you could
         simply hover over the region where the dropdown is and
         the dropdown would appear (not good).
-     2) If we don't transition the visibility then the dropdown will
+     2) If we don't include an opacity attribute then the element
+        isn't faded in/out.
+     3) If we don't transition the visibility then the dropdown will
         dissapear before the opacity transition is even played.
     */
 }

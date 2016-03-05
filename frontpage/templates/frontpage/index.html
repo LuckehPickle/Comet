@@ -32,55 +32,18 @@
         {% include 'shared/push-messages.min.html' %}
         {% include "shared/nav.html" %}
 
-        <div class="jumbo"></div>
+        <!-- Jumbo -->
+        <div class="jumbo">
+            <p id="head">Private, Open Source Messaging.</p>
+            <p id="description">Free instant messaging, built for everyone - the way it should be.</p>
 
-        <div class="jumbo-footer"></div>
+            {% if request.user.is_authenticated %}
+                <a href="{% url 'messages' %}" class="btn-sheen">Go to Messenger</a>
+            {% else %}
+                <a href="{% url 'register' %}" class="btn-sheen">Register</a>
+            {% endif %}
 
-        <div class="about">
-            <!-- TODO Make these look good. -->
-            <div>
-                <svg class="about-icon">
-                    <circle class="icon-outline" cy="50%" cx="50%" r="50%"></circle>
-                </svg>
-                <p class="about-title">Secure</p>
-                <p class="about-summary">Life is too short to be alone, too precious. Share it with a friend. Those great big fluffy clouds. We wash our brush with odorless thinner. There is immense joy in just watching - watching all the little creatures in nature.</p>
-                <a class="about-learn-more">Learn More</a>
-            </div>
-
-            <div>
-                <svg class="about-icon">
-                    <circle class="icon-outline" cy="50%" cx="50%" r="50%"></circle>
-                </svg>
-                <p class="about-title">Private</p>
-                <p class="about-summary">Life is too short to be alone, too precious. Share it with a friend. Those great big fluffy clouds. We wash our brush with odorless thinner. There is immense joy in just watching - watching all the little creatures in nature.</p>
-                <a class="about-learn-more">Learn More</a>
-            </div>
-
-            <div>
-                <svg class="about-icon">
-                    <circle class="icon-outline" cy="50%" cx="50%" r="50%"></circle>
-                </svg>
-                <p class="about-title">Free</p>
-                <p class="about-summary">Life is too short to be alone, too precious. Share it with a friend. Those great big fluffy clouds. We wash our brush with odorless thinner. There is immense joy in just watching - watching all the little creatures in nature.</p>
-                <a class="about-learn-more">Learn More</a>
-            </div>
-
+            <div class="placeholder"></div>
         </div>
-
-        <div class="features"></div>
-
-        <div class="footer"></div>
-        <div class="dark-footer">
-            <div class="wrapper">
-                <p class="logo">{{ title }}</p>
-                <a href="/terms" class="footer-note">Terms</a>
-                <p class="footer-note">|</p>
-                <a href="/privacy" class="footer-note">Privacy</a>
-                <p class="footer-note">|</p>
-                <a href="/cookies" class="footer-note">Cookies</a>
-            </div>
-        </div>
-
-        <script src="{% static 'frontpage/bulk.js' %}"></script>
     </body>
 </html>

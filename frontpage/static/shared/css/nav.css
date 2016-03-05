@@ -17,27 +17,16 @@
 
 @import url(/static/shared/css/dropdown.css);
 
-/*
-This essential does nothing on small screens, apart
-from setting the display type to flex. The real point
-of this DIV becomes evident on larger screens.
-*/
-.wrapper{
-    width: 100%;
-    height: 100%;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    padding: 0 10px;
-    box-sizing: border-box;
-}
-
 /* Menu bar */
-.menu{
+.menu, .menu-wrapper{
     width: 100%;
     height: 40px;
-    background-color: #F5F5F5;
+    background-color: #FFFFFF;
     color: #1C87E5;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    box-sizing: border-box;
 }
 
 /* Nav elements */
@@ -47,30 +36,24 @@ of this DIV becomes evident on larger screens.
     padding: 0;
 }
 
-.menu-item,
-.sign-in,
-.username{
+.menu-item, .sign-in{
     padding: 3px;
     font-family: 'Source Sans Pro', sans-serif;
     font-weight: bold;
     font-size: 14px;
     list-style: none;
     color: #1C87E5;
-    transition: color 0.3s;
     cursor: pointer; /* This is needed for the More nav link */
     display: inline-block;
     vertical-align: middle;
 }
 
-.menu-item a,
-.sign-in,
-.username{
+.menu-item a, .sign-in{
     text-decoration: none;
     color: #1C87E5;
-    transition: color 0.3s;
 }
 
-.sign-in, .username{
+.sign-in, .user-info-container{
     margin-left: auto; /* Essentially float:right; for flexboxes */
 }
 
@@ -83,28 +66,29 @@ of this DIV becomes evident on larger screens.
     font-family: 'BebasKai-Regular';
     font-size: 30px;
     padding-right: 5px;
+    text-decoration: none;
+    color: #1C87E5;
 }
 
-/* Acts as a wrapper for the dropdown */
-.dropdown-container{
-    padding: 0;
-    padding-top: 15px;
+.user-image{
+    width: 38px;
+    height: 38px;
+    border-radius: 5px;
+    background-color: #EBEBEB;
+    margin-left: 8px;
 }
 
-/* Dropdown itself */
-.dropdown-container ul{
-    background-color: #F5F5F5;
-    list-style: none;
-    padding: 0;
-    min-width: 210px;
+.user-info-container{
+    text-align: right;
 }
 
-.dropdown-content{
-    padding: 8px;
-}
-
-.dropdown-content:hover{
-    background-color: #EDE8E8;
+.user-info-container a{
+    margin: 0;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: bold;
+    font-size: 14px;
+    text-decoration: none;
+    color: #1C87E5;
 }
 
 /* For landscape mobile phones and up */
@@ -116,19 +100,70 @@ of this DIV becomes evident on larger screens.
 
 /* For Desktops and some tablets only */
 @media screen and (min-width: 40.5em){
-    .wrapper{
-        max-width: 1500px;
+    /* Wraps Menu if necessary */
+    .menu-wrapper{
+        margin: 0 auto;
+        max-width: 1100px;
     }
 
     .menu{
-        height: 50px;
+        height: 58px;
     }
 
-    .menu-item, .sign-in, .username{
+    .menu-item,
+    .sign-in,
+    .user-info-container a{
         font-size: 16px;
     }
 
     .logo{
         font-size: 35px;
+    }
+
+    #more-drop .dropdown-container{
+        padding: 0;
+        padding-top: 40px;
+        cursor: default;
+        min-width: 220px;
+    }
+
+    #more-drop .dropdown-container ul{
+        background-color: #FFFFFF;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+
+    /* Acts as a wrapper for the dropdown */
+    #account-drop .dropdown-container{
+        padding: 0;
+        padding-top: 28px;
+        cursor: default;
+        right: -45px;
+        left: auto;
+        min-width: 250px;
+    }
+
+    /* Dropdown itself */
+    #account-drop .dropdown-container ul{
+        background-color: #FFFFFF;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+
+    #more-drop .dropdown-content a,
+    #account-drop .dropdown-content a{
+        font-family: 'Roboto Slab', sans-serif;
+        font-weight: bold;
+        font-size: 15px;
+        padding: 8px;
+        cursor: pointer;
+        display: inline-block;
+    }
+
+    #more-drop .dropdown-content:hover,
+    #account-drop .dropdown-content:hover{
+        background-color: #F7F7F7;
     }
 }

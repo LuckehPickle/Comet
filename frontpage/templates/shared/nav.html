@@ -22,34 +22,48 @@
 
 {% load staticfiles %}
 <div class="menu">
-    <div class="wrapper">
-        <div class="logo">Chatguard</div>
-        <nav role="navigation">
-            <ul id="nav-ul">
-                <li class="menu-item"><a href="/premium">Premium</a></li>
-                <li class="menu-item"><a href="/docs">Documentation</a></li>
-                <li class="menu-item"><a href="/about/changelog">Changelog</a></li>
+    {% if wrapped %}<div class="menu-wrapper">{% endif %}
+    <a href="{% url 'frontpage' %}" class="logo">Chatguard</a>
+    <nav role="navigation">
+        <ul id="nav-ul">
+            <li class="menu-item"><a href="">Premium</a></li>
+            <li class="menu-item"><a href="">News</a></li>
+            <li class="menu-item"><a href="">About</a></li>
+            <li class="menu-item"><a href="">Features</a></li>
 
-                <!-- More -->
-                <li class="menu-item">
-                    <p class="dropdown">More</p>
-                    <div class="dropdown-container">
-                        <ul>
-                            <li class="dropdown-content">Test</li>
-                            <li class="dropdown-content">Test</li>
-                        </ul>
-                    </div>
-                    {% comment 'Might not be necessary' %}
-                    <script src="{% static 'shared/js/dropdown.js' %}"></script>
-                    {% endcomment %}
-                </li>
-            </ul>
-        </nav>
+            <!-- More -->
+            <li class="menu-item dropdown" id="more-drop">
+                <a>More</a>
+                <div class="dropdown-container">
+                    <ul>
+                        <li class="dropdown-content"><a href="">Contact</a></li>
+                        <li class="dropdown-content"><a href="">Issue Tracker</a></li>
+                        <li class="dropdown-content"><a href="">Feature Request</a></li>
+                        <li class="dropdown-content"><a href="">Terms</a></li>
+                        <li class="dropdown-content"><a href="">Privacy</a></li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </nav>
 
-        {% if request.user.is_authenticated %}
-            <p class="username">{{ user.username }}</p>
-        {% else %}
-            <a class="sign-in" href="{% url 'login' %}">Sign In</a>
-        {% endif %}
-    </div>
+    {% if request.user.is_authenticated %}
+        <div class="user-info-container">
+            <a href="{% url 'messages' %}user/{{ user.username }}">{{ user.username }}</a>
+            <div class="dropdown" id="account-drop">
+                <a>My Account</a>
+                <div class="dropdown-container">
+                    <ul>
+                        <li class="dropdown-content"><a href="{% url 'messages' %}">Messages</a></li>
+                        <li class="dropdown-content"><a>Settings</a></li>
+                        <li class="dropdown-content"><a href="{% url 'logout' %}">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="user-image"></div>
+    {% else %}
+        <a class="sign-in" href="{% url 'login' %}">Sign In</a>
+    {% endif %}
+    {% if wrapped %}</div>{% endif %}
 </div>
