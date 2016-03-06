@@ -33,7 +33,7 @@
             <!-- More -->
             <li class="menu-item dropdown" id="more-drop">
                 <a>More</a>
-                <div class="dropdown-container">
+                <div class="dropdown-container" style="z-index:101;">
                     <ul>
                         <li class="dropdown-content"><a href="">Contact</a></li>
                         <li class="dropdown-content"><a href="">Issue Tracker</a></li>
@@ -50,25 +50,31 @@
         <div class="user-info-container">
             <a href="{% url 'messages' %}user/{{ user.username }}">{{ user.username }}</a>
             <p>{{ user_id }}</p>
-            {% comment 'improving' %}
-            <div class="dropdown" id="account-drop">
-                <a>My Account</a>
-                <div class="dropdown-container">
-                    <ul>
-                        <li class="dropdown-content"><a href="{% url 'messages' %}">Messages</a></li>
-                        <li class="dropdown-content"><a>Settings</a></li>
-                        <li class="dropdown-content"><a href="{% url 'logout' %}">Logout</a></li>
-                    </ul>
-                </div>
-            </div>
-            {% endcomment %}
         </div>
         <div class="user-image"></div>
 
-        <svg class="user-menu-icon" viewBox="0 0 240 240">
-            <path d="M30 180 H210 V160 H30 V180 M30 130 H210 V110 H30 V130 M30 60 V80 H210 V60 H30 z"></path>
-        </svg>
-        <script src="{% static 'shared/js/hamburger.js' %}"></script>
+        <div class="user-menu">
+            <!-- Menu Icon -->
+            <div class="user-menu-icon">
+                <svg class="_" viewBox="0 0 480 480">
+                    <path d="M408 96 a24 24 0 1 1 0 48 h-336 a24 24 0 1 1 0 -48"/>
+                    <path d="M408 216 a24 24 0 1 1 0 48 h-336 a24 24 0 1 1 0 -48"/>
+                    <path d="M408 336 A24 24 0 1 1 408 384 H72 A24 24 0 1 1 72 336"/>
+                </svg>
+            </div>
+            <button class="user-menu-trigger"></button>
+
+            <!-- Menu Dropdown -->
+            <div class="user-menu-dropdown">
+                <ul>
+                    <li><a href="{% url 'messages' %}">Messages</a></li>
+                    <li><a href="/settings">Settings</a></li>
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                </ul>
+            </div>
+            <div class="user-menu-overlay"></div>
+            <script src="{% static 'shared/js/hamburger.js' %}"></script>
+        </div>
     {% else %}
         <a class="sign-in" href="{% url 'login' %}">Sign In</a>
     {% endif %}
