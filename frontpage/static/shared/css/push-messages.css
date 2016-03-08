@@ -132,7 +132,7 @@ body{
 /* For Desktops and some tablets only */
 @media screen and (min-width: 40.5em){
     .pmessages{
-        top: 55px;
+        top: 60px;
         margin-right: 3px;
     }
 

@@ -36,29 +36,30 @@ body{
     min-height: 100px;
     background-color: #F5F5F5;
     text-align: center;
-    padding-top: 60px;
+    padding-top: 115px;
 }
 
 .jumbo p{
-    font-family: 'Roboto Slab', serif;
     margin: 0;
     margin-bottom: 10px;
 }
 
 .jumbo #head{
-    font-size: 45px;
-    color: #7986CB;
+    font-family: 'Bebas Kai';
+    font-size: 60px;
+    color: #1C87E5;
     text-transform: capitalize;
 }
 
 .jumbo #description{
+    font-family: 'Roboto Slab', serif;
     font-size: 20px;
     color: #757575;
-    margin-bottom: 25px;
+    margin-bottom: 30px;
 }
 
 .jumbo .btn-sheen{
-    margin-bottom: 70px;
+    margin-bottom: 80px;
 }
 
 .jumbo .placeholder{ /* TODO Remove in final ver */

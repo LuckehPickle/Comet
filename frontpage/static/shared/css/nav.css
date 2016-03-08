@@ -29,6 +29,11 @@
     box-sizing: border-box;
 }
 
+.menu{
+    position: fixed;
+    z-index: 100;
+}
+
 /* Nav elements */
 #nav-ul{
     margin: 0;
@@ -46,6 +51,14 @@
     cursor: pointer; /* This is needed for the More nav link */
     display: inline-block;
     vertical-align: middle;
+}
+
+.sign-in{
+    border-color: #1C87E5;
+    border-radius: 4px;
+    border-width: 2px;
+    border-style: solid;
+    padding: 3px 12px;
 }
 
 .menu-item a, .sign-in{
@@ -107,11 +120,23 @@
     left: inherit;
 }
 
-.user-menu-icon ._{
-    height: inherit;
-    width: inherit;
-    padding: 3px;
-    box-sizing: border-box;
+/* TODO Fix this being shite. */
+.menu-icon-inner,
+.menu-icon-inner::before,
+.menu-icon-inner::after{
+    position: absolute;
+    background-color: #292929;
+    width: 38px;
+    height: 4px;
+    border-radius: 4px;
+}
+
+.menu-icon-inner::after{
+    top: -10px;
+}
+
+.menu-icon-inner::before{
+    bottom: -10px;
 }
 
 .user-menu-trigger{
@@ -141,22 +166,39 @@
 .user-menu-dropdown ul{
     margin: 0;
     text-align: right;
+    box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.1);
+    padding: 0;
 }
 
 .user-menu-dropdown li{
     background-color: #FFFFFF;
     list-style: none;
-    padding: 8px;
     min-width: 250px;
+    border-bottom-color: #F7F7F7;
+    border-bottom-style: solid;
+    border-bottom-width: thin;
 }
 
 .user-menu-dropdown li:hover{
     background-color: #F7F7F7;
-    cursor: pointer;
 }
+
+/*.user-menu-dropdown li:nth-child(even){
+    background-color: #F7F7F7;
+}*/
 
 .user-menu-dropdown li a{
     text-decoration: none;
+    font-family: 'Roboto Slab', sans-serif;
+    font-weight: bold;
+    font-size: 15px;
+    color: #1C87E5;
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    padding: 8px;
+    padding-right: 12px;
+    box-sizing: border-box;
 }
 
 .user-menu-overlay{
@@ -204,7 +246,7 @@
         padding: 0;
         padding-top: 40px;
         cursor: default;
-        min-width: 220px;
+        min-width: 250px;
     }
 
     #more-drop .dropdown-container ul{
@@ -212,38 +254,31 @@
         padding: 0;
         margin: 0;
         list-style: none;
+        box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.1);
     }
 
-    /* Acts as a wrapper for the dropdown */
-    #account-drop .dropdown-container{
-        padding: 0;
-        padding-top: 28px;
-        cursor: default;
-        right: -45px;
-        left: auto;
-        min-width: 250px;
-    }
-
-    /* Dropdown itself */
-    #account-drop .dropdown-container ul{
-        background-color: #FFFFFF;
-        padding: 0;
-        margin: 0;
-        list-style: none;
-    }
-
-    #more-drop .dropdown-content a,
-    #account-drop .dropdown-content a{
+    #more-drop .dropdown-content a{
         font-family: 'Roboto Slab', sans-serif;
         font-weight: bold;
         font-size: 15px;
         padding: 8px;
         cursor: pointer;
         display: inline-block;
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+        padding: 8px;
+        padding-left: 14px;
+        box-sizing: border-box;
     }
 
-    #more-drop .dropdown-content:hover,
-    #account-drop .dropdown-content:hover{
+    #more-drop .dropdown-content{
+        border-bottom-color: #F7F7F7;
+        border-bottom-style: solid;
+        border-bottom-width: thin;
+    }
+
+    #more-drop .dropdown-content:hover{
         background-color: #F7F7F7;
     }
 }

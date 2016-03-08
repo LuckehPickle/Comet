@@ -56,19 +56,16 @@
         <div class="user-menu">
             <!-- Menu Icon -->
             <div class="user-menu-icon">
-                <svg class="_" viewBox="0 0 480 480">
-                    <path d="M408 96 a24 24 0 1 1 0 48 h-336 a24 24 0 1 1 0 -48"/>
-                    <path d="M408 216 a24 24 0 1 1 0 48 h-336 a24 24 0 1 1 0 -48"/>
-                    <path d="M408 336 A24 24 0 1 1 408 384 H72 A24 24 0 1 1 72 336"/>
-                </svg>
+                <span class="menu-icon-inner"></span>
             </div>
             <button class="user-menu-trigger"></button>
 
             <!-- Menu Dropdown -->
             <div class="user-menu-dropdown">
                 <ul>
-                    <li><a href="{% url 'messages' %}">Messages</a></li>
-                    <li><a href="/settings">Settings</a></li>
+                    <li><a href="{% url 'messages' %}">Open Messages</a></li>
+                    <li><a href="/settings">Account Settings</a></li>
+                    {% if not request.user.is_verified %}<li><a href="">Send Verification Email</a></li>{% endif %}
                     <li><a href="{% url 'logout' %}">Logout</a></li>
                 </ul>
             </div>

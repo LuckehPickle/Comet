@@ -17,10 +17,6 @@
 # https://docs.djangoproject.com/en/1.9/topics/http/urls/
 */
 
-body{
-    overflow-x: hidden;
-}
-
 /* Main Button */
 .btn-sheen{
     font-family: 'Source Sans Pro', sans-serif;
