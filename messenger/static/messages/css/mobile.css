@@ -1,5 +1,5 @@
 /*
-# [Messages] MAIN.CSS - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
+# [Messages] MOBILE.CSS - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
 # Powered by Django (https://www.djangoproject.com/)
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +13,6 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
-# TODO Set register and login forms input font to Roboto Condensed
 */
 
 /* Fonts */
@@ -27,6 +26,57 @@
 
 body{
     margin: 0;
-    background-color: #F5F5F5;
+    background-color: #F1F1F1;
     overflow-x: hidden;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
+.menu{
+    position: relative;
+    display: none;
+}
+
+.toolbar{
+    display: none;
+}
+
+.friends-list{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -100%;
+    width: 100%;
+    background-color: blue;
+}
+
+.chat-area{
+    position: absolute;
+    top: 55px; /* TODO Adjust for menu */
+    bottom: 0;
+    left: 0;
+    right: 0;
+    /*background-color: red;*/
+    text-align: center;
+}
+
+.chat-area::after{
+    content: "This screen size is currently not supported. Sorry about that.";
+    font-family: "Roboto Slab", sans-serif;
+}
+
+.info-area{
+    display: none;
+}
+
+.toolbar-right{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: -100%;
+    width: 100%;
+    background-color: blue;
 }

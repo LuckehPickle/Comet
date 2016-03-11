@@ -72,3 +72,22 @@ body{
 .col-ratio-1{
     flex-grow: 12;
 }
+
+.menu-icon-inner,
+.menu-icon-inner::before,
+.menu-icon-inner::after{
+    position: absolute;
+    top: 50%;
+    background-color: #292929;
+    width: 38px;
+    height: 4px;
+    border-radius: 4px;
+}
+
+.menu-icon-inner::after{
+    top: calc(50% - 10px);
+}
+
+.menu-icon-inner::before{
+    top: calc(50% + 10px);
+}

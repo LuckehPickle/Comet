@@ -95,6 +95,7 @@ class User(AbstractBaseUser):
     is_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_super_user = models.BooleanField(default=False)
+    is_premium = models.BooleanField(default=False)
 
     objects = UserManager() # Reference to the UserManager class above.
 

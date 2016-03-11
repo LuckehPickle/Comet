@@ -21,7 +21,8 @@
     <head>
         <title>{{ title }}</title>
         {% load staticfiles %}
-        <link href="{% static 'messages/main.css' %}" type="text/css" rel="stylesheet">
+        <link href="{% static 'messages/css/mobile.css' %}" type="text/css" rel="stylesheet" media="screen and (max-width: 40.5em), handheld">
+        <link href="{% static 'messages/css/desktop.css' %}" type="text/css" rel="stylesheet" media="screen and (min-width: 40.5em)">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
         <link rel="icon" type="image/ico" href="{% static 'shared/favicon.ico' %}">
@@ -31,5 +32,20 @@
         <script src="{% static 'shared/js/mo.min.js' %}"></script>
         {% include 'shared/push-messages.min.html' %}
         {% include 'shared/nav.html' %}
+
+        <!-- Toolbar -->
+        <div class="toolbar"></div>
+
+        <!-- Friends -->
+        <div class="friends-list"></div>
+
+        <!-- Chat Area -->
+        <div class="chat-area"></div>
+
+        <!-- Info Area -->
+        <div class="info-area"></div>
+
+        <!-- Toolbar Right -->
+        <div class="toolbar-right"></div>
     </body>
 </html>
