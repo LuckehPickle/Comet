@@ -23,6 +23,7 @@
 /* Stylesheets */
 @import url(/static/shared/css/push-messages.css);
 @import url(/static/shared/css/nav.css);
+@import url(/static/shared/css/footer.css);
 @import url(/static/frontend_utils/css/util-btn-sheen.css);
 
 body{
@@ -31,12 +32,18 @@ body{
     overflow-x: hidden;
 }
 
+.wrapper{
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
 .jumbo{
     width: 100%;
     min-height: 100px;
-    background-color: #F5F5F5;
+    background: linear-gradient(#575c8b, #454A7F);
     text-align: center;
-    padding-top: 115px;
+    padding-top: 60px;
 }
 
 .jumbo p{
@@ -47,30 +54,33 @@ body{
 .jumbo #head{
     font-family: 'Bebas Kai';
     font-size: 60px;
-    color: #1C87E5;
+    color: #FEFEFE;
     text-transform: capitalize;
 }
 
 .jumbo #description{
     font-family: 'Roboto Slab', serif;
     font-size: 20px;
-    color: #757575;
+    color: #FEFEFE;
     margin-bottom: 30px;
 }
 
 .jumbo .btn-sheen{
+    background-color: #7986CB;
     margin-bottom: 80px;
 }
 
 .jumbo .placeholder{ /* TODO Remove in final ver */
     margin: 0 auto;
-    width: 1050px;
+    width: 100%;
     height: 475px;
     background-color: #F2F2F2;
     border-color: #E5E5E5;
     border-style: solid;
     border-bottom-style: none;
     border-width: 2px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
 }
 
 .noselect{
@@ -81,4 +91,33 @@ body{
     -ms-user-select: none;       /* IE/Edge */
     user-select: none;           /* non-prefixed version, currently
                                     not supported by any browser */
+}
+
+.about{
+    padding: 120px 0;
+    font-family: 'Source Sans Pro', sans-serif;
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.about .topic{
+    background-color: #F2F2F2;
+    width: 350px;
+    min-height: 500px;
+    border-radius: 4px;
+}
+
+.features{
+    background-color: #F2F2F2;
+    width: 100%;
+    padding: 120px 0;
+}
+
+.features .table{
+    width: 100%;
+    background-color: #EBEBEB;
+    border-radius: 4px;
+    height: 800px;
 }

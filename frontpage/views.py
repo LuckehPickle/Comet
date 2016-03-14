@@ -28,6 +28,5 @@ def index(request):
         user_id = str(request.user.user_id)[:8]
     return render(request, "frontpage/index.html", {
         "title": cr_config.TITLE,
-        "wrapped": True,
         "user_id": user_id,
     })

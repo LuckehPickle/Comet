@@ -13,74 +13,97 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
+
+   TODO Mobile Support
 */
 
 @import url(/static/shared/css/dropdown.css);
 
 /* Menu bar */
-.menu, .menu-wrapper{
+.menu{
+    position: relative; /* Ensures that box-shadow is shown */
     width: 100%;
-    height: 40px;
-    background-color: #FFFFFF;
-    color: #1C87E5;
-    display: flex;
-    align-items: center;
+    height: 70px;
+    background-color: #3B3B3B;
+    color: #EBEBEB;
     padding: 0 12px;
     box-sizing: border-box;
+    /*box-shadow: 0px 8px 0px rgba(0, 0, 0, 0.15);*/
+    z-index: 100;
 }
 
-.menu{
-    position: fixed;
-    z-index: 100;
+/* Wraps Menu */
+.menu-wrapper{
+    margin: 0 auto;
+    height: 100%;
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    align-items: center;
 }
 
 /* Nav elements */
 #nav-ul{
     margin: 0;
-    margin-left: 10px; /* Seperate nav elements from the logo */
+    margin-left: 12px; /* Seperate nav elements from the logo */
     padding: 0;
+    display: flex;
+    list-style: none;
 }
 
-.menu-item, .sign-in{
-    padding: 3px;
+.menu-item a{
+    padding: 5px;
     font-family: 'Source Sans Pro', sans-serif;
-    font-weight: bold;
-    font-size: 14px;
-    list-style: none;
-    color: #1C87E5;
-    cursor: pointer; /* This is needed for the More nav link */
+    font-size: 16px;
     display: inline-block;
-    vertical-align: middle;
+    text-decoration: none;
+    color: #EBEBEB;
+    transition: color 0.3s;
+}
+
+.menu-item a:hover{
+    color: #F1F1F1;
 }
 
 .sign-in{
-    border-color: #1C87E5;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 16px;
+    display: inline-block;
+    text-decoration: none;
+    color: #EBEBEB;
+    border-color: #EBEBEB;
     border-radius: 4px;
     border-width: 2px;
     border-style: solid;
-    padding: 3px 12px;
+    padding: 6px 17px;
+    transition: background-color 0.3s, color 0.3s;
 }
 
-.menu-item a, .sign-in{
-    text-decoration: none;
-    color: #1C87E5;
+.sign-in:hover{
+    background-color: #EBEBEB;
+    color: #333333;
 }
 
 .sign-in, .user-info-container{
     margin-left: auto; /* Essentially float:right; for flexboxes */
 }
 
-.menu-item p{
-    margin: 0;
-    display: inline-block;
-}
-
 .logo{
     font-family: 'BebasKai-Regular';
-    font-size: 30px;
+    font-size: 35px;
     padding-right: 5px;
     text-decoration: none;
-    color: #1C87E5;
+    color: #EBEBEB;
+}
+
+.logo::before{
+    content: "";
+    width: 26px;
+    height: 26px;
+    border-radius: 35px;
+    background-color: #EBEBEB;
+    display: inline-block;
+    margin-right: 8px;
 }
 
 .user-image{
@@ -98,10 +121,9 @@
 .user-info-container a, .user-info-container p{
     margin: 0;
     font-family: 'Source Sans Pro', sans-serif;
-    font-weight: bold;
-    font-size: 14px;
+    font-size: 16px;
     text-decoration: none;
-    color: #1C87E5;
+    color: white;
 }
 
 .user-menu{
@@ -119,14 +141,13 @@
     left: inherit;
 }
 
-/* TODO Fix this being shite. */
 .menu-icon-inner,
 .menu-icon-inner::before,
 .menu-icon-inner::after{
     content: "";
     position: relative;
     top: calc(50% - 2px);
-    background-color: #5A5A5A;
+    background-color: #EBEBEB;
     width: 25px;
     height: 3px;
     border-radius: 40px;
@@ -161,7 +182,7 @@
 
 .user-menu-dropdown{
     position: absolute;
-    top: 48px;
+    top: 54px;
     right: 0;
     display: none;
     z-index: 101;
@@ -175,28 +196,20 @@
 }
 
 .user-menu-dropdown li{
-    background-color: #FFFFFF;
+    background-color: #454545;
     list-style: none;
     min-width: 250px;
-    border-bottom-color: #F7F7F7;
-    border-bottom-style: solid;
-    border-bottom-width: thin;
 }
 
 .user-menu-dropdown li:hover{
-    background-color: #F7F7F7;
+    background-color: #4F4F4F;
 }
-
-/*.user-menu-dropdown li:nth-child(even){
-    background-color: #F7F7F7;
-}*/
 
 .user-menu-dropdown li a{
     text-decoration: none;
-    font-family: 'Roboto Slab', sans-serif;
-    font-weight: bold;
-    font-size: 15px;
-    color: #1C87E5;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 16px;
+    color: #EBEBEB;
     display: inline-block;
     width: 100%;
     height: 100%;
@@ -207,82 +220,21 @@
 
 .user-menu-overlay{
     position: fixed;
-    top: 58px;
+    top: 70px;
     left: 0;
     right: 0;
     bottom: 0;
     z-index: 100;
     display: none;
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.2);
 }
 
 /* For landscape mobile phones and up */
 @media screen and (min-width: 28.75em){
-    .menu{
-        height: 45px;
-    }
+
 }
 
 /* For Desktops and some tablets only */
 @media screen and (min-width: 40.5em){
-    /* Wraps Menu if necessary */
-    .menu-wrapper{
-        margin: 0 auto;
-        max-width: 1100px;
-    }
 
-    .menu{
-        height: 58px;
-    }
-
-    .menu-item,
-    .sign-in,
-    .user-info-container a,
-    .user-info-container p{
-        font-size: 16px;
-    }
-
-    .logo{
-        font-size: 35px;
-    }
-
-    #more-drop .dropdown-container{
-        padding: 0;
-        padding-top: 40px;
-        cursor: default;
-        min-width: 250px;
-    }
-
-    #more-drop .dropdown-container ul{
-        background-color: #FFFFFF;
-        padding: 0;
-        margin: 0;
-        list-style: none;
-        box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    #more-drop .dropdown-content a{
-        font-family: 'Roboto Slab', sans-serif;
-        font-weight: bold;
-        font-size: 15px;
-        padding: 8px;
-        cursor: pointer;
-        display: inline-block;
-        display: inline-block;
-        width: 100%;
-        height: 100%;
-        padding: 8px;
-        padding-left: 14px;
-        box-sizing: border-box;
-    }
-
-    #more-drop .dropdown-content{
-        border-bottom-color: #F7F7F7;
-        border-bottom-style: solid;
-        border-bottom-width: thin;
-    }
-
-    #more-drop .dropdown-content:hover{
-        background-color: #F7F7F7;
-    }
 }

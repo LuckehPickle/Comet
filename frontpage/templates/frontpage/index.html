@@ -34,14 +34,35 @@
 
         <!-- Jumbo -->
         <div class="jumbo">
-            <p id="head" class="noselect">Private, Open Source Messaging.</p>
-            <p id="description" class="noselect">Free instant messaging, built for everyone - the way it should be.</p>
-            {% if request.user.is_authenticated %}
-                <a href="{% url 'messages' %}" class="btn-sheen noselect">Go to Messenger</a>
-            {% else %}
-                <a href="{% url 'register' %}" class="btn-sheen noselect">Join Chatguard</a>
-            {% endif %}
-            <div class="placeholder"></div>
+            <div class="wrapper">
+                <p id="head">Private, Open Source Messaging.</p>
+                <p id="description">Free instant messaging, built for everyone - the way it should be.</p>
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'messages' %}" class="btn-sheen noselect">Open Messenger</a>
+                {% else %}
+                    <a href="{% url 'register' %}" class="btn-sheen noselect">Get started.</a>
+                {% endif %}
+                <div class="placeholder"></div>
+            </div>
         </div>
+
+        <!-- About -->
+        <div class="wrapper">
+            <div class="about">
+                <div class="topic"></div>
+                <div class="topic"></div>
+                <div class="topic"></div>
+            </div>
+        </div>
+
+        <!-- Features -->
+        <div class="features">
+            <div class="wrapper">
+                <div class="table"></div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        {% include 'shared/footer.html' %}
     </body>
 </html>

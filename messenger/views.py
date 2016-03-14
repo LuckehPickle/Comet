@@ -31,7 +31,6 @@ def index(request):
         user_id = str(request.user.user_id)[:8]
     return render(request, "messages/index.html", {
         "title": (cr_config.TITLE_FORMAT % "Messages"),
-        "wrapped": False,
         "user_id": str(request.user.user_id)[:8],
     })
 

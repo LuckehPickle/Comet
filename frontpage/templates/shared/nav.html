@@ -21,59 +21,46 @@
 
 {% load staticfiles %}
 <div class="menu">
-    {% if wrapped %}<div class="menu-wrapper">{% endif %}
-    <a href="{% url 'frontpage' %}" class="logo">Chatguard</a>
-    <nav role="navigation">
-        <ul id="nav-ul">
-            <li class="menu-item"><a href="">Premium</a></li>
-            <li class="menu-item"><a href="">News</a></li>
-            <li class="menu-item"><a href="">About</a></li>
-            <li class="menu-item"><a href="">Features</a></li>
+    <div class="menu-wrapper">
+        <a href="{% url 'frontpage' %}" class="logo">Chatguard</a>
+        <nav role="navigation">
+            <ul id="nav-ul">
+                <li class="menu-item"><a href="">Premium</a></li>
+                <li class="menu-item"><a href="">News</a></li>
+                <li class="menu-item"><a href="">Docs</a></li>
+                <li class="menu-item"><a href="">Features</a></li>
+                <li class="menu-item"><a href="https://github.com/LuckehPickle/chat">Source</a></li>
+            </ul>
+        </nav>
 
-            <!-- More -->
-            <li class="menu-item dropdown" id="more-drop">
-                <a>More</a>
-                <div class="dropdown-container" style="z-index:101;">
+        {% if request.user.is_authenticated %}
+            <div class="user-info-container">
+                <a href="{% url 'messages' %}user/{{ user.username }}">{{ user.username }}</a>
+                <p>{{ user_id }}</p>
+            </div>
+            <div class="user-image"></div>
+
+            <div class="user-menu">
+                <!-- Menu Icon -->
+                <div class="user-menu-icon">
+                    <div class="menu-icon-inner"></div>
+                </div>
+                <button class="user-menu-trigger"></button>
+
+                <!-- Menu Dropdown -->
+                <div class="user-menu-dropdown">
                     <ul>
-                        <li class="dropdown-content"><a href="">Contact</a></li>
-                        <li class="dropdown-content"><a href="">Issue Tracker</a></li>
-                        <li class="dropdown-content"><a href="">Feature Request</a></li>
-                        <li class="dropdown-content"><a href="">Terms</a></li>
-                        <li class="dropdown-content"><a href="">Privacy</a></li>
+                        <li><a href="{% url 'messages' %}">Open Messages</a></li>
+                        <li><a href="/settings">Account Settings</a></li>
+                        {% if not request.user.is_verified %}<li><a href="">Send Verification Email</a></li>{% endif %}
+                        <li><a href="{% url 'logout' %}">Logout</a></li>
                     </ul>
                 </div>
-            </li>
-        </ul>
-    </nav>
-
-    {% if request.user.is_authenticated %}
-        <div class="user-info-container">
-            <a href="{% url 'messages' %}user/{{ user.username }}">{{ user.username }}</a>
-            <p>{{ user_id }}</p>
-        </div>
-        <div class="user-image"></div>
-
-        <div class="user-menu">
-            <!-- Menu Icon -->
-            <div class="user-menu-icon">
-                <div class="menu-icon-inner"></div>
+                <div class="user-menu-overlay"></div>
+                <script src="{% static 'shared/js/hamburger.js' %}"></script>
             </div>
-            <button class="user-menu-trigger"></button>
-
-            <!-- Menu Dropdown -->
-            <div class="user-menu-dropdown">
-                <ul>
-                    <li><a href="{% url 'messages' %}">Open Messages</a></li>
-                    <li><a href="/settings">Account Settings</a></li>
-                    {% if not request.user.is_verified %}<li><a href="">Send Verification Email</a></li>{% endif %}
-                    <li><a href="{% url 'logout' %}">Logout</a></li>
-                </ul>
-            </div>
-            <div class="user-menu-overlay"></div>
-            <script src="{% static 'shared/js/hamburger.js' %}"></script>
-        </div>
-    {% else %}
-        <a class="sign-in" href="{% url 'login' %}">Sign In</a>
-    {% endif %}
-    {% if wrapped %}</div>{% endif %}
+        {% else %}
+            <a class="sign-in" href="{% url 'login' %}">Sign In</a>
+        {% endif %}
+    </div>
 </div>
