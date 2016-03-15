@@ -26,35 +26,22 @@
 @import url(/static/shared/css/footer.css);
 @import url(/static/shared/css/util-btn-sheen.css);
 
+/* Common Styles */
+
 body{
     margin: 0;
     background-color: #FFFFFF;
     overflow-x: hidden;
 }
 
-.beta{
-    width: 100%;
-    height: 60px;
-    /*background-color: #FF5722;*/
-    background-color: #40689E;
-    color: #EBEBEB;
-    font-family: 'Source Sans Pro', sans-serif;
-}
-
-.beta .material-icons{
-    margin-right: 8px;
-}
-
-.beta-item{
-    margin-right: 4px;
-    color: #EBEBEB;
-}
-
-.beta .wrapper{
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    height: 100%;
+.noselect{
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none;   /* Chrome/Safari/Opera */
+    -khtml-user-select: none;    /* Konqueror */
+    -moz-user-select: none;      /* Firefox */
+    -ms-user-select: none;       /* IE/Edge */
+    user-select: none;           /* non-prefixed version, currently
+                                    not supported by any browser */
 }
 
 .wrapper{
@@ -99,54 +86,95 @@ body{
     box-shadow: 0px 5px 0px rgba(0, 0, 0, 0.1);
 }
 
-.jumbo .placeholder{ /* TODO Remove in final ver */
-    margin: 0 auto;
+.beta{
     width: 100%;
-    height: 475px;
-    background-color: #F2F2F2;
-    border-color: #E5E5E5;
-    border-style: solid;
-    border-bottom-style: none;
-    border-width: 2px;
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px;
-}
-
-.noselect{
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none;   /* Chrome/Safari/Opera */
-    -khtml-user-select: none;    /* Konqueror */
-    -moz-user-select: none;      /* Firefox */
-    -ms-user-select: none;       /* IE/Edge */
-    user-select: none;           /* non-prefixed version, currently
-                                    not supported by any browser */
-}
-
-.about{
-    padding: 120px 0;
+    height: 60px;
+    /*background-color: #FF5722;*/
+    background-color: #40689E;
+    color: #EBEBEB;
     font-family: 'Source Sans Pro', sans-serif;
+}
+
+.beta .material-icons{
+    margin-right: 8px;
+}
+
+.beta-item{
+    margin-right: 4px;
+    color: #EBEBEB;
+}
+
+.beta .wrapper{
     display: flex;
-    align-items: stretch;
-    justify-content: space-between;
+    align-items: center;
     flex-wrap: wrap;
+    height: 100%;
 }
 
-.about .topic{
-    background-color: #F2F2F2;
-    width: 350px;
-    min-height: 500px;
-    border-radius: 4px;
+/* For mobile phones and other small devices */
+@media screen and (max-width: 40.5em){
+    .jumbo{
+        padding: 0px 15px; /* Move elems away from edge of screen */
+        padding-top: 120px; /* Need to make room for the fixed position menu */
+        box-sizing: border-box;
+    }
+
+    .jumbo .placeholder{
+        display: none;
+    }
+
+    .beta .wrapper{
+        padding: 0px 15px;
+        box-sizing: border-box;
+        flex-wrap: nowrap;
+    }
+
+    .beta .wrapper a{
+        display: none;
+    }
 }
 
-.features{
-    background-color: #F2F2F2;
-    width: 100%;
-    padding: 120px 0;
-}
+/* For Desktops and some tablets only */
+@media screen and (min-width: 40.5em){
+    .jumbo .placeholder{ /* TODO Remove in final ver */
+        margin: 0 auto;
+        width: 100%;
+        height: 475px;
+        background-color: #F2F2F2;
+        border-color: #E5E5E5;
+        border-style: solid;
+        border-bottom-style: none;
+        border-width: 2px;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+    }
 
-.features .table{
-    width: 100%;
-    background-color: #EBEBEB;
-    border-radius: 4px;
-    height: 800px;
+    .about{
+        padding: 120px 0;
+        font-family: 'Source Sans Pro', sans-serif;
+        display: flex;
+        align-items: stretch;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+
+    .about .topic{
+        background-color: #F2F2F2;
+        width: 350px;
+        min-height: 500px;
+        border-radius: 4px;
+    }
+
+    .features{
+        background-color: #F2F2F2;
+        width: 100%;
+        padding: 120px 0;
+    }
+
+    .features .table{
+        width: 100%;
+        background-color: #EBEBEB;
+        border-radius: 4px;
+        height: 800px;
+    }
 }

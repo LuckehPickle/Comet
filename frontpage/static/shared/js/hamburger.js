@@ -15,7 +15,6 @@
    limitations under the License.
 
  TODO Animate each path
- TODO Remove when clicking elsewhere
 */
 
 // Variables

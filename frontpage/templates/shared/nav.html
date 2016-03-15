@@ -22,16 +22,18 @@
 {% load staticfiles %}
 <div class="menu">
     <div class="menu-wrapper">
-        <a href="{% url 'frontpage' %}" class="logo">Chatguard</a>
-        <nav role="navigation">
-            <ul id="nav-ul">
+        <a href="{% url 'frontpage' %}" class="logo">Chatguard</a> <!-- Logo -->
+        <div class="mobile-nav-trigger"><div></div></div> <!-- Mobile Nav Trigger -->
+        <nav role="navigation"> <!-- Nav Menu -->
+            <ul class="nav-ul">
                 <li class="menu-item"><a href="/premium">Premium</a></li>
-                <li class="menu-item"><a href="/docs/news">News</a></li>
+                <li class="menu-item"><a href="/docs/news">Changelog</a></li>
                 <li class="menu-item"><a href="/docs">Docs</a></li>
                 <li class="menu-item"><a href="/features">Features</a></li>
                 <li class="menu-item"><a href="https://github.com/LuckehPickle/chat">Source</a></li>
             </ul>
         </nav>
+        <script src="{% static 'shared/js/nav.js' %}"></script>
 
         {% if request.user.is_authenticated %}
             <div class="user-info-container">
