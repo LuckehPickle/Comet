@@ -26,7 +26,6 @@ socketio.sdjango.autodiscover()
 # Other Imports
 from accounts import views as accounts
 from frontpage import views as front
-from frontend_utils import views as frontend_utils
 
 # URL Patterns
 urlpatterns = [
@@ -37,6 +36,5 @@ urlpatterns = [
     url(r'^messages/', include("messenger.urls")),
     url(r'^chat-test/', include("chat_test.urls")),
     url(r'^socket\.io/', include(socketio.sdjango.urls)),
-    url(r'^front', frontend_utils.index, name="front"),
     url(r'^admin/', admin.site.urls),
 ]
