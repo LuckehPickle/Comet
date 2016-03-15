@@ -32,6 +32,31 @@ body{
     overflow-x: hidden;
 }
 
+.beta{
+    width: 100%;
+    height: 60px;
+    /*background-color: #FF5722;*/
+    background-color: #40689E;
+    color: #EBEBEB;
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+.beta .material-icons{
+    margin-right: 8px;
+}
+
+.beta-item{
+    margin-right: 4px;
+    color: #EBEBEB;
+}
+
+.beta .wrapper{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    height: 100%;
+}
+
 .wrapper{
     width: 100%;
     max-width: 1200px;
@@ -41,9 +66,12 @@ body{
 .jumbo{
     width: 100%;
     min-height: 100px;
-    background: linear-gradient(#575c8b, #454A7F);
+    background-color: #40689E;
+    background-image: url(/static/shared/img/jumbo-background.png);
+    background-size: cover;
     text-align: center;
-    padding-top: 60px;
+    padding-top: 70px;
+    box-shadow: inset 0px 10px 0px rgba(0, 0, 0, 0.15);
 }
 
 .jumbo p{
@@ -66,8 +94,9 @@ body{
 }
 
 .jumbo .btn-sheen{
-    background-color: #7986CB;
+    background-color: #6D92C4;
     margin-bottom: 80px;
+    box-shadow: 0px 5px 0px rgba(0, 0, 0, 0.1);
 }
 
 .jumbo .placeholder{ /* TODO Remove in final ver */

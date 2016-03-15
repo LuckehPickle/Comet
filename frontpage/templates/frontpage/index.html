@@ -40,9 +40,19 @@
                 {% if request.user.is_authenticated %}
                     <a href="{% url 'messages' %}" class="btn-sheen noselect">Open Messenger</a>
                 {% else %}
-                    <a href="{% url 'register' %}" class="btn-sheen noselect">Get started.</a>
+                    <a href="{% url 'register' %}" class="btn-sheen noselect">Get started with ChatGuard</a>
                 {% endif %}
                 <div class="placeholder"></div>
+            </div>
+        </div>
+
+
+        <!-- Beta Warning -->
+        <div class="beta">
+            <div class="wrapper">
+                <i class="material-icons beta-item">warning</i>
+                <p class="beta-item">This project is still in development.</p>
+                <a class="beta-item" href="/beta">Find out what this means for you.</a>
             </div>
         </div>
 
@@ -56,7 +66,7 @@
         </div>
 
         <!-- Features -->
-        <div class="features">
+        <div class="features" id="features">
             <div class="wrapper">
                 <div class="table"></div>
             </div>
