@@ -3,3 +3,7 @@ This is my first major project, so please excuse any major mistakes in the sourc
 
 ![Indev Screenshot](http://i.imgur.com/yrnpHVP.png)
 ![Indev Screenshot](http://i.imgur.com/q76R5F0.png)
+
+# TODO
+* Think of a name. Uuuuggh
+* Prepare for Closed Beta
