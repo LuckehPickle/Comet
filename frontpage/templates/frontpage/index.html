@@ -14,13 +14,13 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 
- TODO Improve Mobile Styles for below beta warning
+ TODO STARS! Make an animated stars jumbo to compare with current jumbo
  Looking for source code? Check it out here: https://github.com/LuckehPickle/chat
 -->
 <!DOCTYPE html>
 <html>
     <head>
-        <title>{{ title }}</title>
+        <title>{{ title }} | Private, Open Source Messaging</title>
         {% load staticfiles %}
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
@@ -41,7 +41,7 @@
                 {% if request.user.is_authenticated %}
                     <a href="{% url 'messages' %}" class="btn-sheen noselect">Open Messenger</a>
                 {% else %}
-                    <a href="{% url 'register' %}" class="btn-sheen noselect">Get started with ChatGuard</a>
+                    <a href="{% url 'register' %}" class="btn-sheen noselect">Get started with Comet</a>
                 {% endif %}
                 <div class="placeholder"></div>
             </div>

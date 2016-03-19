@@ -22,15 +22,24 @@
 {% load staticfiles %}
 <div class="menu">
     <div class="menu-wrapper">
-        <a href="{% url 'frontpage' %}" class="logo">Chatguard</a> <!-- Logo -->
+        <a href="{% url 'frontpage' %}" class="logo"><img src="{% static 'shared/img/logo.svg' %}"></img></a> <!-- Logo -->
         <div class="mobile-nav-trigger"><div></div></div> <!-- Mobile Nav Trigger -->
         <nav role="navigation"> <!-- Nav Menu -->
             <ul class="nav-ul">
-                <li class="menu-item"><a href="/premium">Premium</a></li>
-                <li class="menu-item"><a href="/docs/news">Changelog</a></li>
-                <li class="menu-item"><a href="/docs">Docs</a></li>
-                <li class="menu-item"><a href="/features">Features</a></li>
-                <li class="menu-item"><a href="https://github.com/LuckehPickle/chat">Source</a></li>
+                <li><a href="/premium">Premium</a></li>
+                <li><a href="/docs/news">Changelog</a></li>
+                <li><a href="/docs">Docs</a></li>
+                <li><a href="/features">Features</a></li>
+                <li><a href="https://github.com/LuckehPickle/chat">Source</a></li>
+                <div class="mobile-button-wrapper">
+                    {% if request.user.is_authenticated %}
+                        <a href="{% url 'messages' %}" id="up">Open Messenger</a>
+                        <a href="{% url 'logout' %}" id="in">Sign Out</a>
+                    {% else %}
+                        <a href="{% url 'register' %}" id="up">Sign Up</a>
+                        <a href="{% url 'login' %}" id="in">Sign In</a>
+                    {% endif %}
+                </div>
             </ul>
         </nav>
         <script src="{% static 'shared/js/nav.js' %}"></script>
@@ -42,6 +51,7 @@
             </div>
             <div class="user-image"></div>
 
+            {% comment 'deprecating' %} <!-- TODO Some kind of messages/settings/logout nav -->
             <div class="user-menu">
                 <!-- Menu Icon -->
                 <div class="user-menu-icon">
@@ -61,6 +71,9 @@
                 <div class="user-menu-overlay"></div>
                 <script src="{% static 'shared/js/hamburger.js' %}"></script>
             </div>
+            <i class="material-icons">chat</i>
+            <i class="material-icons">settings</i>
+            {% endcomment %}
         {% else %}
             <a class="sign-in" href="{% url 'login' %}">Sign In</a>
         {% endif %}

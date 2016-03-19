@@ -52,7 +52,6 @@ body{
 
 .jumbo{
     width: 100%;
-    min-height: 100px;
     background-color: #40689E;
     background-image: url(/static/shared/img/jumbo-background.png);
     background-size: cover;
@@ -115,7 +114,7 @@ body{
 @media screen and (max-width: 40.5em){
     .jumbo{
         padding: 0px 15px; /* Move elems away from edge of screen */
-        padding-top: 120px; /* Need to make room for the fixed position menu */
+        padding-top: 70px; /* Need to make room for the fixed position menu */
         box-sizing: border-box;
     }
 
