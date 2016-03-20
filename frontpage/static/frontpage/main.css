@@ -17,15 +17,15 @@
 */
 
 /* Fonts */
-@import url(https://fonts.googleapis.com/css?family=Roboto+Slab:400,700);
-@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700);
-@import url(/static/shared/BebasKai-Regular.css);
+@import url(https://fonts.googleapis.com/css?family=Roboto+Slab:400,300,700);
+@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,600,700);
 
 /* Stylesheets */
 @import url(/static/shared/css/push-messages.css);
 @import url(/static/shared/css/nav.css);
 @import url(/static/shared/css/footer.css);
 @import url(/static/shared/css/util-btn-sheen.css);
+@import url(/static/shared/css/stars.css);
 
 /* Common Styles */
 
@@ -53,7 +53,7 @@ body{
 
 .jumbo{
     width: 100%;
-    background-color: #40689E;
+    background-color: #375987;
     background-image: url(/static/shared/img/jumbo-background.png);
     background-size: cover;
     text-align: center;
@@ -67,10 +67,10 @@ body{
 }
 
 .jumbo #head{
-    font-family: 'Bebas Kai';
+    font-family: bebas-neue, sans-serif;
     font-size: 60px;
     color: #FEFEFE;
-    text-transform: capitalize;
+    text-transform: uppercase;
 }
 
 .jumbo #description{
@@ -81,16 +81,17 @@ body{
 }
 
 .jumbo .btn-sheen{
-    background-color: #6D92C4;
+    background-color: #5484C3;
     margin-bottom: 80px;
     box-shadow: 0px 5px 0px rgba(0, 0, 0, 0.1);
+    font-weight: 600;
 }
 
 .beta{
     width: 100%;
     height: 60px;
     /*background-color: #FF5722;*/
-    background-color: #40689E;
+    background-color: #3B3B3B;
     color: #EBEBEB;
     font-family: 'Source Sans Pro', sans-serif;
 }
@@ -109,6 +110,35 @@ body{
     align-items: center;
     flex-wrap: wrap;
     height: 100%;
+}
+
+.about{
+    padding: 120px 0;
+    font-family: 'Source Sans Pro', sans-serif;
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.about .topic{
+    background-color: #F2F2F2;
+    padding: 40px 0;
+    width: 350px;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.about .topic #title{
+    font-family: bebas-neue, sans-serif;
+    color: #3B3B3B;
+    font-size: 40px;
+    margin: 0;
+    margin-bottom: 10px;
+}
+
+.about .topic #body{
+    padding: 0px 40px;
 }
 
 /* For mobile phones and other small devices */
@@ -132,6 +162,19 @@ body{
     .beta .wrapper a{
         display: none;
     }
+
+    .about{
+        padding: 0;
+        padding-bottom: 30px;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .about .topic{
+        width: 90%;
+        margin-top: 30px;
+        padding: 30px 0;
+    }
 }
 
 /* For Desktops and some tablets only */
@@ -141,28 +184,8 @@ body{
         width: 100%;
         height: 475px;
         background-color: #F2F2F2;
-        border-color: #E5E5E5;
-        border-style: solid;
-        border-bottom-style: none;
-        border-width: 2px;
         border-top-left-radius: 3px;
         border-top-right-radius: 3px;
-    }
-
-    .about{
-        padding: 120px 0;
-        font-family: 'Source Sans Pro', sans-serif;
-        display: flex;
-        align-items: stretch;
-        justify-content: space-between;
-        flex-wrap: wrap;
-    }
-
-    .about .topic{
-        background-color: #F2F2F2;
-        width: 350px;
-        min-height: 500px;
-        border-radius: 4px;
     }
 
     .features{

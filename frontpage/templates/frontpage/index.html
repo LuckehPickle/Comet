@@ -27,6 +27,7 @@
         <link rel="icon" type="image/ico" href="{% static 'shared/favicon.ico' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'frontpage/main.css' %}">
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <script src="//use.edgefonts.net/bebas-neue:n4.js"></script>
     </head>
     <body>
         <script src="{% static 'shared/js/mo.min.js' %}"></script>
@@ -41,7 +42,7 @@
                 {% if request.user.is_authenticated %}
                     <a href="{% url 'messages' %}" class="btn-sheen noselect">Open Messenger</a>
                 {% else %}
-                    <a href="{% url 'register' %}" class="btn-sheen noselect">Get started with Comet</a>
+                    <a href="{% url 'register' %}" class="btn-sheen noselect">Get Started with Comet</a>
                 {% endif %}
                 <div class="placeholder"></div>
             </div>
@@ -60,9 +61,21 @@
         <!-- About -->
         <div class="wrapper">
             <div class="about">
-                <div class="topic"></div>
-                <div class="topic"></div>
-                <div class="topic"></div>
+                <div class="topic">
+                    <p id="title">Private</p>
+                    <p id="body">Lorem ipsum dolor sit amet, aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                    <a href="/placeholder" class="btn-sheen noselect">Learn More</a>
+                </div>
+                <div class="topic">
+                    <p id="title">Secure</p>
+                    <p id="body">Lorem ipsum dolor sit amet, aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                    <a href="/placeholder" class="btn-sheen noselect">Learn More</a>
+                </div>
+                <div class="topic">
+                    <p id="title">Free</p>
+                    <p id="body">Lorem ipsum dolor sit amet, aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                    <a href="/placeholder" class="btn-sheen noselect">Learn More</a>
+                </div>
             </div>
         </div>
 
@@ -75,5 +88,7 @@
 
         <!-- Footer -->
         {% include 'shared/footer.html' %}
+        <script src="{% static 'shared/js/nav.js' %}"></script>
+        <script src="{% static 'frontpage/js/main.js'%}"></script>
     </body>
 </html>

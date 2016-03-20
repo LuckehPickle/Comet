@@ -19,6 +19,26 @@
 
 var trigger = document.querySelector(".mobile-nav-trigger");
 var nav_ul = document.querySelector(".nav-ul");
+/*var sign_in = document.querySelector(".sign-in");
+
+if(sign_in != null){
+    sign_in.addEventListener("click", function(event){
+        new mojs.Transit({
+            parent: sign_in,
+            duration: 550,
+            type: "circle",
+            radius: {0: 22},
+            fill: "transparent",
+            stroke: "#ABABAB",
+            strokeWidth: {16: 0},
+            opacity: 0.6,
+            x: "50%",
+            y: "50%",
+            isRunLess: true,
+            easing: mojs.easing.bezier(0, 1, 0.5, 1),
+        }).run();
+    });
+}*/
 
 trigger.addEventListener("click", function(event){
     if(trigger.hasAttribute("data-active")){
