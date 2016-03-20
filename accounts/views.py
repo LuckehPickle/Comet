@@ -49,6 +49,7 @@ def logout(request):
 # TODO Put email verification timer in a code well/block
 def login(request):
     if request.user.is_authenticated(): # Check if the user is logged in
+        messages.add_message(request, messages.INFO, "You're already logged in to Comet. If you want to login to a different account please <a href='/logout'>logout</a> first.")
         return redirect("frontpage")
 
     if request.POST: # Check if there is any POST data.
@@ -111,6 +112,7 @@ def renderLogin(request, next_dir="", form=AuthenticationForm()):
 # is dedicated to handling the registration process from the POST data.
 def register(request):
     if request.user.is_authenticated(): # Check if the user is logged in
+        messages.add_message(request, messages.INFO, "You're already logged in to Comet. If you want to register a different account please <a href='/logout'>logout</a> first.")
         return redirect("frontpage") # User is logged in, return them to index
 
     if request.POST: # Some data was posted

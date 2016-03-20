@@ -35,11 +35,6 @@ body{
     left: 0;
 }
 
-.menu{
-    position: relative;
-    display: none;
-}
-
 .toolbar{
     display: none;
 }

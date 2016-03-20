@@ -30,10 +30,10 @@
                 <li><a href="/docs/news">Changelog</a></li>
                 <li><a href="/docs">Docs</a></li>
                 <li><a href="/features">Features</a></li>
-                <li><a href="https://github.com/LuckehPickle/chat">Source</a></li>
+                <li><a href="https://github.com/LuckehPickle/Comet">Source</a></li>
                 <div class="mobile-button-wrapper">
                     {% if request.user.is_authenticated %}
-                        <a href="{% url 'messages' %}" id="up">Open Messenger</a>
+                        <a href="{% url 'messages' %}" id="up">Messenger</a>
                         <a href="{% url 'logout' %}" id="in">Sign Out</a>
                     {% else %}
                         <a href="{% url 'register' %}" id="up">Sign Up</a>

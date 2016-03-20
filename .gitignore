@@ -37,8 +37,8 @@ develop-eggs/
 pip-log.txt
 
 .imdone/
-chatproject/settings.py
-chatproject/wsgi.py
+comet/settings.py
+comet/wsgi.py
 cr_config.py
 *.sqlite3
 frontpage/static/shared/BebasKai-Regular.otf
@@ -56,9 +56,25 @@ frontpage/static/shared/mo.min.js
 */__pycache__/
 frontpage/models.py
 messages_app/models.py
-frontend_utils/static/frontend_utils/js/util-toggle.min.js
 frontpage/static/shared/js/mo.min.js
 frontpage/static/shared/img/geometry2.png
 frontpage/static/shared/img/Legal.txt
 frontpage/templates/shared/nav.min.html
 frontpage/templates/shared/push-messages.min.html
+accounts/static/accounts/main.min.css
+accounts/templates/login/index.min.html
+accounts/templates/register/index.min.html
+frontpage/static/frontpage/main.min.css
+frontpage/static/shared/css/dropdown.min.css
+frontpage/static/shared/css/nav.min.css
+frontpage/static/shared/css/push-messages.min.css
+frontpage/static/shared/css/util-btn-sheen.min.css
+frontpage/static/shared/js/hamburger.min.js
+frontpage/static/shared/js/nav.min.js
+messenger/templates/messages/index.min.html
+messenger/static/messages/css/desktop.min.css
+messenger/static/messages/css/mobile.min.css
+frontpage/static/shared/css/footer.min.css
+frontpage/static/shared/js/push-message.min.js
+frontpage/templates/frontpage/index.min.html
+frontpage/templates/shared/footer.min.html

@@ -20,7 +20,7 @@ from django.contrib import messages
 
 # Other Imports
 import cr_config
-from chatproject.decorators import login_required_message
+from comet.decorators import login_required_message
 
 # INDEX
 # Currently just renders the messenger interface from the template.

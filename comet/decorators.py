@@ -1,4 +1,4 @@
-# [ChatProject] DECORATORS.PY - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
+# [Comet] DECORATORS.PY - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
 # Powered by Django (https://www.djangoproject.com/) - Not endorsed by Django
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
