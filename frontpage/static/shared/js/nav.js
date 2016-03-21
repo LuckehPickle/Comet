@@ -19,35 +19,51 @@
 
 var trigger = document.querySelector(".mobile-nav-trigger");
 var nav_ul = document.querySelector(".nav-ul");
-/*var sign_in = document.querySelector(".sign-in");
 
-if(sign_in != null){
-    sign_in.addEventListener("click", function(event){
-        new mojs.Transit({
-            parent: sign_in,
-            duration: 550,
-            type: "circle",
-            radius: {0: 22},
-            fill: "transparent",
-            stroke: "#ABABAB",
-            strokeWidth: {16: 0},
-            opacity: 0.6,
-            x: "50%",
-            y: "50%",
-            isRunLess: true,
-            easing: mojs.easing.bezier(0, 1, 0.5, 1),
-        }).run();
+if(trigger != null){
+    trigger.addEventListener("click", function(event){
+        if(trigger.hasAttribute("data-active")){
+            //Hide nav_ul
+            trigger.removeAttribute("data-active");
+            nav_ul.className = "nav-ul";
+        }else{
+            // Show nav_ul
+            trigger.setAttribute("data-active", "");
+            nav_ul.className = "nav-ul active";
+        }
     });
-}*/
+}
 
-trigger.addEventListener("click", function(event){
-    if(trigger.hasAttribute("data-active")){
-        //Hide nav_ul
-        trigger.removeAttribute("data-active");
-        nav_ul.className = "nav-ul";
-    }else{
-        // Show nav_ul
-        trigger.setAttribute("data-active", "");
-        nav_ul.className = "nav-ul active";
+var menu_icons = document.querySelector(".menu-icons");
+var more_transit = document.querySelector("#more-transit");
+var easingPath = mojs.easing.bezier(0, 1, 0.5, 1);
+
+var transit = new mojs.Tween({
+    duration: 300,
+    onStart: function(){
+        more_transit.style.transform = "scale(0)";
+        more_transit.style.opacity = "0";
+        more_transit.style.display = "block";
+    },
+    onUpdate: function(progress){
+        more_transit.style.transform = "scale(" + easingPath(progress) + ")";
+        more_transit.style.opacity = "" + easingPath(progress);
+    },
+    onComplete: function(){
+        onTransitComplete.run();
+    },
+});
+
+var onTransitComplete = new mojs.Tween({
+    duration: 200,
+    onUpdate: function(progress){
+        more_transit.style.opacity = "" + (1 - progress);
+    },
+    onComplete: function(){
+        more_transit.style.display = "";
     }
+});
+
+menu_icons.addEventListener("click", function(event){
+    transit.run();
 });

@@ -14,6 +14,7 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 #
+  TODO Make Login and register use the same template
 # https://docs.djangoproject.com/en/1.9/topics/http/urls/
 -->
 
@@ -22,60 +23,55 @@
     <head>
         <title>{{ title }}</title>
         {% load staticfiles %}
-        <link href="{% static 'accounts/main.css' %}" type="text/css" rel="stylesheet">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
         <link rel="icon" type="image/ico" href="{% static 'shared/favicon.ico' %}">
-        <!--<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">-->
+        <link href="{% static 'accounts/main.css' %}" type="text/css" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <script src="//use.edgefonts.net/bebas-neue:n4.js"></script>
     </head>
     <body>
-        {% if messages or form.non_field_errors %}
+        <script src="{% static 'shared/js/mo.min.js' %}"></script>
+        {% include 'shared/push-messages.min.html' %}
+
+        {% if form.non_field_errors %} <!-- TODO Redesign -->
             <div class="messages">
-                {% for message in messages %}
-                <p class="message message-{{ message.tags }}">{{ message|safe }}</p>
-                {% endfor %}
                 {% for error in form.non_field_errors %}
                 <p class="message message-error">{{error}}</p>
                 {% endfor %}
             </div>
         {% endif %}
+
         <div class="wrapper">
-            <a href="{% url 'frontpage' %}">
-                <img src="{% static 'accounts/logo-b-c.png' %}" alt="{{ title }}" class="logo"/>
-            </a>
-            <div class="container">
+            <!-- LOGO -->
+            <a href="{% url 'frontpage' %}" class="logo"><img src="{% static 'shared/img/logo.svg' %}"></a>
 
-                <!-- FORM TITLE -->
-                <p class="form-title">Login to {{ projectname }}</p>
+            <!-- FORM -->
+            <form action="/login{{ next_dir }}" method="post" novalidate>
+                {% csrf_token %}
+                <p class="form-title">Login to Comet</p>
 
-                <form action="/login{{ next_dir }}" method="post" novalidate>
-                    {% csrf_token %}
-
-                    <!-- FIELDS -->
-                    {% for field in form %}
+                <!-- FIELDS -->
+                {% for field in form %}
                     <div class="input-container">
-                        <p class="input-title">{{ field.label }}</p>
-                        <div class="input-body">
-                            {{ field }}
-                        </div>
-                        <!-- FIELD ERRORS -->
+                        <p>{{ field.label }}</p>
+                        <div>{{ field }}</div>
                         {% if field.errors %}
-                        <ul class="input-error">
-                            {% for error in field.errors %}
-                            <li>{{ error|safe }}</li>
-                            {% endfor %}
-                        </ul>
+                            <ul>
+                                {% for error in field.errors %}
+                                    <li>{{ error|safe }}</li>
+                                {% endfor %}
+                            </ul>
                         {% endif %}
                     </div>
-                    {% endfor %}
+                {% endfor %}
 
-                    <!-- MATERIAL BUTTONS -->
-                    <div class="btn-material-bar">
-                        <input type="submit" class="btn-material" value="Login">
-                    </div>
-                </form>
-                <p class="register-note">Don't have an account? <a href="{% url 'register' %}{{ next_dir }}">Create one.</a></p>
-            </div>
+                <div class="footer-container">
+                    <input type="submit" value="Sign in">
+                    <a href="/reset">Reset password</a>
+                </div>
+                <p id="swap">Don't have an account? <a href="{% url 'register' %}{{ next_dir }}">Create one.</a></p>
+            </form>
             <p class="note">By using this service you agree to the <a href="/docs/terms" target="_blank">terms and conditions</a>, <a href="/docs/privacy" target ="_blank">privacy policy</a> and <a href="/docs/cookies" target="_blank">cookies policy.</a></p>
         </div>
     </body>

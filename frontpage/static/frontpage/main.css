@@ -13,7 +13,6 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
- TODO Remove Bebas Kai
 */
 
 /* Fonts */
@@ -25,7 +24,6 @@
 @import url(/static/shared/css/nav.css);
 @import url(/static/shared/css/footer.css);
 @import url(/static/shared/css/util-btn-sheen.css);
-@import url(/static/shared/css/stars.css);
 
 /* Common Styles */
 
@@ -33,6 +31,11 @@ body{
     margin: 0;
     background-color: #FFFFFF;
     overflow-x: hidden;
+}
+
+.menu{
+    position: fixed;
+    box-shadow: 0px 10px 0px rgba(0, 0, 0, 0.15);
 }
 
 .noselect{
@@ -53,12 +56,11 @@ body{
 
 .jumbo{
     width: 100%;
-    background-color: #375987;
-    background-image: url(/static/shared/img/jumbo-background.png);
+    background-color: #2D2D2D;
+    background-image: url(/static/shared/img/jumbo-bg-alt.png);
     background-size: cover;
     text-align: center;
-    padding-top: 70px;
-    box-shadow: inset 0px 10px 0px rgba(0, 0, 0, 0.15);
+    padding-top: 140px;
 }
 
 .jumbo p{
@@ -81,7 +83,7 @@ body{
 }
 
 .jumbo .btn-sheen{
-    background-color: #5484C3;
+    background-color: #F1592B;
     margin-bottom: 80px;
     box-shadow: 0px 5px 0px rgba(0, 0, 0, 0.1);
     font-weight: 600;
@@ -125,6 +127,7 @@ body{
     background-color: #F2F2F2;
     padding: 40px 0;
     width: 350px;
+    min-height: 425px;
     border-radius: 4px;
     text-align: center;
 }
@@ -145,7 +148,7 @@ body{
 @media screen and (max-width: 40.5em){
     .jumbo{
         padding: 0px 15px; /* Move elems away from edge of screen */
-        padding-top: 70px; /* Need to make room for the fixed position menu */
+        padding-top: 130px; /* Need to make room for the fixed position menu */
         box-sizing: border-box;
     }
 

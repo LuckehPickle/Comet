@@ -100,7 +100,6 @@ def renderLogin(request, next_dir="", form=AuthenticationForm()):
         next_dir = "?next=" + next_dir
 
     return render(request, "login/index.html", {
-        "projectname": cr_config.TITLE,
         "title": (cr_config.TITLE_FORMAT % PAGE_NAME),
         "next_dir": next_dir,
         "form": form,
@@ -167,7 +166,6 @@ def renderRegister(request, next_dir="", form=RegistrationForm()):
         next_dir = "?next=" + next_dir
 
     return render(request, "register/index.html", {
-        "projectname": cr_config.TITLE,
         "title": (cr_config.TITLE_FORMAT % PAGE_NAME),
         "next_dir": next_dir,
         "form": form,

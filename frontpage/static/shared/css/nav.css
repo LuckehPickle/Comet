@@ -136,8 +136,8 @@
         bottom: 8px;
     }
 
-    .sign-in, .user-info-container, .user-menu{
-        display: none;
+    .sign-in, .user-info-container, .user-menu, .menu-icons{
+        display: none !important;
     }
 
     .mobile-button-wrapper{
@@ -243,121 +243,50 @@
         height: 38px;
         border-radius: 5px;
         background-color: #EBEBEB;
-        margin-left: 8px;
+        margin-left: 14px;
     }
 
     .user-info-container{
         text-align: right;
     }
 
-    .user-info-container a, .user-info-container p{
+    .user-info-container p{
         margin: 0;
         font-family: 'Source Sans Pro', sans-serif;
-        font-size: 16px;
-        text-decoration: none;
-        color: white;
-    }
-
-    .user-menu{
-        width: 38px;
-        height: 38px;
-        position: relative;
-    }
-
-    .user-menu-icon{
-        height: 38px;
-        margin-left: 10px;
-        pointer-events: none;
-        position: absolute;
-        top: inherit;
-        left: inherit;
-    }
-
-    .menu-icon-inner,
-    .menu-icon-inner::before,
-    .menu-icon-inner::after{
-        content: "";
-        position: relative;
-        top: calc(50% - 2px);
-        background-color: #EBEBEB;
-        width: 25px;
-        height: 3px;
-        border-radius: 40px;
-        display: block;
-    }
-
-    .menu-icon-inner::after{
-        top: auto;
-        bottom: -5px;
-    }
-
-    .menu-icon-inner::before{
-        top: auto;
-        bottom: 8px;
-    }
-
-    .user-menu-trigger{
-        width: 38px;
-        height: 38px;
-        margin-left: 6px;
-        background-color: transparent;
-        border: none;
-        cursor: pointer;
-        outline: none;
-        position: relative;
-        padding: 0;
-    }
-
-    .user-menu-icon path{
-        fill: #717171;
-    }
-
-    .user-menu-dropdown{
-        position: absolute;
-        top: 54px;
-        right: 0;
-        display: none;
-        z-index: 101;
-    }
-
-    .user-menu-dropdown ul{
-        margin: 0;
-        text-align: right;
-        box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.1);
-        padding: 0;
-    }
-
-    .user-menu-dropdown li{
-        background-color: #3B3B3B;
-        list-style: none;
-        min-width: 250px;
-    }
-
-    .user-menu-dropdown li:hover{
-        background-color: #4F4F4F;
-    }
-
-    .user-menu-dropdown li a{
-        text-decoration: none;
-        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: bold;
         font-size: 16px;
         color: #EBEBEB;
-        display: inline-block;
-        width: 100%;
-        height: 100%;
-        padding: 8px;
-        padding-right: 12px;
-        box-sizing: border-box;
     }
 
-    .user-menu-overlay{
-        position: fixed;
-        top: 70px;
-        left: 0;
-        right: 0;
-        bottom: 0;
+    .user-info-container #id{
+        text-transform: uppercase;
+        font-size: 15px;
+    }
+
+    .menu-icons{
+        font-size: 28px !important;
+        cursor: pointer;
+        padding: 6px;
+        margin-left: 8px;
+        position: relative;
         z-index: 100;
+    }
+
+    #more-transit{
+        z-index: -10;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 75px;
+        height: 75px;
+        margin-left: -37.5px;
+        margin-top: -37.5px;
         display: none;
-        background-color: rgba(0, 0, 0, 0.2);
+    }
+
+    #more-transit svg{
+        position: absolute;
+        width: 100%;
+        height: 100%;
     }
 }
