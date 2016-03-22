@@ -1,0 +1,137 @@
+/*
+# [Messages] MAIN.CSS - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
+# Powered by Django (https://www.djangoproject.com/)
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+*/
+
+/* Fonts */
+@import url(https://fonts.googleapis.com/css?family=Roboto+Slab:400,300,700);
+@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,600,700);
+
+/* Stylesheets */
+@import url(/static/shared/css/push-messages.css);
+@import url(/static/shared/css/nav.css);
+
+body{
+    margin: 0;
+    background-color: #FFFFFF;
+    overflow-x: hidden;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
+.noselect{
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none;   /* Chrome/Safari/Opera */
+    -khtml-user-select: none;    /* Konqueror */
+    -moz-user-select: none;      /* Firefox */
+    -ms-user-select: none;       /* IE/Edge */
+    user-select: none;           /* non-prefixed version, currently
+                                    not supported by any browser */
+}
+
+.menu{
+    position: absolute;
+}
+
+.toolbar{
+    position: absolute;
+    left: 0;
+    right: 0;
+    background-color: #454545;
+    height: 50px;
+    padding: 0 7px;
+}
+
+.toolbar [class$="tools"]{ /* class$="tools" matches classes ending with 'tools' */
+    height: 100%;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+}
+
+/* For mobile phones and other small devices */
+@media screen and (max-width: 40.5em){
+    .toolbar{
+        top: 50px;
+    }
+
+    .desktop-tools{
+        display: none !important;
+    }
+
+    .mobile-tools p{
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: bold;
+        text-transform: uppercase;
+        text-overflow: ellipsis;
+        color: #EBEBEB;
+        flex-grow: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        margin: 0;
+        padding: 0 9px;
+    }
+
+    .mobile-tools .material-icons{
+        color: #EBEBEB;
+        cursor: pointer;
+        padding: 11px 9px;
+    }
+
+    #more{
+        margin-left: auto;
+    }
+}
+
+/* For Desktops and some tablets only */
+@media screen and (min-width: 40.5em){
+    .pmessages{
+        top: 70px;
+    }
+
+    .toolbar{
+        top: 70px;
+        padding: 0 12px;
+    }
+
+    .mobile-tools{
+        display: none !important;
+    }
+
+    .desktop-tools p{
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: bold;
+        text-transform: uppercase;
+        text-overflow: ellipsis;
+        color: #EBEBEB;
+        flex-grow: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        margin: 0;
+        padding: 0 9px;
+    }
+
+    .desktop-tools .material-icons{
+        color: #EBEBEB;
+        cursor: pointer;
+        padding: 11px 9px;
+        position: relative;
+    }
+}

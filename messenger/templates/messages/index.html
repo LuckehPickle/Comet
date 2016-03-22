@@ -21,13 +21,11 @@
     <head>
         <title>{{ title }}</title>
         {% load staticfiles %}
-        <link href="{% static 'messages/css/mobile.css' %}" type="text/css" rel="stylesheet" media="screen and (max-width: 40.5em), handheld">
-        <link href="{% static 'messages/css/desktop.css' %}" type="text/css" rel="stylesheet" media="screen and (min-width: 40.5em)">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
         <link rel="icon" type="image/ico" href="{% static 'shared/favicon.ico' %}">
+        <link href="{% static 'messages/css/main.css' %}" type="text/css" rel="stylesheet">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        <script src="{% static 'shared/js/nav.js' %}"></script>
     </head>
     <body>
         <script src="{% static 'shared/js/mo.min.js' %}"></script>
@@ -35,19 +33,19 @@
         {% include 'shared/nav.html' %}
 
         <!-- Toolbar -->
-        <div class="toolbar"></div>
+        <div class="toolbar">
+            <div class="mobile-tools">
+                <i class="material-icons">chevron_left</i>
+                <i class="material-icons">search</i>
+                <p>This is a really long title</p>
+                <i class="material-icons" id="more">more_vert</i>
+            </div>
+            <div class="desktop-tools">
+                <i class="material-icons js-transit" data-transit-id="search">search</i>
+                <p>This is a really long title</p>
+            </div>
+        </div>
 
-        <!-- Friends -->
-        <div class="friends-list"></div>
-
-        <!-- Chat Area -->
-        <div class="chat-area"></div>
-
-        <!-- Info Area -->
-        <div class="info-area"></div>
-
-        <!-- Toolbar Right -->
-        <div class="toolbar-right"></div>
         <script src="{% static 'shared/js/nav.js' %}"></script>
     </body>
 </html>

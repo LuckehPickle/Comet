@@ -78,3 +78,5 @@ frontpage/static/shared/css/footer.min.css
 frontpage/static/shared/js/push-message.min.js
 frontpage/templates/frontpage/index.min.html
 frontpage/templates/shared/footer.min.html
+accounts/templates/accounts/index.min.html
+messenger/static/messages/css/main.min.css

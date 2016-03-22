@@ -64,9 +64,9 @@ def login(request):
                 if user.is_active: # Check if the account is active (not suspended)
                     login_user(request, user) # Log the user in
                     # Redirect to front page
-                    messages.add_message(request, messages.WARNING, "This project is still in development. <a href='/beta' target='_blank'>Find out what this means for you</a>.<br> Thankyou for being a part of the BETA!")
+                    messages.add_message(request, messages.WARNING, "This project is still in development. <a href='/beta' target='_blank'>Find out what this means for you</a>.<br> Thank you for being a part of the BETA!")
                     if not user.is_verified:
-                        messages.add_message(request, messages.INFO, "Your email address has not been verified yet. <a href='/verify'>Click here to verify your email.</a> You have 24 hours remaining.")
+                        messages.add_message(request, messages.INFO, "Your email address has not been verified. <a href='/verify'>Click here to verify your email.</a> You have 24 hours remaining.")
                     if "next" in request.GET:
                         return redirect(request.GET["next"])
                     return redirect("messages")
@@ -76,6 +76,10 @@ def login(request):
             else:
                 # Invalid credentials where entered
                 messages.add_message(request, messages.ERROR, "Username or password is incorrect.")
+        next_dir = ""
+        if "next" in request.GET:
+            next_dir=request.GET["next"]
+        return renderLogin(request, next_dir=next_dir, form=form)
 
     # If the function reaches this point, then we simply need to render
     # a new page, taking the next direcory into account.
@@ -108,7 +112,7 @@ def renderLogin(request, next_dir="", form=AuthenticationForm()):
 # is dedicated to handling the registration process from the POST data.
 def register(request):
     if request.user.is_authenticated(): # Check if the user is logged in
-        messages.add_message(request, messages.INFO, "You're already logged in to Comet. If you want to register a different account please <a href='/logout'>logout</a> first.")
+        messages.add_message(request, messages.INFO, "You're currently logged in to Comet. If you want to register another account please <a href='/logout'>logout</a> first.")
         return redirect("frontpage") # User is logged in, return them to index
 
     if request.POST: # Some data was posted
@@ -135,7 +139,7 @@ def register(request):
             login_user(request, user) # Log the user in.
 
             messages.add_message(request, messages.INFO, "Your account has been created. <a href='/verify'>Click here to verify your email.</a>")
-            messages.add_message(request, messages.WARNING, "This project is still in development. <a href='/beta' target='_blank'>Find out what this means for you</a>.<br> Thankyou for being a part of the BETA!")
+            messages.add_message(request, messages.WARNING, "This project is still in development. <a href='/beta' target='_blank'>Find out what this means for you</a>.<br> Thank you for being a part of the BETA!")
             if "next" in request.GET:
                 return redirect(request.GET["next"])
             return redirect("messages")

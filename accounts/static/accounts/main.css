@@ -97,12 +97,12 @@ form{
 
 .input-container div{
     width: 100%;
-    background-color: #E2E2E2;
+    background-color: #FFFFFF;
 }
 
 .input-container input{
     width: 100%;
-    padding: 6px;
+    padding: 8px;
     box-sizing: border-box;
     font-family: 'Source Sans Pro', sans-serif;
     font-size: 16px;
@@ -110,6 +110,18 @@ form{
     background-color: transparent;
     outline: none;
     border: none;
+}
+
+.input-container ul{
+    width: 100%;
+    background-color: #D2D2D2;
+    margin: 0;
+    list-style-type: none;
+    padding: 8px;
+    box-sizing: border-box;
+    border-radius: 0 0 4px 4px;
+    font-family: 'Source Sans Pro', sans-serif;
+    color: #3B3B3B;
 }
 
 .footer-container{

@@ -30,62 +30,29 @@ body{
     left: 0;
     display: flex;
     flex-direction: column;
-    z-index: 100;
+    z-index: 110;
 }
 
 /* Contains a messages elements */
 .pmessage-container{
-    background-color: #2ECC71;
-    border-color: #239B56;
+    background-color: #EBEBEB;
+    border-color: #F37021;
     border-width: 15px;
     border-left-style: solid;
     overflow: hidden;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Overrides default container properties */
-.pmessage-container-error{
-    background-color: #EC7063;
-    border-color: #C0392B;
-}
-
-.pmessage-container-info{
-    background-color: #039BE5;
-    border-color: #1C87E5;
-}
-
-.pmessage-container-warning{
-    background-color: #F7DC6F;
-    border-color: #F1C40F;
-}
-
-.pmessage{
+.pmessage, .pmessage a{
     font-family: 'Oxygen', sans-serif;
-    font-size: 12px;
+    font-size: 14px;
     margin: 12px;
-    color: #333;
     margin-right: 30px;
+    color: #3B3B3B;
 }
 
-/* Overrides default message properties */
-.pmessage-error, .pmessage-error a{
-    color: #641E16;
-}
-
-.pmessage-error::before{
-    content: "Error: ";
-}
-
-.pmessage-info, .pmessage-info a{
-    color: #E4E9EF;
-}
-
-.pmessage-warning, .pmessage-warning a{
-    color: #7D6608;
-}
-
-.pmessage-warning::before{
-    content: "Warning: ";
+.pmessage a{ /* Firefox gives urls margins? */
+    margin: 0;
 }
 
 .pmessage-close{
@@ -99,22 +66,30 @@ body{
     cursor: pointer;
 }
 
-.pmessage-close-error path{
-    fill: #641E16;
+.pmessage-container path{
+    fill: #1B1B1B;
 }
 
-.pmessage-close-info path{
-    fill: #1B4F72;
+.pmessage-container-error{
+    border-color: #C0392B;
 }
 
-.pmessage-close-warning path{
-    fill: #7D6608;
+.pmessage-error::before{
+    content: "Error: ";
+}
+
+.pmessage-container-warning{
+    border-color: #F1C40F;
+}
+
+.pmessage-warning::before{
+    content: "Warning: ";
 }
 
 /* For landscape mobile phones and up */
 @media screen and (min-width: 28.75em){
     .pmessages{
-        position: absolute;
+        position: fixed;
         top: 30px; /* TODO Update this to sit just below menu height */
         left: auto;
         width: 400px;
@@ -124,20 +99,16 @@ body{
         border-radius: 3px;
         margin: 3px;
     }
-
-    .pmessage{
-        font-size: 13px;
-    }
 }
 
 /* For Desktops and some tablets only */
 @media screen and (min-width: 40.5em){
     .pmessages{
-        top: 70px;
+        top: 75px;
         margin-right: 3px;
     }
 
-    .pmessage{
+    .pmessage, .pmessage a{
         font-size: 15px;
     }
 }

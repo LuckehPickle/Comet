@@ -69,3 +69,37 @@ if(menu_icons != null){
         transit.run();
     });
 }
+
+var transit_items = document.querySelectorAll(".js-transit");
+var animations = {};
+for(var i = 0; i < transit_items.length; i++){
+    var transit_item = transit_items[i];
+
+    if(!transit_item.hasAttribute("data-transit-id")){
+        console.log("An element with class js-transit was not assigned a transit id.");
+        break;
+    }else if(transit_item.getAttribute("data-transit-id") in animations){
+        console.log("Transit id '" + transit_item.getAttribute("data-transit-id") + "' already exists. Please use a unique id.");
+        break;
+    }
+
+    animations[transit_item.getAttribute("data-transit-id")] = new mojs.Transit({
+		parent: transit_item,
+		duration: 400,
+		type: 'circle',
+		radius: {0: 21},
+		fill: 'transparent',
+		stroke: 'rgba(0, 0, 0, 0.4)',
+		strokeWidth: {15:0},
+		opacity: 0.6,
+		x: '50%',
+		y: '50%',
+		isRunLess: true,
+		easing: mojs.easing.bezier(0, 1, 0.5, 1)
+	});
+
+    transit_item.addEventListener("click", function(event){
+        var source = event.target;
+        animations[source.getAttribute("data-transit-id")].run();
+    });
+}
