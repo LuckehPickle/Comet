@@ -13,11 +13,7 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 #
-# This file contains all accounts related views. The views contained
-# within this file include:
-#   - /logout
-#   - /login
-#   - /register
+# TODO Redo the logic here. It's not amazing...
 
 # Django Imports
 from django.shortcuts import render, redirect
@@ -99,10 +95,11 @@ def renderLogin(request, next_dir="", form=AuthenticationForm()):
     if not next_dir == "":
         next_dir = "?next=" + next_dir
 
-    return render(request, "login/index.html", {
+    return render(request, "accounts/index.html", {
         "title": (cr_config.TITLE_FORMAT % PAGE_NAME),
         "next_dir": next_dir,
         "form": form,
+        "form_type": "login",
     })
 
 # REGISTER
@@ -165,8 +162,9 @@ def renderRegister(request, next_dir="", form=RegistrationForm()):
     if not next_dir == "":
         next_dir = "?next=" + next_dir
 
-    return render(request, "register/index.html", {
+    return render(request, "accounts/index.html", {
         "title": (cr_config.TITLE_FORMAT % PAGE_NAME),
         "next_dir": next_dir,
         "form": form,
+        "form_type": "register",
     })

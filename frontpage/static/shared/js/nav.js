@@ -64,6 +64,8 @@ var onTransitComplete = new mojs.Tween({
     }
 });
 
-menu_icons.addEventListener("click", function(event){
-    transit.run();
-});
+if(menu_icons != null){
+    menu_icons.addEventListener("click", function(event){
+        transit.run();
+    });
+}

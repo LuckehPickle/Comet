@@ -1,5 +1,5 @@
 <!--
- [Accounts.Register] INDEX.HTML - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
+ [Accounts] INDEX.HTML - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
  Powered by Django (https://www.djangoproject.com/) - Not endorsed by Django
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,6 +14,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -43,9 +44,9 @@
             <a href="{% url 'frontpage' %}" class="logo"><img src="{% static 'shared/img/logo.svg' %}"></a>
 
             <!-- FORM -->
-            <form action="/login{{ next_dir }}" method="post" novalidate>
+            <form action="/{{ form_type }}{{ next_dir }}" method="post" novalidate>
                 {% csrf_token %}
-                <p class="form-title">Join Comet</p>
+                <p class="form-title">{% if form_type == 'login' %}Login to Comet{% else %}Join Comet{% endif %}</p>
 
                 <!-- FIELDS -->
                 {% for field in form %}
@@ -63,9 +64,20 @@
                 {% endfor %}
 
                 <div class="footer-container">
-                    <input type="submit" value="Sign up">
+                    {% if form_type == 'login' %}
+                        <input type="submit" value="Sign in">
+                        <a href="/reset">Reset password</a>
+                    {% else %}
+                        <input type="submit" value="Sign up">
+                    {% endif %}
                 </div>
-                <p id="swap">Already have an account? <a href="{% url 'login' %}{{ next_dir }}">Sign in.</a></p>
+                <p id="swap">
+                    {% if form_type == 'login' %}
+                        Don't have an account? <a href="{% url 'register' %}{{ next_dir }}">Create one.</a>
+                    {% else %}
+                        Already have an account? <a href="{% url 'login' %}{{ next_dir }}">Sign in.</a>
+                    {% endif %}
+                </p>
             </form>
             <p class="note">By using this service you agree to the <a href="/docs/terms" target="_blank">terms and conditions</a>, <a href="/docs/privacy" target ="_blank">privacy policy</a> and <a href="/docs/cookies" target="_blank">cookies policy.</a></p>
         </div>
