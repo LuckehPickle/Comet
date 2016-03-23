@@ -17,6 +17,9 @@
  TODO Merge Hamburger.js into this script
 */
 
+/* Allows :active styles to work on Safari */
+document.addEventListener("touchstart", function(){}, true);
+
 var trigger = document.querySelector(".mobile-nav-trigger");
 var nav_ul = document.querySelector(".nav-ul");
 
@@ -31,42 +34,6 @@ if(trigger != null){
             trigger.setAttribute("data-active", "");
             nav_ul.className = "nav-ul active";
         }
-    });
-}
-
-var menu_icons = document.querySelector(".menu-icons");
-var more_transit = document.querySelector("#more-transit");
-var easingPath = mojs.easing.bezier(0, 1, 0.5, 1);
-
-var transit = new mojs.Tween({
-    duration: 300,
-    onStart: function(){
-        more_transit.style.transform = "scale(0)";
-        more_transit.style.opacity = "0";
-        more_transit.style.display = "block";
-    },
-    onUpdate: function(progress){
-        more_transit.style.transform = "scale(" + easingPath(progress) + ")";
-        more_transit.style.opacity = "" + easingPath(progress);
-    },
-    onComplete: function(){
-        onTransitComplete.run();
-    },
-});
-
-var onTransitComplete = new mojs.Tween({
-    duration: 200,
-    onUpdate: function(progress){
-        more_transit.style.opacity = "" + (1 - progress);
-    },
-    onComplete: function(){
-        more_transit.style.display = "";
-    }
-});
-
-if(menu_icons != null){
-    menu_icons.addEventListener("click", function(event){
-        transit.run();
     });
 }
 

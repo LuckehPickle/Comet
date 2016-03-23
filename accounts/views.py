@@ -99,17 +99,19 @@ def renderLogin(request, next_dir="", form=AuthenticationForm()):
     if not next_dir == "":
         next_dir = "?next=" + next_dir
 
-    return render(request, "accounts/index.html", {
+    return render(request, "accounts/index.html", { #" + cr_config.FILE_SUFFIX + "
         "title": (cr_config.TITLE_FORMAT % PAGE_NAME),
         "next_dir": next_dir,
         "form": form,
         "form_type": "login",
+        #"file_suffix": cr_config.FILE_SUFFIX,
     })
 
 # REGISTER
 # Handles registration requests. Note: This function actually doubles as a form,
 # accepting inputs from itself if they exist. The majority of this function
 # is dedicated to handling the registration process from the POST data.
+# TODO Recaptcha setup
 def register(request):
     if request.user.is_authenticated(): # Check if the user is logged in
         messages.add_message(request, messages.INFO, "You're currently logged in to Comet. If you want to register another account please <a href='/logout'>logout</a> first.")
@@ -171,4 +173,5 @@ def renderRegister(request, next_dir="", form=RegistrationForm()):
         "next_dir": next_dir,
         "form": form,
         "form_type": "register",
+        #"file_suffix": cr_config.FILE_SUFFIX,
     })

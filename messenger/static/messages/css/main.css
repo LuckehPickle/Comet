@@ -25,7 +25,7 @@
 
 body{
     margin: 0;
-    background-color: #FFFFFF;
+    background-color: #F0F0F0;
     overflow-x: hidden;
     position: absolute;
     top: 0;
@@ -98,12 +98,26 @@ body{
     #more{
         margin-left: auto;
     }
+
+    .chat-wrap{
+        position: absolute;
+        top: 100px;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+
+    .chat-area{
+        width: 100%;
+        height: 100%;
+        background-color: #FAFAFA;
+    }
 }
 
 /* For Desktops and some tablets only */
 @media screen and (min-width: 40.5em){
     .pmessages{
-        top: 70px;
+        top: 120px;
     }
 
     .toolbar{
@@ -120,7 +134,7 @@ body{
         font-weight: bold;
         text-transform: uppercase;
         text-overflow: ellipsis;
-        color: #EBEBEB;
+        color: #D1D1D1;
         flex-grow: 1;
         white-space: nowrap;
         overflow: hidden;
@@ -128,10 +142,35 @@ body{
         padding: 0 9px;
     }
 
+    .desktop-tools p::before{
+        content: "Chat: ";
+        color: #EBEBEB;
+    }
+
     .desktop-tools .material-icons{
         color: #EBEBEB;
         cursor: pointer;
         padding: 11px 9px;
         position: relative;
+    }
+
+    .material-icons[data-transit-id="info"]{
+        margin-left: auto; /* basically float:right; */
+    }
+
+    .chat-wrap{
+        position: absolute;
+        top: 120px;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+
+    .chat-area{
+        height: 100%;
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        background-color: #FAFAFA;
     }
 }

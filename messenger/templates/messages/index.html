@@ -35,15 +35,23 @@
         <!-- Toolbar -->
         <div class="toolbar">
             <div class="mobile-tools">
-                <i class="material-icons">chevron_left</i>
-                <i class="material-icons">search</i>
+                <i class="material-icons js-transit" data-transit-id="m-back">chevron_left</i>
                 <p>This is a really long title</p>
-                <i class="material-icons" id="more">more_vert</i>
+                <i class="material-icons js-transit" data-transit-id="m-add_user">person_add</i>
+                <i class="material-icons js-transit" data-transit-id="m-more" id="more">more_vert</i>
             </div>
             <div class="desktop-tools">
                 <i class="material-icons js-transit" data-transit-id="search">search</i>
                 <p>This is a really long title</p>
+                <i class="material-icons js-transit" data-transit-id="add_user">person_add</i>
+                <i class="material-icons js-transit" data-transit-id="link">link</i>
+                <i class="material-icons js-transit" data-transit-id="more">more_vert</i>
             </div>
+        </div>
+
+        <!-- Chat Wrap -->
+        <div class="chat-wrap">
+            <div class="chat-area"></div>
         </div>
 
         <script src="{% static 'shared/js/nav.js' %}"></script>

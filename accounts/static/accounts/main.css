@@ -124,6 +124,10 @@ form{
     color: #3B3B3B;
 }
 
+.g-recaptcha{
+    margin-top: 25px;
+}
+
 .footer-container{
     width: 100%;
     display: flex;
