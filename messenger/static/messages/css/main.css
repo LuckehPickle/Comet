@@ -16,7 +16,7 @@
 */
 
 /* Fonts */
-@import url(https://fonts.googleapis.com/css?family=Roboto+Slab:400,300,700);
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,300,700);
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,600,700);
 
 /* Stylesheets */
@@ -62,8 +62,10 @@ body{
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    display: flex;
-    align-items: center;
+    display: -webkit-flex;
+            display: flex;
+    -webkit-align-items: center;
+            align-items: center;
 }
 
 /* For mobile phones and other small devices */
@@ -82,7 +84,8 @@ body{
         text-transform: uppercase;
         text-overflow: ellipsis;
         color: #EBEBEB;
-        flex-grow: 1;
+        -webkit-flex-grow: 1;
+                flex-grow: 1;
         white-space: nowrap;
         overflow: hidden;
         margin: 0;
@@ -130,12 +133,13 @@ body{
     }
 
     .desktop-tools p{
-        font-family: 'Source Sans Pro', sans-serif;
+        font-family: 'Roboto', sans-serif;
         font-weight: bold;
         text-transform: uppercase;
         text-overflow: ellipsis;
         color: #D1D1D1;
-        flex-grow: 1;
+        -webkit-flex-grow: 1;
+                flex-grow: 1;
         white-space: nowrap;
         overflow: hidden;
         margin: 0;
@@ -152,6 +156,49 @@ body{
         cursor: pointer;
         padding: 11px 9px;
         position: relative;
+        font-size: 20px;
+    }
+
+    .dropdown{
+        position: absolute;
+        top: 48px;
+        right: 0;
+        background-color: #FFFFFF;
+        list-style-type: none;
+        font-family: 'Roboto', sans-serif;
+        font-size: 14px;
+        margin: 0;
+        padding: 10px 0;
+        z-index: 100;
+        cursor: default;
+        width: 0;
+        overflow: hidden;
+    }
+
+    .dropdown li{
+        width: 240px;
+    }
+
+    .dropdown li:hover{
+        background-color: #EBEBEB;
+    }
+
+    .dropdown li a{
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+        display: block;
+        text-decoration: none;
+        color: #3B3B3B;
+        display: -webkit-flex;
+                display: flex;
+        -webkit-align-items: center;
+                align-items: center;
+    }
+
+    .dropdown .material-icons{
+        color: #3B3B3B;
+        padding: 0 10px;
     }
 
     .material-icons[data-transit-id="info"]{

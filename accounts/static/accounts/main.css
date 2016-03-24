@@ -130,9 +130,12 @@ form{
 
 .footer-container{
     width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: -webkit-flex;
+            display: flex;
+    -webkit-justify-content: space-between;
+            justify-content: space-between;
+    -webkit-align-items: center;
+            align-items: center;
     margin: 25px 0;
 }
 

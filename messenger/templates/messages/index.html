@@ -45,7 +45,18 @@
                 <p>This is a really long title</p>
                 <i class="material-icons js-transit" data-transit-id="add_user">person_add</i>
                 <i class="material-icons js-transit" data-transit-id="link">link</i>
-                <i class="material-icons js-transit" data-transit-id="more">more_vert</i>
+                <i class="material-icons js-transit" data-transit-id="more" id="more_d">
+                    more_vert
+                    <ul class="dropdown">
+                        <li><a href="/"><i class="material-icons">photo</i>Edit chat picture</a></li>
+                        <li><a href="/"><i class="material-icons">title</i>Edit chat name</a></li>
+                        <li><a href="/"><i class="material-icons">group</i>Edit participants</a></li>
+                        <li><a href="/"><i class="material-icons">gavel</i>Manage moderators</a></li>
+                        <li><a href="/"><i class="material-icons">gavel</i>View commands</a></li>
+                        <li><a href="/"><i class="material-icons">exit_to_app</i>Leave chat</a></li>
+                    </ul>
+                    <script src="{% static 'messages/js/messenger.js' %}"></script>
+                </i>
             </div>
         </div>
 

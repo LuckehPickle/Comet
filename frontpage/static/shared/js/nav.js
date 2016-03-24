@@ -67,6 +67,8 @@ for(var i = 0; i < transit_items.length; i++){
 
     transit_item.addEventListener("click", function(event){
         var source = event.target;
-        animations[source.getAttribute("data-transit-id")].run();
+        if(source.hasAttribute("data-transit-id")){
+            animations[source.getAttribute("data-transit-id")].run();
+        }
     });
 }

@@ -17,6 +17,8 @@
    TODO Mobile Support
 */
 
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,300,700);
+
 @import url(/static/shared/css/dropdown.css);
 
 /* Common Styles */
@@ -32,15 +34,20 @@
     margin: 0 auto;
     height: 100%;
     width: 100%;
-    display: flex;
-    align-items: center;
+    display: -webkit-flex;
+            display: flex;
+    -webkit-align-items: center;
+            align-items: center;
 }
 
 .logo{
     width: 200px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: -webkit-flex;
+            display: flex;
+    -webkit-flex-direction: column;
+            flex-direction: column;
+    -webkit-align-items: center;
+            align-items: center;
     padding: 8px 0;
 }
 
@@ -62,6 +69,29 @@
     position: relative;
 }
 
+/*.js-tooltip{
+    position: relative;
+}
+
+.js-tooltip::after{
+    content: attr(data-tooltip);
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    background-color: #3B3B3B;
+    padding: 8px 15px;
+    position: absolute;
+    top: 50px;
+    left: -50%;
+    z-index: 100;
+    visibility: hidden;
+    cursor: default;
+    border-radius: 3px;
+}
+
+.js-tooltip:hover .js-tooltip::after{
+    visibility: visible;
+}*/
+
 /* For mobile phones and other small devices */
 @media screen and (max-width: 40.5em){
     .menu{
@@ -72,7 +102,8 @@
     }
 
     .menu-wrapper{
-        justify-content: space-between;
+        -webkit-justify-content: space-between;
+                justify-content: space-between;
         text-align: center;
     }
 
@@ -117,7 +148,8 @@
     }
 
     .logo{
-        flex-grow: 1;
+        -webkit-flex-grow: 1;
+                flex-grow: 1;
     }
 
     .mobile-nav-trigger{
@@ -162,15 +194,19 @@
         border-top-color: #4B4B4B;
         border-top-width: thin;
         border-top-style: solid;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        display: -webkit-flex;
+                display: flex;
+        -webkit-justify-content: space-between;
+                justify-content: space-between;
+        -webkit-align-items: center;
+                align-items: center;
     }
 
     .mobile-button-wrapper a{
         font-family: 'Source Sans Pro', sans-serif;
         text-decoration: none;
-        flex-grow: 1;
+        -webkit-flex-grow: 1;
+                flex-grow: 1;
         margin: 0px 3px;
         text-align: center;
         padding: 8px 0px;
@@ -208,7 +244,8 @@
         margin: 0;
         /*margin-left: 12px; /* Seperate nav elements from the logo */
         padding: 0;
-        display: flex;
+        display: -webkit-flex;
+                display: flex;
         list-style: none;
     }
 
