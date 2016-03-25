@@ -50,7 +50,18 @@
                 <p id="id">({{ user_id }})</p>
             </div>
             <div class="user-image"></div>
-            <i class="material-icons menu-icons noselect js-transit" data-transit-id="menu">more_vert</i>
+            <i class="material-icons menu-icons js-transit dropdown-trigger" data-transit-id="menu">
+                more_vert
+                <ul class="dropdown" id="dropdown-profile">
+                    <li><a href="{% url 'messages' %}"><i class="material-icons">chat</i>Open messenger</a></li>
+                    <li><a href="/premium"><i class="material-icons">favorite</i>Purchase premium</a></li>
+                    <li><a href="/verify"><i class="material-icons">email</i>Verify email</a></li>
+                    <li><a href="/settings"><i class="material-icons">settings</i>Account settings</a></li>
+                    <li><a href="https://github.com/LuckehPickle/Comet/issues" target="_blank"><i class="material-icons">bug_report</i>Report a bug</a></li>
+                    <li><a href="{% url 'logout' %}"><i class="material-icons">exit_to_app</i>Logout</a></li>
+                </ul>
+                <script src="{% static 'shared/js/dropdown.js' %}"></script>
+            </i>
         {% else %}
             <a class="sign-in" href="{% url 'login' %}">Sign In</a>
         {% endif %}

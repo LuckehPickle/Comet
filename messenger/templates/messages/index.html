@@ -38,14 +38,7 @@
                 <i class="material-icons js-transit" data-transit-id="m-back">chevron_left</i>
                 <p>This is a really long title</p>
                 <i class="material-icons js-transit" data-transit-id="m-add_user">person_add</i>
-                <i class="material-icons js-transit" data-transit-id="m-more" id="more">more_vert</i>
-            </div>
-            <div class="desktop-tools">
-                <i class="material-icons js-transit" data-transit-id="search">search</i>
-                <p>This is a really long title</p>
-                <i class="material-icons js-transit" data-transit-id="add_user">person_add</i>
-                <i class="material-icons js-transit" data-transit-id="link">link</i>
-                <i class="material-icons js-transit" data-transit-id="more" id="more_d">
+                <i class="material-icons js-transit dropdown-trigger" data-transit-id="m-more" data-mobile id="more">
                     more_vert
                     <ul class="dropdown">
                         <li><a href="/"><i class="material-icons">photo</i>Edit chat picture</a></li>
@@ -55,15 +48,90 @@
                         <li><a href="/"><i class="material-icons">gavel</i>View commands</a></li>
                         <li><a href="/"><i class="material-icons">exit_to_app</i>Leave chat</a></li>
                     </ul>
-                    <script src="{% static 'messages/js/messenger.js' %}"></script>
+                </i>
+            </div>
+            <div class="desktop-tools">
+                <i class="material-icons js-transit" data-transit-id="search">search</i>
+                <p>This is a really long title</p>
+                <i class="material-icons js-transit" data-transit-id="add_user">person_add</i>
+                <i class="material-icons js-transit" data-transit-id="link">link</i>
+                <i class="material-icons js-transit dropdown-trigger" data-transit-id="more">
+                    more_vert
+                    <ul class="dropdown">
+                        <li><a href="/"><i class="material-icons">photo</i>Edit chat picture</a></li>
+                        <li><a href="/"><i class="material-icons">title</i>Edit chat name</a></li>
+                        <li><a href="/"><i class="material-icons">group</i>Edit participants</a></li>
+                        <li><a href="/"><i class="material-icons">gavel</i>Manage moderators</a></li>
+                        <li><a href="/"><i class="material-icons">gavel</i>View commands</a></li>
+                        <li><a href="/"><i class="material-icons">exit_to_app</i>Leave chat</a></li>
+                    </ul>
+                    <script src="{% static 'shared/js/dropdown.js' %}"></script>
                 </i>
             </div>
         </div>
 
         <!-- Chat Wrap -->
         <div class="chat-wrap">
-            <div class="chat-area"></div>
+            <div class="chat-area">
+                <div class="chat-list"></div>
+                <div class="chat">
+                    <!-- Chat Body -->
+                    <div class="chat-body">
+
+                        <div class="chat-message-container-other">
+                            <div class="chat-message-image-other"></div>
+                            <span class="triangle-top-right"></span>
+                            <div class="chat-message-content-other">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+                        </div>
+
+                        <div class="chat-message-container">
+                            <div class="chat-message-image"></div>
+                            <span class="triangle-top-left"></span>
+                            <div class="chat-message-content">Proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+                        </div>
+
+                        <div class="chat-message-container-tag">
+                            <div class="chat-message-content">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</div>
+                        </div>
+
+                        <div class="chat-message-container-other">
+                            <div class="chat-message-image-other"></div>
+                            <span class="triangle-top-right"></span>
+                            <div class="chat-message-content-other">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+                        </div>
+
+                        <div class="chat-message-container-tag-other">
+                            <div class="chat-message-content-other">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+                        </div>
+
+                        <div class="chat-message-container-tag-other">
+                            <div class="chat-message-content-other">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</div>
+                        </div>
+
+                        <div class="chat-message-container">
+                            <div class="chat-message-image"></div>
+                            <span class="triangle-top-left"></span>
+                            <div class="chat-message-content">Proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+                        </div>
+
+                        <div class="chat-message-container-tag">
+                            <div class="chat-message-content">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</div>
+                        </div>
+                    </div>
+
+                    <!-- Chat Footer -->
+                    <div class="chat-footer">
+                        <i class="material-icons js-transit" data-transit-id="attach">attachment</i>
+                        <input type="text" maxlength="256" placeholder="Send message">
+                        <span class="triangle-top-left"></span>
+                        <div class="chat-message-image"></div>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <!-- Compressed Footer -->
+        <div class="footer"></div>
 
         <script src="{% static 'shared/js/nav.js' %}"></script>
     </body>

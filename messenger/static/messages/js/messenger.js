@@ -14,37 +14,3 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-
-var more_d = document.querySelector("#more_d");
-var dropdown;
-var height;
-
-for(var i = 0; i < more_d.children.length; i++){
-    if(more_d.children[i].className == "dropdown"){
-        dropdown = more_d.children[i];
-        height = dropdown.clientHeight - 20;
-        break;
-    }
-}
-
-if(more_d != null && dropdown != null){
-    more_d.addEventListener("click", function(event){
-        if(dropdown.style.width == "" || dropdown.style.width == "0px"){
-            new mojs.Tween({
-                duration: 250,
-                onUpdate: function(progress){
-                    dropdown.style.width = (240 * progress) + "px";
-                    dropdown.style.height = (height * progress) + "px";
-                }
-            }).run();
-        }else if(dropdown.style.width == "240px"){
-            new mojs.Tween({
-                duration: 250,
-                onUpdate: function(progress){
-                    dropdown.style.width = (240 * (1 - progress)) + "px";
-                    dropdown.style.height = (height * (1 - progress)) + "px";
-                }
-            }).run();
-        }
-    });
-}

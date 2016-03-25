@@ -19,13 +19,57 @@
 */
 
 .dropdown{
-    position: relative;
+    position: absolute;
+    top: 48px;
+    right: 0;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    background-color: #FAFAFA;
+    list-style-type: none;
+    width: 0;
+    margin: 0;
+    padding: 10px 0;
+    cursor: default;
+    overflow: hidden;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+}
+
+.dropdown li{
+    width: 240px;
+}
+
+.dropdown li:hover{
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.dropdown li a{
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    display: block;
+    text-decoration: none;
+    color: #3B3B3B;
+    display: -webkit-flex;
+            display: flex;
+    -webkit-align-items: center;
+            align-items: center;
+}
+
+.dropdown .material-icons{
+    color: #3B3B3B !important;
+    padding: 0 10px !important;
+    font-size: 20px !important;
 }
 
 /*
+.dropdown{
+    position: relative;
+}
+
 These styles handle what the container looks like
 after the transition has run.
-*/
+
 .dropdown:hover .dropdown-container,
 .dropdown-container:hover{
     opacity: 1;
@@ -50,5 +94,6 @@ after the transition has run.
         isn't faded in/out.
      3) If we don't transition the visibility then the dropdown will
         dissapear before the opacity transition is even played.
-    */
+
 }
+*/
