@@ -38,21 +38,22 @@
                 <i class="material-icons js-transit" data-transit-id="m-back">chevron_left</i>
                 <p>This is a really long title</p>
                 <i class="material-icons js-transit" data-transit-id="m-add_user">person_add</i>
-                <i class="material-icons js-transit dropdown-trigger" data-transit-id="m-more" data-mobile id="more">
-                    more_vert
-                    <ul class="dropdown">
-                        <li><a href="/"><i class="material-icons">photo</i>Edit chat picture</a></li>
-                        <li><a href="/"><i class="material-icons">title</i>Edit chat name</a></li>
-                        <li><a href="/"><i class="material-icons">group</i>Edit participants</a></li>
-                        <li><a href="/"><i class="material-icons">gavel</i>Manage moderators</a></li>
-                        <li><a href="/"><i class="material-icons">gavel</i>View commands</a></li>
-                        <li><a href="/"><i class="material-icons">exit_to_app</i>Leave chat</a></li>
-                    </ul>
-                </i>
+                <i class="material-icons js-transit dropdown-trigger" data-transit-id="m-more" data-mobile id="more">more_vert</i>
+                {% comment %}
+                <ul class="dropdown">
+                    <li><a href="/"><i class="material-icons">photo</i>Edit chat picture</a></li>
+                    <li><a href="/"><i class="material-icons">title</i>Edit chat name</a></li>
+                    <li><a href="/"><i class="material-icons">group</i>Edit participants</a></li>
+                    <li><a href="/"><i class="material-icons">link</i>Get URL</a></li>
+                    <li><a href="/"><i class="material-icons">gavel</i>Manage moderators</a></li>
+                    <li><a href="/"><i class="material-icons">gavel</i>View commands</a></li>
+                    <li><a href="/"><i class="material-icons">exit_to_app</i>Leave chat</a></li>
+                </ul>
+                {% endcomment %}
             </div>
             <div class="desktop-tools">
                 <i class="material-icons js-transit" data-transit-id="search">search</i>
-                <p>This is a really long title</p>
+                <p id="title">This is a really long title</p>
                 <i class="material-icons js-transit" data-transit-id="add_user">person_add</i>
                 <i class="material-icons js-transit" data-transit-id="link">link</i>
                 <i class="material-icons js-transit dropdown-trigger" data-transit-id="more">
@@ -73,7 +74,22 @@
         <!-- Chat Wrap -->
         <div class="chat-wrap">
             <div class="chat-area">
-                <div class="chat-list"></div>
+                <div class="chat-list">
+                    <div class="chat-item chat-item-active">
+                        <div class="chat-item-image"></div>
+                        <div class="chat-item-wrapper">
+                            <p class="chat-item-title">This is a really long title</p>
+                            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                        </div>
+                    </div>
+                    <div class="chat-item">
+                        <div class="chat-item-image"></div>
+                        <div class="chat-item-wrapper">
+                            <p class="chat-item-title">Hello World</p>
+                            <p>Proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                        </div>
+                    </div>
+                </div>
                 <div class="chat">
                     <!-- Chat Body -->
                     <div class="chat-body">
@@ -123,15 +139,16 @@
                     <div class="chat-footer">
                         <i class="material-icons js-transit" data-transit-id="attach">attachment</i>
                         <input type="text" maxlength="256" placeholder="Send message">
-                        <span class="triangle-top-left"></span>
-                        <div class="chat-message-image"></div>
+                        <div class="chat-send"><i class="material-icons">send</i></div> <!-- TODO Make this button ripple -->
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Compressed Footer -->
-        <div class="footer"></div>
+        <div class="footer">
+            <div><img src="{% static 'shared/img/type.svg' %}">Copyright © 2016 - Sean Bailey - All Rights Reserved</div>
+        </div>
 
         <script src="{% static 'shared/js/nav.js' %}"></script>
     </body>

@@ -42,7 +42,7 @@
                 {% if request.user.is_authenticated %}
                     <a href="{% url 'messages' %}" class="btn-sheen noselect">Open Messenger</a>
                 {% else %}
-                    <a href="{% url 'register' %}" class="btn-sheen noselect">Get Started with Comet</a>
+                    <a href="{% url 'register' %}" class="btn-sheen noselect">Sign up for the Comet Beta</a>
                 {% endif %}
                 <div class="placeholder"></div>
             </div>

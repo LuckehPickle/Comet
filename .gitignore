@@ -80,3 +80,5 @@ frontpage/templates/frontpage/index.min.html
 frontpage/templates/shared/footer.min.html
 accounts/templates/accounts/index.min.html
 messenger/static/messages/css/main.min.css
+frontpage/static/shared/js/jquery-2.2.2.min.js
+frontpage/static/shared/js/jquery.slimscroll.min.js

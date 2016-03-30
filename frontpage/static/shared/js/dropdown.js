@@ -22,20 +22,25 @@ var easingPath = mojs.easing.path('M0,100 Q0,0 100,0');
 
 for(var i = 0; i < dropdown_triggers.length; i++){
     var trigger = dropdown_triggers[i];
+    var key = null;
+    var searchNode = trigger;
 
-    for(var j = 0; j < trigger.children.length; j++){
-        if(trigger.children[j].className == "dropdown"){
-            var key = getKey(trigger);
+    if(trigger.hasAttribute("data-mobile")){
+        searchNode = trigger.parentNode;
+    }
+
+    for(var j = 0; j < searchNode.children.length; j++){
+        if(searchNode.children[j].className == "dropdown"){
+            key = getKey(trigger);
             if(key in dropdowns){
                 console.error("The key '" + key + "' is already registered. Please use a unique id or transit id.");
                 break;
             }
-            dropdowns[key] = trigger.children[j];
-            heights[key] = trigger.children[j].clientHeight - 20;
+            dropdowns[key] = searchNode.children[j];
+            heights[key] = searchNode.children[j].clientHeight - 20;
             break;
         }
     }
-
 
     trigger.addEventListener("click", function(event){
         var target = event.target;
@@ -43,30 +48,30 @@ for(var i = 0; i < dropdown_triggers.length; i++){
             var key = getKey(target);
             var dropdown = dropdowns[key];
             var height = heights[key];
-            var width = target.hasAttribute("data-mobile") ? "mobile" : "240px";
+            var mobile = target.hasAttribute("data-mobile");
 
             if(dropdown.style.width == "" || dropdown.style.width == "0px"){
                 new mojs.Tween({
                     duration: 250,
                     onUpdate: function(progress){
-                        if(width == "mobile"){
-                            dropdown.style.width = (parseInt(width) * easingPath(progress)) + "%";
+                        if(mobile){
+                            dropdown.style.width = (100 * easingPath(progress)) + "%";
                         }else{
-                            dropdown.style.width = (parseInt(width) * easingPath(progress)) + "px";
+                            dropdown.style.width = (240 * easingPath(progress)) + "px";
+                            dropdown.style.height = (height * easingPath(progress)) + "px";
                         }
-                        dropdown.style.height = (height * easingPath(progress)) + "px";
                     }
                 }).run();
-            }else if(dropdown.style.width == width){
+            }else if(dropdown.style.width == "240px" || dropdown.style.width == "100%"){
                 new mojs.Tween({
                     duration: 250,
                     onUpdate: function(progress){
-                        if(width == "mobile"){
-                            dropdown.style.width = (parseInt(width) * easingPath(1 - progress)) + "%";
+                        if(mobile){
+                            dropdown.style.width = (100 * easingPath(1 - progress)) + "%";
                         }else{
-                            dropdown.style.width = (parseInt(width) * easingPath(1 - progress)) + "px";
+                            dropdown.style.width = (240 * easingPath(1 - progress)) + "px";
+                            dropdown.style.height = (height * easingPath(1 - progress)) + "px";
                         }
-                        dropdown.style.height = (height * easingPath(1 - progress)) + "px";
                     },
                     onComplete: function(){
                         dropdown.style.width = "0px";
