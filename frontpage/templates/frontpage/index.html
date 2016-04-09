@@ -23,6 +23,10 @@
         <title>{{ title }} | Private, Open Source Messaging</title>
         {% load staticfiles %}
         <meta charset="UTF-8">
+        <meta name="theme-color" content="#3B3B3B">
+        <meta name="msapplication-navbutton-color" content="#3B3B3B">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
         <link rel="icon" type="image/ico" href="{% static 'shared/favicon.ico' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'frontpage/main.css' %}">
@@ -42,7 +46,7 @@
                 {% if request.user.is_authenticated %}
                     <a href="{% url 'messages' %}" class="btn-sheen noselect">Open Messenger</a>
                 {% else %}
-                    <a href="{% url 'register' %}" class="btn-sheen noselect">Sign up for the Comet Beta</a>
+                    <a href="{% url 'register' %}" class="btn-sheen noselect">Join the Comet Beta</a>
                 {% endif %}
                 <div class="placeholder"></div>
             </div>

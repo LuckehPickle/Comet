@@ -29,7 +29,7 @@ def index(request):
     user_id = None
     if request.user.is_authenticated():
         user_id = str(request.user.user_id)[:8]
-    return render(request, "messages/index.html", {
+    return render(request, "messenger/index.html", {
         "title": (cr_config.TITLE_FORMAT % "Messages"),
         "user_id": str(request.user.user_id)[:8],
     })

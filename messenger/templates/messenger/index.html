@@ -22,9 +22,13 @@
         <title>{{ title }}</title>
         {% load staticfiles %}
         <meta charset="UTF-8">
+        <meta name="theme-color" content="#3B3B3B">
+        <meta name="msapplication-navbutton-color" content="#3B3B3B">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
         <link rel="icon" type="image/ico" href="{% static 'shared/favicon.ico' %}">
-        <link href="{% static 'messages/css/main.css' %}" type="text/css" rel="stylesheet">
+        <link href="{% static 'messenger/css/main.css' %}" type="text/css" rel="stylesheet">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     </head>
     <body>
@@ -51,8 +55,21 @@
                 </ul>
                 {% endcomment %}
             </div>
+
+            <!-- Desktop Toolbar -->
             <div class="desktop-tools">
-                <i class="material-icons js-transit" data-transit-id="search">search</i>
+                <!-- Chat List Tools -->
+                <div id="list">
+                    <i class="material-icons" id="search-icon">search</i>
+                    <input type="text" spellcheck="false" placeholder="Search...">
+                    <i class="material-icons js-transit" data-transit-id="create-chat">add</i>
+                </div>
+
+                <!-- Chat Body Tools -->
+                <div>
+
+                </div>
+                <!--<i class="material-icons js-transit" data-transit-id="search">search</i>
                 <p id="title">This is a really long title</p>
                 <i class="material-icons js-transit" data-transit-id="add_user">person_add</i>
                 <i class="material-icons js-transit" data-transit-id="link">link</i>
@@ -67,15 +84,17 @@
                         <li><a href="/"><i class="material-icons">exit_to_app</i>Leave chat</a></li>
                     </ul>
                     <script src="{% static 'shared/js/dropdown.js' %}"></script>
-                </i>
+                </i>-->
             </div>
         </div>
 
         <!-- Chat Wrap -->
         <div class="chat-wrap">
             <div class="chat-area">
+
+                <!-- List of chats -->
                 <div class="chat-list">
-                    <div class="chat-item chat-item-active">
+                    <div class="chat-item active">
                         <div class="chat-item-image"></div>
                         <div class="chat-item-wrapper">
                             <p class="chat-item-title">This is a really long title</p>
@@ -90,6 +109,8 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Chat -->
                 <div class="chat">
                     <!-- Chat Body -->
                     <div class="chat-body">
@@ -146,8 +167,8 @@
         </div>
 
         <!-- Compressed Footer -->
-        <div class="footer">
-            <div><img src="{% static 'shared/img/type.svg' %}">Copyright © 2016 - Sean Bailey - All Rights Reserved</div>
+        <div class="compact-footer">
+            <div>Copyright © 2016 - Sean Bailey - All Rights Reserved</div>
         </div>
 
         <script src="{% static 'shared/js/nav.js' %}"></script>

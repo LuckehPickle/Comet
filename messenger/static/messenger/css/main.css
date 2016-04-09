@@ -26,7 +26,7 @@
 
 body{
     margin: 0;
-    background-color: #E5E5E5;
+    background-color: #555555;
     overflow-x: hidden;
     position: absolute;
     top: 0;
@@ -352,28 +352,40 @@ div[class^="chat-message-content"]{
         display: none !important;
     }
 
-    .desktop-tools p{
-        font-family: 'Source Sans Pro', sans-serif;
-        font-weight: bold;
-        text-transform: uppercase;
-        text-overflow: ellipsis;
-        color: #EBEBEB;
-        white-space: nowrap;
-        overflow: hidden;
-        margin: 0;
-        padding: 0 9px;
+    .desktop-tools{
+        display: -webkit-flex;
+                display: flex;
+        -webkit-align-items: stretch;
+                align-items: stretch;
     }
 
-    #title{
+    .desktop-tools div{
+        display: -webkit-flex;
+                display: flex;
+        -webkit-align-items: center;
+                align-items: center;
+    }
+
+    .desktop-tools #list-area{
+        width: 320px;
+    }
+
+    .desktop-tools input{
+        background-color: transparent;
+        border: none;
+        outline: none;
+        font-family: 'Roboto', sans-serif;
+        font-size: 16px;
+        color: #EBEBEB;
+    }
+
+    #search-icon{
+        cursor: text;
+    }
+
+    .desktop-tools:not(#list-area){
         -webkit-flex-grow: 1;
                 flex-grow: 1;
-        color: #D1D1D1;
-        margin-left: 280px;
-    }
-
-    #title::before{
-        content: "Chat: ";
-        color: #EBEBEB;
     }
 
     .desktop-tools .material-icons{
@@ -390,7 +402,7 @@ div[class^="chat-message-content"]{
     .chat-wrap{
         position: absolute;
         top: 120px;
-        bottom: 50px;
+        bottom: 35px;
         left: 0;
         right: 0;
     }
@@ -413,6 +425,7 @@ div[class^="chat-message-content"]{
         background-color: #F0F0F0;
         overflow-x: hidden;
         overflow-y: scroll;
+        position: relative; /* Allows chat-create to be positioned */
     }
 
     .chat-item{
@@ -425,10 +438,11 @@ div[class^="chat-message-content"]{
         -webkit-align-items: center;
                 align-items: center;
         cursor: pointer;
+        background-color: white;
     }
 
-    .chat-item-active{
-        background-color: white;
+    .chat-item:not(.active){
+        background-color: transparent;
     }
 
     .chat-item-image{
@@ -469,6 +483,36 @@ div[class^="chat-message-content"]{
     .chat-item-title{
         font-weight: bold;
     }
+
+    /*.chat-create{
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: rgba(50, 50, 50, 0.8);
+        box-sizing: border-box;
+        display: -webkit-flex;
+                display: flex;
+        -webkit-align-items: center;
+                align-items: center;
+    }
+
+    div[class^="chat-create-"]{
+        flex-grow: 1;
+        text-align: center;
+        font-family: 'Roboto', sans-serif;
+        font-size: 15px;
+        padding: 10px;
+        box-sizing: border-box;
+        cursor: pointer;
+        color: #EBEBEB;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-align-items: center;
+                align-items: center;
+        -webkit-justify-content: center;
+                justify-content: center;
+    }*/
 
     .chat{
         -webkit-flex-grow: 1;
@@ -515,32 +559,29 @@ div[class^="chat-message-content"]{
         content: "Send";
     }
 
-    .footer{
+    .compact-footer{
         position: absolute;
         bottom: 0;
         left: 0;
         right: 0;
-        height: 50px;
+        height: 35px;
         background-color: #454545;
     }
 
-    .footer div{
+    .compact-footer div{
         height: 100%;
         width: 100%;
         max-width: 1200px;
         margin: 0 auto;
-        color: #EBEBEB;
+        color: #DBDBDB;
         font-family: 'Source Sans Pro', sans-serif;
+        font-size: 14px;
         -webkit-display: flex;
                 display: flex;
         -webkit-align-items: center;
                 align-items: center;
-        padding: 0 10px;
+        -webkit-justify-content: center;
+                justify-content: center;
         box-sizing: border-box;
-    }
-
-    .footer img{
-        height: 20px;
-        margin-right: 10px;
     }
 }
