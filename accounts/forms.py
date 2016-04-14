@@ -23,7 +23,7 @@ from django import forms
 from .models import User
 from django.utils.translation import ugettext as _
 
-# RegistrationForm Class
+# Registration Form Class
 # Contains information and a cleaning function for the registration
 # form. Note that this is where error messages for particular fields
 # can be defined.

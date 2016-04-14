@@ -32,6 +32,7 @@ def index(request):
     return render(request, "messenger/index.html", {
         "title": (cr_config.TITLE_FORMAT % "Messages"),
         "user_id": str(request.user.user_id)[:8],
+        "form": CreateChatForm(),
     })
 
 # PRIVATE
@@ -43,7 +44,7 @@ def index(request):
 def private(request, identifier=None):
     return HttpResponse("Private message with " + identifier)
 
-# group
+# GROUP
 # Renders a page that allows you to message a particular group.
 # Note: You do not have to be logged in to view a group, but you will not
 # be able to complete most interactions and will be assigned a temporary
@@ -55,6 +56,8 @@ def private(request, identifier=None):
 def group(request, identifier=None):
     return HttpResponse("Group message with " + identifier)
 
+# CREATE
+# Handles the form submissions from the chat creation modal. 
 @login_required_message
 def create(request):
     if request.POST:

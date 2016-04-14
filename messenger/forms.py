@@ -16,19 +16,30 @@
 # Django Imports
 from django import forms
 
+# Create Chat Form Class
+# Contains information for the chat room creation form.
 class CreateChatForm(forms.ModelForm):
 
+    # NAME FIELD
+    # These restrictions should be imposed on the client side first, but
+    # must remain here for security reasons. Note that this name does not
+    # need to be unique, as each chat has it's own unique identifier.
     name = forms.CharField(
         label="Name",
         min_length=3,
         max_length=32,
         error_messages={
-            "required": "No chat name was provided.",
+            "required": "No chat name was provided.", # Field was not filled out
             "min_length": "Chat names must be atleast three (3) characters long.",
             "max_length": "Chat names must be less than 32 characters long.",
         },
     )
 
+    # PUBLIC FIELD
+    # Allows users to choose whether the chat should be accessible by the
+    # public or not. If set to true then anyone with the URL can join the
+    # chat. If set to false then then only users who are invited to join
+    # or accepted can subscribe to the room.
     public = forms.BooleanField(
         label="Anyone with the link can join (public)",
     )

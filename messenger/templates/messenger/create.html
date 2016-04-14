@@ -20,5 +20,13 @@
 <div class="modal-create">
     <p class="modal-title">Create Chat</p>
     <p class="modal-note">What type of group would you like to create?</p>
-    <form action="{% url 'create' %}"></form>
+    <form action="{% url 'create' %}" method="post" novalidate>
+        {% for field in form %}
+            <div class="modal-input-container">
+                <p>{{ field.label }}</p>
+                <div>{{ field }}</div>
+                
+            </div>
+        {% endfor %}
+    </form>
 </div>
