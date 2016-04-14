@@ -584,4 +584,44 @@ div[class^="chat-message-content"]{
                 justify-content: center;
         box-sizing: border-box;
     }
+
+    .modal-wrapper{
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.3);
+        z-index: 10000;
+        display: -webkit-flex;
+                display: flex;
+        -webkit-justify-content: center;
+                justify-content: center;
+        -webkit-align-items: center;
+                align-items: center;
+    }
+
+    .modal-create{
+        width: 500px;
+        padding: 40px;
+        box-sizing: border-box;
+        background-color: #F2F2F2;
+        border-radius: 4px;
+    }
+
+    .modal-title{
+        font-family: bebas-neue, sans-serif;
+        font-size: 45px;
+        color: #3B3B3B;
+        margin: 0;
+        text-align: center;
+    }
+
+    .modal-note{
+        font-family: 'Source Sans Pro', sans-serif;
+        font-size: 16px;
+        color: #3B3B3B;
+        margin: 5px 0;
+        text-align: center;
+    }
 }

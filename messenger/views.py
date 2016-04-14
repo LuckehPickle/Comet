@@ -51,5 +51,16 @@ def private(request, identifier=None):
 # shown an error message regardless.
 # IDEA: Allow groups to create unique aliases for their URL. This will make
 # it easier to share the URL of public chats.
+@login_required_message
 def group(request, identifier=None):
     return HttpResponse("Group message with " + identifier)
+
+@login_required_message
+def create(request):
+    if request.POST:
+        form = CreateChatForm(request.POST)
+        messages.add_message(request, messages.DEBUG, "Success")
+        return redirect("messages")
+    else:
+        messages.add_message(request, messages.ERROR, "A group could not be created because no data was posted.")
+        return redirect("messages")
