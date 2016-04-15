@@ -19,8 +19,9 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 
 # Other Imports
-import cr_config
+import cr_config as config
 from comet.decorators import login_required_message
+from messenger.forms import CreateChatForm
 
 # INDEX
 # Currently just renders the messenger interface from the template.
@@ -30,9 +31,9 @@ def index(request):
     if request.user.is_authenticated():
         user_id = str(request.user.user_id)[:8]
     return render(request, "messenger/index.html", {
-        "title": (cr_config.TITLE_FORMAT % "Messages"),
+        "title": (config.TITLE_FORMAT % "Messages"),
         "user_id": str(request.user.user_id)[:8],
-        "form": CreateChatForm(),
+        "create_chat_form": CreateChatForm(),
     })
 
 # PRIVATE
@@ -57,7 +58,7 @@ def group(request, identifier=None):
     return HttpResponse("Group message with " + identifier)
 
 # CREATE
-# Handles the form submissions from the chat creation modal. 
+# Handles the form submissions from the chat creation modal.
 @login_required_message
 def create(request):
     if request.POST:

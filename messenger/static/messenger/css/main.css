@@ -484,36 +484,6 @@ div[class^="chat-message-content"]{
         font-weight: bold;
     }
 
-    /*.chat-create{
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background-color: rgba(50, 50, 50, 0.8);
-        box-sizing: border-box;
-        display: -webkit-flex;
-                display: flex;
-        -webkit-align-items: center;
-                align-items: center;
-    }
-
-    div[class^="chat-create-"]{
-        flex-grow: 1;
-        text-align: center;
-        font-family: 'Roboto', sans-serif;
-        font-size: 15px;
-        padding: 10px;
-        box-sizing: border-box;
-        cursor: pointer;
-        color: #EBEBEB;
-        display: -webkit-flex;
-        display: flex;
-        -webkit-align-items: center;
-                align-items: center;
-        -webkit-justify-content: center;
-                justify-content: center;
-    }*/
-
     .chat{
         -webkit-flex-grow: 1;
                 flex-grow: 1;
@@ -585,6 +555,8 @@ div[class^="chat-message-content"]{
         box-sizing: border-box;
     }
 
+    /* MODAL */
+
     .modal-wrapper{
         position: absolute;
         top: 0;
@@ -593,6 +565,10 @@ div[class^="chat-message-content"]{
         bottom: 0;
         background-color: rgba(0, 0, 0, 0.3);
         z-index: 10000;
+        display: none;
+    }
+
+    .modal-wrapper[data-enabled], .modal-wrapper[data-animating]{
         display: -webkit-flex;
                 display: flex;
         -webkit-justify-content: center;
@@ -622,6 +598,111 @@ div[class^="chat-message-content"]{
         font-size: 16px;
         color: #3B3B3B;
         margin: 5px 0;
+        margin-bottom: 0px;
+    }
+
+    .modal-input-container{
+        width: 100%;
+        text-align: left;
+        margin: 10px 0;
+        margin-bottom: 0;
+        display: inline-block;
+    }
+
+    .modal-checkbox-container{
+        margin: 10px 0;
+    }
+
+    .modal-checkbox-container input[type="checkbox"]{
+        display: none; /* Hide the default checkbox */
+    }
+
+    .modal-checkbox-container input[type="checkbox"] + label:before{
+        content: "";
+        width: 15px;
+        height: 15px;
+        background-color: transparent;
+        transition: background-color 0.2s;
+        border-radius: 2px;
+        border: 2px solid #F37021;
+        display: inline-block;
+        margin: 6px 0px;
+        margin-right: 10px;
+        cursor: pointer;
+    }
+
+    .modal-checkbox-container input[type="checkbox"]:checked + label:before{
+        content: "";
+        background-color: #F37021;
+    }
+
+    .modal-checkbox-container label{
+        display: -webkit-flex;
+                display: flex;
+        -webkit-align-items: center;
+                align-items: center;
+        cursor: pointer;
+    }
+
+    .modal-input-container p, .modal-checkbox-container label{
+        font-family: 'Source Sans Pro', sans-serif;
+        color: #3B3B3B;
+        margin: 5px 0;
+    }
+
+    .modal-input-container div{
+        width: 100%;
+        background-color: #FFFFFF;
+    }
+
+    .modal-input-container input[type="text"]{
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+        font-family: 'Source Sans Pro', sans-serif;
+        font-size: 16px;
+        color: #3B3B3B;
+        background-color: transparent;
+        outline: none;
+        border: none;
+    }
+
+    .modal-button-wrapper{
+        width: 100%;
+        display: -webkit-flex;
+                display: flex;
+        -webkit-align-items: center;
+                align-items: center;
+        -webkit-justify-content: space-between;
+                justify-content: space-between;
+        margin-top: 25px;
+    }
+
+    .modal-button-wrapper input[type="submit"]{
+        border: none;
+        outline: none;
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: bold;
+        font-size: 16px;
         text-align: center;
+        text-transform: uppercase;
+        padding: 10px 30px;
+        border-radius: 3px;
+        background-color: #F37021;
+        color: #EBEBEB;
+        cursor: pointer;
+    }
+
+    .modal-silent-button{
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: bold;
+        font-size: 16px;
+        text-align: center;
+        text-transform: uppercase;
+        padding: 10px 20px;
+        border-radius: 2px;
+        color: #3B3B3B;
+        cursor: pointer;
+        position: relative;
     }
 }

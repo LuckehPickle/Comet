@@ -14,3 +14,80 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
+
+var createGroupTriggers = document.querySelectorAll(".create-group-trigger");
+var modal_wrapper = document.querySelector(".modal-wrapper");
+var modal_create = document.querySelector(".modal-create");
+var easingPath = mojs.easing.path('M0,100 Q0,0 100,0');
+
+var modal_animations = {};
+
+var modal_create_show = new mojs.Tween({
+    duration: 250,
+    onStart: function(){
+        modal_create.setAttribute("data-animating", "");
+        modal_wrapper.setAttribute("data-animating", "");
+    },
+    onUpdate: function(progress){
+        modal_create.style.opacity = easingPath(progress);
+        modal_wrapper.style.opacity = easingPath(progress);
+    },
+    onComplete: function(){
+        modal_create.removeAttribute("data-animating");
+        modal_create.setAttribute("data-enabled", "");
+        modal_wrapper.removeAttribute("data-animating");
+        modal_wrapper.setAttribute("data-enabled", "");
+    },
+});
+
+modal_animations["create-show"] = modal_create_show;
+
+var modal_create_hide = new mojs.Tween({
+    duration: 300,
+    delay: 100,
+    onStart: function(){
+        modal_create.removeAttribute("data-enabled");
+        modal_create.setAttribute("data-animating", "");
+        modal_wrapper.removeAttribute("data-enabled");
+        modal_wrapper.setAttribute("data-animating", "");
+    },
+    onUpdate: function(progress){
+        modal_create.style.opacity = (1 - easingPath(progress));
+        modal_wrapper.style.opacity = (1 - easingPath(progress));
+    },
+    onComplete: function(){
+        modal_create.removeAttribute("data-animating");
+        modal_wrapper.removeAttribute("data-animating");
+    },
+});
+
+modal_animations["create-hide"] = modal_create_hide;
+
+var modal_create_cancel = document.querySelector(".modal-create-cancel");
+
+modal_create_cancel.addEventListener("click", function(){
+    toggleModal(modal_create);
+});
+
+for(var i = 0; i < createGroupTriggers.length; i++){
+    var trigger = createGroupTriggers[i];
+    trigger.addEventListener("click", function(){
+        toggleModal(modal_create);
+    });
+}
+
+// Disables
+function toggleModal(modal){
+    // Make sure a modal was passed
+    if(modal.className.indexOf("_modal") == -1){
+        return;
+    }
+
+    console.debug("Toggling Modal");
+
+    if(!modal.hasAttribute("data-enabled") && !modal.hasAttribute("data-animating")){ // Show modal
+        modal_animations[modal.getAttribute("data-animation-id") + "-show"].run();
+    }else if(modal.hasAttribute("data-enabled")){ // hide modal
+        modal_animations[modal.getAttribute("data-animation-id") + "-hide"].run();
+    }
+}

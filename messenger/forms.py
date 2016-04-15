@@ -16,6 +16,9 @@
 # Django Imports
 from django import forms
 
+# Other Imports
+from .models import ChatRoom
+
 # Create Chat Form Class
 # Contains information for the chat room creation form.
 class CreateChatForm(forms.ModelForm):
@@ -25,7 +28,7 @@ class CreateChatForm(forms.ModelForm):
     # must remain here for security reasons. Note that this name does not
     # need to be unique, as each chat has it's own unique identifier.
     name = forms.CharField(
-        label="Name",
+        label="Group Name",
         min_length=3,
         max_length=32,
         error_messages={
@@ -40,6 +43,10 @@ class CreateChatForm(forms.ModelForm):
     # public or not. If set to true then anyone with the URL can join the
     # chat. If set to false then then only users who are invited to join
     # or accepted can subscribe to the room.
-    public = forms.BooleanField(
-        label="Anyone with the link can join (public)",
+    is_public = forms.BooleanField(
+        label="Make this group public",
     )
+
+    class Meta:
+        model = ChatRoom
+        fields = ["name", "is_public"]

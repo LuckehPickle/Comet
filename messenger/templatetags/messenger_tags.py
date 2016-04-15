@@ -1,4 +1,4 @@
-# [Messenger] IDENTIFIER.PY - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
+# [Messenger] MESSENGER_TAGS.PY - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
 # Powered by Django (https://www.djangoproject.com/) - Not endorsed by Django
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,9 +13,11 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-# Other Imports
-import base64
+# Django Imports
+from django import template
 
-# TODO generate a random 7 char long base64 string, and check to see if it's already in use
-def generate():
-    return "abcdefg"
+register = template.Library()
+
+@register.filter(name="field_type")
+def is_checkbox(field):
+    return field.field.widget.__class__.__name__

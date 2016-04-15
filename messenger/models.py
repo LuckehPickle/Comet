@@ -19,8 +19,8 @@ from django.utils import timezone
 from django.core.urlresolvers import reverse
 
 # Other Imports
+import uuid
 from . import identifier as ident
-from . import views
 
 # Chat Room Class
 # Represents the database model that each chatroom, public or private,
@@ -52,7 +52,7 @@ class ChatRoom(models.Model):
     is_public = models.BooleanField(default=False)
 
     # Creator's have elavated permissions compared to moderators.
-    creator = models.UUIDField()
+    creator = models.UUIDField(default=uuid.uuid4)
 
     # TODO Add a dict for moderators
 
@@ -61,4 +61,4 @@ class ChatRoom(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return reverse(views.group, args=[str(self.identifier)])
+        return "/messages/%s" % str(self.identifier)
