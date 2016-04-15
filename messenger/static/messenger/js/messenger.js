@@ -13,6 +13,8 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
+
+ TODO Rewrite in JQuery
 */
 
 var createGroupTriggers = document.querySelectorAll(".create-group-trigger");
@@ -91,3 +93,30 @@ function toggleModal(modal){
         modal_animations[modal.getAttribute("data-animation-id") + "-hide"].run();
     }
 }
+
+$(function(){
+    $("#chat-form").submit(function(){
+        var message = $("#chat-message").val();
+    });
+
+    var connected = function(){
+        socket.subscribe("group-" + window.group_id);
+        socket.send({
+            group: window.group_id,
+            action: 'start',
+        });
+    };
+
+    var disconnected;
+    var messaged;
+
+    var start = function(){
+        socket = new io.Socket();
+        socket.connect();
+        socket.on("connect", connected);
+        socket.on("disconnect", disconnected);
+        socket.on("message", messaged);
+    }
+
+    //start();
+});

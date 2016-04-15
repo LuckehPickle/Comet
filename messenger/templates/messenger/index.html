@@ -31,6 +31,8 @@
         <link href="{% static 'messenger/css/main.css' %}" type="text/css" rel="stylesheet">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <script src="//use.edgefonts.net/bebas-neue:n4.js"></script>
+        {% load socketio_tags %}
+        {% socketio %}
     </head>
     <body>
         <script src="{% static 'shared/js/mo.min.js' %}"></script>
@@ -140,11 +142,14 @@
                     <!-- Chat Footer -->
                     <div class="chat-footer">
                         <i class="material-icons js-transit" data-transit-id="attach">attachment</i>
-                        <input type="text" maxlength="256" placeholder="Send message">
-                        <div class="chat-send">
-                            <i class="material-icons">send</i>
-                            <link class="rippleJS"/>
-                        </div>
+                        <form id="chat-form" novalidate>
+                            <input id="chat-message" type="text" maxlength="256" placeholder="Send message">
+                            <div class="chat-send">
+                                <i class="material-icons">send</i>
+                                <link class="rippleJS"/>
+                            </div>
+                            <input type="submit"><!-- Hidden, allows users to press 'enter' -->
+                        </form>
                     </div>
                 </div>
             </div>
@@ -156,6 +161,7 @@
         </div>
 
         <script src="{% static 'shared/js/nav.js' %}"></script>
+        <script src="{% static 'shared/js/jquery-2.2.2.min.js' %}"></script>
         <script src="{% static 'messenger/js/messenger.js' %}"></script>
         <script src="https://cdn.rawgit.com/samthor/rippleJS/v1.0.2/ripple.min.js"></script>
     </body>

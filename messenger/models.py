@@ -66,8 +66,6 @@ class ChatGroup(models.Model):
         related_name="+",
     )
 
-    # TODO Add one-to-many relationship to another table. Each row will contain a different user
-
     def __unicode__(self):
         return str(self.name)
 

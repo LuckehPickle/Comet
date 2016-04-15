@@ -15,7 +15,7 @@
 
 # Django Imports
 from django.http import HttpResponse, Http404
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 
 # Other Imports
@@ -58,13 +58,7 @@ def private(request, identifier=None):
 @login_required_message
 def group(request, identifier=None):
     user_id = None
-
-    name = None
-    try:
-        name = ChatGroup.objects.get(identifier=identifier)
-    except:
-        raise Http404
-
+    name = get_object_or_404(ChatGroup, identifier=identifier)
     if request.user.is_authenticated():
         user_id = str(request.user.user_id)[:8]
     return render(request, "messenger/index.html", {
