@@ -90,7 +90,17 @@ class User(AbstractBaseUser):
     )
 
     # Most of these fields are pretty self explanatory.
-    username = models.CharField(_("Username"), max_length=32,)
+    username = models.CharField(
+        _("Username"),
+        max_length=32,
+    )
+
+    # Friends are symmetrical (ie A friend request must be accepted)
+    # I don't think this requires a thorugh model
+    friends = models.ManyToManyField(
+        "self",
+    )
+
     date_joined = models.DateTimeField(default=timezone.now)
     is_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)

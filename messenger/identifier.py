@@ -15,7 +15,10 @@
 
 # Other Imports
 import base64
+import uuid
 
-# TODO generate a random 7 char long base64 string, and check to see if it's already in use
+# Generates a random 11 character long base64 string
 def generate():
-    return "abcdefg"
+    u = uuid.uuid4()
+    b64 = base64.urlsafe_b64encode(str(u))[:11]
+    return b64

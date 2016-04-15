@@ -19,8 +19,8 @@
 
 <div class="modal-create _modal" data-animation-id="create">
     <p class="modal-title">Create Group</p>
-    {% comment %}<form action="{% url 'create' %}" method="post" novalidate>{% endcomment %}
-    <form novalidate>
+    <form action="{% url 'create' %}" method="post" novalidate>
+        {% csrf_token %}
         {% load messenger_tags %}
         {% for field in create_chat_form %}
             {% if field|field_type == "CheckboxInput" %}
@@ -35,7 +35,7 @@
                 </div>
             {% endif %}
         {% endfor %}
-        <p class="modal-note">Note: Anyone with the URL can join a public group.</p>
+        <!--<p class="modal-note">Note: Anyone with the URL can join a public group.</p>-->
         <div class="modal-button-wrapper">
             <input type="submit" value="Create">
             <div class="modal-silent-button noselect modal-create-cancel">

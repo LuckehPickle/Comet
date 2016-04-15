@@ -14,7 +14,7 @@
 #   limitations under the License.
 
 # Django Imports
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect
 from django.contrib import messages
 
@@ -22,6 +22,8 @@ from django.contrib import messages
 import cr_config as config
 from comet.decorators import login_required_message
 from messenger.forms import CreateChatForm
+from messenger.models import ChatGroup
+from messenger.identifier import generate
 
 # INDEX
 # Currently just renders the messenger interface from the template.
@@ -55,7 +57,21 @@ def private(request, identifier=None):
 # it easier to share the URL of public chats.
 @login_required_message
 def group(request, identifier=None):
-    return HttpResponse("Group message with " + identifier)
+    user_id = None
+
+    name = None
+    try:
+        name = ChatGroup.objects.get(identifier=identifier)
+    except:
+        raise Http404
+
+    if request.user.is_authenticated():
+        user_id = str(request.user.user_id)[:8]
+    return render(request, "messenger/index.html", {
+        "title": (config.TITLE_FORMAT % name),
+        "user_id": str(request.user.user_id)[:8],
+        "create_chat_form": CreateChatForm(),
+    })
 
 # CREATE
 # Handles the form submissions from the chat creation modal.
@@ -63,7 +79,28 @@ def group(request, identifier=None):
 def create(request):
     if request.POST:
         form = CreateChatForm(request.POST)
-        messages.add_message(request, messages.DEBUG, "Success")
+        if form.is_valid():
+            # Generate a new identifier
+            identifier = generate()
+            while ChatGroup.objects.filter(identifier=identifier).count() != 0:
+                print("Looping")
+                identifier = generate()
+
+            data = form.cleaned_data
+            room = ChatGroup.objects.create(
+                name=data["name"],
+                is_public=data["is_public"],
+                creator=request.user,
+                identifier=identifier,
+            )
+
+            if data["is_public"]:
+                messages.add_message(request, messages.INFO, "Group '%s' successfully created. Add people to this group by giving them the URL or by clicking 'add users'." % data["name"])
+            else:
+                messages.add_message(request, messages.INFO, "Group '%s' successfully created. Add people to this group by clicking 'add users'." % data["name"])
+            return redirect(room)
+
+        messages.add_message(request, messages.ERROR, "The data you entered was invalid.")
         return redirect("messages")
     else:
         messages.add_message(request, messages.ERROR, "A group could not be created because no data was posted.")

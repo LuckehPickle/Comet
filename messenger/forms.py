@@ -17,7 +17,7 @@
 from django import forms
 
 # Other Imports
-from .models import ChatRoom
+from .models import ChatGroup
 
 # Create Chat Form Class
 # Contains information for the chat room creation form.
@@ -45,8 +45,10 @@ class CreateChatForm(forms.ModelForm):
     # or accepted can subscribe to the room.
     is_public = forms.BooleanField(
         label="Make this group public",
+        initial=False,
+        required=False, # If this is set to true then not checking the box will throw errors
     )
 
     class Meta:
-        model = ChatRoom
+        model = ChatGroup
         fields = ["name", "is_public"]

@@ -286,6 +286,7 @@ div[class^="chat-message-content"]{
         box-sizing: border-box;
         margin-left: 10px;
         cursor: pointer;
+        position: relative;
     }
 
     div[class^="chat-message-container"]{
@@ -519,6 +520,7 @@ div[class^="chat-message-content"]{
         padding: 12px 24px;
         margin-left: 10px;
         cursor: pointer;
+        position: relative;
     }
 
     .chat-send i{
@@ -563,7 +565,7 @@ div[class^="chat-message-content"]{
         right: 0;
         left: 0;
         bottom: 0;
-        background-color: rgba(0, 0, 0, 0.3);
+        background-color: rgba(0, 0, 0, 0.75);
         z-index: 10000;
         display: none;
     }
@@ -578,19 +580,19 @@ div[class^="chat-message-content"]{
     }
 
     .modal-create{
-        width: 500px;
-        padding: 40px;
+        width: 360px;
+        padding: 35px;
         box-sizing: border-box;
         background-color: #F2F2F2;
-        border-radius: 4px;
+        border-radius: 3px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
     }
 
     .modal-title{
         font-family: bebas-neue, sans-serif;
-        font-size: 45px;
+        font-size: 40px;
         color: #3B3B3B;
         margin: 0;
-        text-align: center;
     }
 
     .modal-note{
@@ -675,7 +677,7 @@ div[class^="chat-message-content"]{
                 align-items: center;
         -webkit-justify-content: space-between;
                 justify-content: space-between;
-        margin-top: 25px;
+        margin-top: 20px;
     }
 
     .modal-button-wrapper input[type="submit"]{

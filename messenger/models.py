@@ -22,10 +22,10 @@ from django.core.urlresolvers import reverse
 import uuid
 from . import identifier as ident
 
-# Chat Room Class
-# Represents the database model that each chatroom, public or private,
+# Chat Group Class
+# Represents the database model that each chatgroup, public or private,
 # must adopt.
-class ChatRoom(models.Model):
+class ChatGroup(models.Model):
 
     # The name can be changed at anytime by the rooms moderators.
     # Does not have to be unique, and should not be use as the primary
@@ -52,13 +52,55 @@ class ChatRoom(models.Model):
     is_public = models.BooleanField(default=False)
 
     # Creator's have elavated permissions compared to moderators.
-    creator = models.UUIDField(default=uuid.uuid4)
+    creator = models.ForeignKey(
+        "accounts.User",
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+    )
 
-    # TODO Add a dict for moderators
+    users = models.ManyToManyField(
+        "accounts.User",
+        through="ChatPermissions",
+        through_fields=("chat_group", "user"),
+        related_name="+",
+    )
+
+    # TODO Add one-to-many relationship to another table. Each row will contain a different user
 
     def __unicode__(self):
         return str(self.name)
 
-    @models.permalink
+    #@models.permalink
     def get_absolute_url(self):
-        return "/messages/%s" % str(self.identifier)
+        return reverse("messenger.views.group", args=[str(self.identifier)])
+        #return "/messages/%s" % str(self.identifier)
+
+class ChatPermissions(models.Model):
+    # The group that these permissions apply to
+    chat_group = models.ForeignKey(ChatGroup, on_delete=models.CASCADE)
+
+    # The user whose permissions apply
+    user = models.ForeignKey("accounts.User", on_delete=models.CASCADE)
+
+    # Is the user a moderator of this group. This field is ignored if the user is a creator
+    is_moderator = models.BooleanField(
+        default=False,
+    )
+
+    # Tracks whether the user is currently muted. Muted users can appeal their mute to
+    # moderators, but only once per set amount of time.
+    is_muted = models.BooleanField(
+        default=False,
+    )
+
+    # Tracks whether the user has been banned, preventing them from connecting.
+    is_banned = models.BooleanField(
+        default=False,
+    )
+
+    # Tracks the reason for the ban, to be relayed to the user on a failed connect.
+    ban_reason = models.CharField(
+        blank=True,
+        max_length=120,
+    )

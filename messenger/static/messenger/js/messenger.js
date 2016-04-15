@@ -44,7 +44,7 @@ modal_animations["create-show"] = modal_create_show;
 
 var modal_create_hide = new mojs.Tween({
     duration: 300,
-    delay: 100,
+    delay: 120,
     onStart: function(){
         modal_create.removeAttribute("data-enabled");
         modal_create.setAttribute("data-animating", "");
