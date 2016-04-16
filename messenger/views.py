@@ -22,7 +22,7 @@ from django.contrib import messages
 import cr_config as config
 from comet.decorators import login_required_message
 from messenger.forms import CreateChatForm
-from messenger.models import ChatGroup
+from messenger.models import ChatGroup, ChatPermissions
 from messenger.identifier import generate
 
 # INDEX
@@ -56,9 +56,9 @@ def private(request, identifier=None):
 # IDEA: Allow groups to create unique aliases for their URL. This will make
 # it easier to share the URL of public chats.
 @login_required_message
-def group(request, identifier=None):
+def group(request, group_id=None):
     user_id = None
-    name = get_object_or_404(ChatGroup, identifier=identifier)
+    name = get_object_or_404(ChatGroup, group_id=group_id)
     if request.user.is_authenticated():
         user_id = str(request.user.user_id)[:8]
     return render(request, "messenger/index.html", {
@@ -75,24 +75,32 @@ def create(request):
         form = CreateChatForm(request.POST)
         if form.is_valid():
             # Generate a new identifier
-            identifier = generate()
-            while ChatGroup.objects.filter(identifier=identifier).count() != 0:
+            group_id = generate()
+            while ChatGroup.objects.filter(group_id=group_id).count() != 0:
                 print("Looping")
-                identifier = generate()
+                group_id = generate()
 
             data = form.cleaned_data
-            room = ChatGroup.objects.create(
+
+            # Create a new group
+            group = ChatGroup.objects.create(
                 name=data["name"],
                 is_public=data["is_public"],
-                creator=request.user,
-                identifier=identifier,
+                group_id=group_id,
+            )
+
+            # Add user permissions
+            user_perms = ChatPermissions.objects.create(
+                chat_group=group,
+                user=request.user,
+                is_creator=True,
             )
 
             if data["is_public"]:
                 messages.add_message(request, messages.INFO, "Group '%s' successfully created. Add people to this group by giving them the URL or by clicking 'add users'." % data["name"])
             else:
                 messages.add_message(request, messages.INFO, "Group '%s' successfully created. Add people to this group by clicking 'add users'." % data["name"])
-            return redirect(room)
+            return redirect(group)
 
         messages.add_message(request, messages.ERROR, "The data you entered was invalid.")
         return redirect("messages")

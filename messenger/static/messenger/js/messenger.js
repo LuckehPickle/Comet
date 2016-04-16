@@ -85,8 +85,6 @@ function toggleModal(modal){
         return;
     }
 
-    console.debug("Toggling Modal");
-
     if(!modal.hasAttribute("data-enabled") && !modal.hasAttribute("data-animating")){ // Show modal
         modal_animations[modal.getAttribute("data-animation-id") + "-show"].run();
     }else if(modal.hasAttribute("data-enabled")){ // hide modal

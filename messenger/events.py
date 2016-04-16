@@ -16,11 +16,11 @@
 # Django Imports
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
-from django.utils.html import strip_tags
+from django.utils.html import escape
 
 # Other Imports
 from django_socketio import events
-from messenger.models import ChatGroup
+from messenger.models import ChatGroup, ChatPermissions
 
 # On Message
 # Event handler for a ChatGroup receiving a message.
@@ -43,11 +43,20 @@ def message(request, socket, context, message):
         messages.add_message(request, messages.ERROR, "You must be logged in to view this content. Note: We are working on allowing guests to join chats without logging in.")
         return redirect("login")
 
-    room = get_object_or_404(ChatGroup, identifier=message["group_id"])
+    # Get the group
+    group = get_object_or_404(ChatGroup, group_id=message["group_id"])
+    # Get the permission set
+    perms = ChatPermissions.objects.get_or_create(
+        chat_group=group,
+        user=request.user,
+    )
 
-    if room.users.filter(user_id=request.user.user_id).count() >= 1:
-        # User is subscribed to this group
+    # Check if the user has been banned
+    if perms.is_banned:
+        messages.add_message(request, messages.ERROR, "You have been banned from this group. Reason: %s" % escape(perms.ban_reason))
         return redirect("messages")
-    else:
-        # User is not subscribed to this group. Check if they should be.
-        return redirect("messages")
+
+    if group.is_public:
+
+
+    return redirect("messages")

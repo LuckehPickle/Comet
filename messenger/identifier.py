@@ -17,8 +17,8 @@
 import base64
 import uuid
 
-# Generates a random 11 character long base64 string
+# Generates a random 7 character long base64 string
 def generate():
     u = uuid.uuid4()
-    b64 = base64.urlsafe_b64encode(str(u))[:11]
+    b64 = base64.urlsafe_b64encode(str(u))[:7]
     return b64
