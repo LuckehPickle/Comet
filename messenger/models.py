@@ -79,6 +79,9 @@ class ChatPermissions(models.Model):
         on_delete=models.CASCADE,
     )
 
+    # Tracks whether the user is currently present in the group
+    is_present = models.BooleanField(default=False)
+
     # Creator's have elavated permissions compared to moderators.
     is_creator = models.BooleanField(default=False)
 
@@ -96,4 +99,25 @@ class ChatPermissions(models.Model):
     ban_reason = models.CharField(
         blank=True,
         max_length=120,
+    )
+
+class ChatInvite(models.Model):
+    # The user that received the invite
+    recipient = models.ForeignKey(
+        "accounts.User",
+        on_delete=models.CASCADE,
+        related_name="recipient",
+    )
+
+    # The user that sent the invite
+    sender = models.ForeignKey(
+        "accounts.User",
+        on_delete=models.CASCADE,
+        related_name="sender",
+    )
+
+    # The group that the recipient was invited to
+    group = models.ForeignKey(
+        "ChatGroup",
+        on_delete=models.CASCADE,
     )

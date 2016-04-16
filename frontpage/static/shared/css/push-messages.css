@@ -57,6 +57,17 @@ body{
     margin: 0;
 }
 
+.pmessage-well{
+    width: calc(100% - 45px);
+    background-color: #E0E0E0;
+    border-radius: 4px;
+    padding: 10px;
+    box-sizing: border-box;
+    margin: 0 10px;font-family: 'Oxygen', sans-serif;
+    font-size: 14px;
+    color: #3B3B3B;
+}
+
 .pmessage-close{
     float: right;
     height: 30px;

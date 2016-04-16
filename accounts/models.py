@@ -101,6 +101,15 @@ class User(AbstractBaseUser):
         "self",
     )
 
+    # A reference to every group this is in. Group based permissions
+    # can also be accessed here.
+    groups = models.ManyToManyField(
+        "messenger.ChatGroup",
+        through="messenger.ChatPermissions",
+        through_fields=("user", "chat_group"),
+        related_name="+",
+    )
+
     date_joined = models.DateTimeField(default=timezone.now)
     is_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
