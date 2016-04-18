@@ -12,8 +12,6 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
-#
-# https://docs.djangoproject.com/en/1.9/topics/http/urls/
 
 # Django Imports
 from django.conf.urls import include, url

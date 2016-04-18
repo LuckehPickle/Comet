@@ -21,3 +21,7 @@ register = template.Library()
 @register.filter(name="field_type")
 def field_type(field):
     return field.field.widget.__class__.__name__
+
+@register.filter(name="sort_by")
+def sort_by(queryset, order):
+    return queryset.order_by(order)

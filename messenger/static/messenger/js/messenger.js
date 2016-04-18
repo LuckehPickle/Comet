@@ -15,16 +15,20 @@
    limitations under the License.
 
  TODO Rewrite in JQuery
+ TODO Redo modal handling
+ TODO User search modal
 */
 
-var createGroupTriggers = document.querySelectorAll(".create-group-trigger");
 var modal_wrapper = document.querySelector(".modal-wrapper");
 var modal_create = document.querySelector(".modal-create");
+var createGroupTriggers = document.querySelectorAll(".create-group-trigger");
+var modal_user_search = document.querySelector(".modal-user-search");
+var user_search_triggers = document.querySelectorAll(".user-search-trigger");
 var easingPath = mojs.easing.path('M0,100 Q0,0 100,0');
 
 var modal_animations = {};
 
-var modal_create_show = new mojs.Tween({
+modal_animations["create-show"] = new mojs.Tween({
     duration: 250,
     onStart: function(){
         modal_create.setAttribute("data-animating", "");
@@ -42,9 +46,25 @@ var modal_create_show = new mojs.Tween({
     },
 });
 
-modal_animations["create-show"] = modal_create_show;
+modal_animations["user-search-show"] = new mojs.Tween({
+    duration: 250,
+    onStart: function(){
+        modal_user_search.setAttribute("data-animating", "");
+        modal_wrapper.setAttribute("data-animating", "");
+    },
+    onUpdate: function(progress){
+        modal_user_search.style.opacity = easingPath(progress);
+        modal_wrapper.style.opacity = easingPath(progress);
+    },
+    onComplete: function(){
+        modal_user_search.removeAttribute("data-animating");
+        modal_user_search.setAttribute("data-enabled", "");
+        modal_wrapper.removeAttribute("data-animating");
+        modal_wrapper.setAttribute("data-enabled", "");
+    },
+});
 
-var modal_create_hide = new mojs.Tween({
+modal_animations["create-hide"] = new mojs.Tween({
     duration: 300,
     delay: 120,
     onStart: function(){
@@ -63,7 +83,24 @@ var modal_create_hide = new mojs.Tween({
     },
 });
 
-modal_animations["create-hide"] = modal_create_hide;
+modal_animations["user-search-hide"] = new mojs.Tween({
+    duration: 300,
+    delay: 120,
+    onStart: function(){
+        modal_user_search.removeAttribute("data-enabled");
+        modal_user_search.setAttribute("data-animating", "");
+        modal_wrapper.removeAttribute("data-enabled");
+        modal_wrapper.setAttribute("data-animating", "");
+    },
+    onUpdate: function(progress){
+        modal_user_search.style.opacity = (1 - easingPath(progress));
+        modal_wrapper.style.opacity = (1 - easingPath(progress));
+    },
+    onComplete: function(){
+        modal_user_search.removeAttribute("data-animating");
+        modal_wrapper.removeAttribute("data-animating");
+    },
+});
 
 var modal_create_cancel = document.querySelector(".modal-create-cancel");
 
@@ -75,6 +112,13 @@ for(var i = 0; i < createGroupTriggers.length; i++){
     var trigger = createGroupTriggers[i];
     trigger.addEventListener("click", function(){
         toggleModal(modal_create);
+    });
+}
+
+for(var i = 0; i < user_search_triggers.length; i++){
+    var trigger = user_search_triggers[i];
+    trigger.addEventListener("click", function(){
+        toggleModal(modal_user_search);
     });
 }
 
@@ -96,6 +140,7 @@ function toggleModal(modal){
 /* FRIENDS LIST & GROUPS LIST */
 var tab_heads = document.querySelectorAll(".tab-head");
 var tab_bodies = document.querySelectorAll(".tab-body");
+var tab_footers = document.querySelectorAll(".tab-footer");
 
 // Opens whichever tab-head is passed to it.
 // TODO Animate changing tabs
@@ -106,7 +151,8 @@ function openTab(tab){
     }
     tab.setAttribute("active", "");
     document.querySelector(".tab-" + tab.getAttribute("data-tab")).setAttribute("active", "");
-    document.cookie = "tab=" + tab.getAttribute("data-tab") + ";";
+    document.querySelector(".tab-footer-" + tab.getAttribute(data-tab)).setAttribute("active", "")
+    document.cookie = "tab=" + tab.getAttribute("data-tab") + ";path=/messages";
 }
 
 // Iterate over each tab to add an event listener

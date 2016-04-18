@@ -58,6 +58,8 @@ class ChatGroup(models.Model):
         related_name="+",
     )
 
+    last_message = models.DateTimeField(default=timezone.now)
+
     def __unicode__(self):
         return str(self.name)
 

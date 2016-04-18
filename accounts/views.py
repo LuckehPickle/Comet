@@ -26,6 +26,7 @@ from django.utils.translation import ugettext_lazy as _
 # Other Imports
 from accounts.forms import AuthenticationForm, RegistrationForm
 from accounts.models import User
+from messenger.identifier import generate
 import cr_config
 
 # LOGOUT
@@ -125,12 +126,18 @@ def register(request):
         if form.is_valid():
             # Form data is valid, send a verification email.
             data = form.cleaned_data
+
+            user_url = generate()
+            while User.objects.filter(user_url=user_url).count() != 0:
+                user_url = generate()
+
             # You need to call user.objects.create_user rather than accessing
             # the user manager directly.
             User.objects.create_user(
                 email=data["email"],
                 username=data["username"],
                 password=data["password"],
+                user_url=user_url,
             )
 
             # Authenticate

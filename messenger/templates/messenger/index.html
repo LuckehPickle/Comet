@@ -36,6 +36,7 @@
         <script>{% if group_id != None %}window.group_id = "{{ group_id }}";{% else %}window.group_id = null;{% endif %}</script>
     </head>
     <body>
+        {% load messenger_tags %}
         <script src="{% static 'shared/js/mo.min.js' %}"></script>
         {% include 'shared/push-messages.min.html' %}
         {% include 'shared/nav.html' %}
@@ -43,6 +44,7 @@
         <!-- Modals -->
         <div class="modal-wrapper">
             {% include 'messenger/create.html' %}
+            {% include 'messenger/user_search.html' %}
         </div>
 
         <!-- Toolbar -->
@@ -72,6 +74,7 @@
                     <!--<i class="material-icons" id="search-icon">search</i>
                     <input type="text" spellcheck="false" placeholder="Search...">-->
                     <i class="material-icons js-transit create-group-trigger" data-transit-id="create-chat">add</i>
+                    <i class="material-icons js-transit user-search-trigger" data-transit-id="user-search">pregnant_woman</i>
                 </div>
 
                 <!-- Chat Body Tools -->
@@ -105,22 +108,22 @@
                     <!-- TABS HEAD -->
                     <div class="tab-heads">
                         <!-- TODO Store active tab in cookes -->
-                        <div class="tab-head noselect" data-tab="friends" {% if not group %}active{% endif %}>Friends</div>
-                        <div class="tab-head noselect" data-tab="groups" {% if group %}active{% endif %}>Groups</div>
+                        <div class="tab-head noselect" data-tab="friends" {% if not is_group %}active{% endif %}>Friends</div>
+                        <div class="tab-head noselect" data-tab="groups" {% if is_group %}active{% endif %}>Groups</div>
                     </div>
 
                     <!-- FRIENDS LIST -->
-                    <div class="tab-body tab-friends" {% if not group %}active{% endif %}>
+                    <div class="tab-body tab-friends" {% if not is_group %}active{% endif %}>
                         {% if request.user.friends.count != 0 %}
-                            {% for friend in request.user.friends.all %}
-                                <div class="friend-container">
+                            {% for friend in request.user.friends.all|sort_by:"is_online" %}
+                                <a class="friend-container" href="{{ friend.get_absolute_url }}" {% if not is_group and user_url == friend.user_url %}active{% endif %}>
                                     <div class="friend-image"></div>
                                     <div>
                                         <p class="friend-username">{{ friend.username }} {% comment "TODO" %}{{ friend.nickname }}{% endcomment %}</p>
                                         <p class="friend-tag">Beta-Tester</p> <!-- TODO Allow custom tags -->
                                     </div>
                                     <div class="friend-status-{% if friend.is_online %}online{% else %}offline{% endif %}"></div>
-                                </div>
+                                </a>
                             {% endfor %}
                         {% else %}
                             <div class="no-friends">You don't have any friends yet. TODO Make this look fancy, and add a tip on how to add a friend.</div>
@@ -128,10 +131,10 @@
                     </div>
 
                     <!-- GROUPS LIST -->
-                    <div class="tab-body tab-groups" {% if group %}active{% endif %}>
+                    <div class="tab-body tab-groups" {% if is_group %}active{% endif %}>
                         {% if request.user.groups.count != 0 %}
-                            {% for group in request.user.groups.all %}
-                                <a class="group-container" href="{{ group.get_absolute_url }}">
+                            {% for group in request.user.groups.all|sort_by:"last_message" %}
+                                <a class="group-container" href="{{ group.get_absolute_url }}" {% if is_group and group_id == group.group_id %}active{% endif %}>
                                     <div class="group-image"></div>
                                     <div>
                                         <p class="group-name">{{ group.name }}</p>

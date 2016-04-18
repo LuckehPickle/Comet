@@ -23,9 +23,11 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.utils.translation import ugettext_lazy as _
+from django.core.urlresolvers import reverse
 
 # Other Imports
 import uuid
+from messenger import identifier
 
 # UserManager Class [extends BaseUserManager]
 # This custom manager class allows the user of a custom user model.
@@ -110,6 +112,13 @@ class User(AbstractBaseUser):
         related_name="+",
     )
 
+    # A URL which points to the user. Can be customized by premiums
+    user_url = models.CharField(
+        unique=True,
+        max_length=20,
+        default=identifier.generate,
+    )
+
     date_joined = models.DateTimeField(default=timezone.now)
     is_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -126,3 +135,9 @@ class User(AbstractBaseUser):
     # their email address, and even add secondary addresses.
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username", "password"]
+
+    def __unicode__(self):
+        return str(self.username)
+
+    def get_absolute_url(self):
+        return reverse("messenger.views.private", args=[str(self.user_url)])

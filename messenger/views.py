@@ -25,6 +25,7 @@ from comet.decorators import login_required_message
 from messenger.forms import CreateChatForm
 from messenger.models import ChatGroup, ChatPermissions, ChatInvite
 from messenger.identifier import generate
+from accounts.models import User
 
 # INDEX
 # Currently just renders the messenger interface from the template.
@@ -37,9 +38,12 @@ def index(request):
 # Note: Will provide an error if you are not on the users contacts list
 # and the user has "only_from_contacts" setting set to TRUE.
 # IDEA: Allow users to set unique alliases for their URL.
+# TODO Add user blocking
 @login_required_message
 def private(request, identifier=None):
-    return HttpResponse("Private message with " + identifier)
+    # Get the user that the user is attempting to message
+    user = get_object_or_404(User, user_url=identifier)
+    return renderMessenger(request, title=user, user_url=user.user_url)
 
 # GROUP
 # Renders a page that allows you to message a particular group.
@@ -51,23 +55,28 @@ def group(request, group_id=None):
     # Get the group that the user is attempting to connect to
     group = get_object_or_404(ChatGroup, group_id=group_id)
     # Get the user's membership status
-    is_member = group.users.filter(user_id=request.user.user_id) >= 1
+    is_member = group.users.filter(user_id=request.user.user_id).count() >= 1
 
     # Check if group is public
     if not group.is_public:
+        print("debug")
+        print(str(is_member))
         # Group is private, handle membership/invites
         if not is_member:
+            print("Test")
             # User is not a member, check if they are invited.
             invites = ChatInvite.objects.filter(group=group, recipient=request.user)
-            if invites.count >= 1:
+            if invites.count() >= 1:
+                print("membered")
                 # User is invited, remove stale invites.
                 for invite in invites:
                     invite.delete()
                 is_member = True # Membership is added below when the perms are retrieved
             else:
+                print("failure membered")
                 # User has not been invited, refuse connection
                 messages.add_message(request, messages.ERROR, "Sorry, this group is private. You will soon be able to send a request to the groups moderators.")
-                return renderMessenger(request, title="Private Group")
+                return renderMessenger(request, title="Private Group", is_group=True)
     else:
         if not is_member:
             is_member = True
@@ -85,20 +94,21 @@ def group(request, group_id=None):
             ban_reason = escape(perms.ban_reason)
 
         messages.add_message(request, messages.ERROR, "You have been banned from this group for the following reason: <div class=\"pmessage-well\">%s</div> <p class=\"pmessage\">Normally a ban appeal message would go here, but ban appealing hasn't been implemented yet.</p>" % ban_reason)
-        return renderMessenger(request, title="Banned", )
+        return renderMessenger(request, title="Banned", is_group=True)
 
     # If the request makes it this far, they are free to join the group.
     # TODO Add socket data here
     # TODO If connection is denied disable the text input
-    return renderMessenger(request, title=group, group_id=group_id)
+    return renderMessenger(request, title=group, is_group=True, group_id=group_id)
 
-def renderMessenger(request, title, form=CreateChatForm(), group_id=None):
+def renderMessenger(request, title, form=CreateChatForm(), is_group=False, group_id=None, user_url=None):
     return render(request, "messenger/index.html", {
         "title": (config.TITLE_FORMAT % title),
         "user_id": str(request.user.user_id)[:8],
         "create_chat_form": form,
-        "group": request.COOKIES.get("tab") == "groups",
+        "is_group": is_group,
         "group_id": group_id,
+        "user_url": user_url,
     })
 
 # CREATE
