@@ -79,9 +79,6 @@ class ChatPermissions(models.Model):
         on_delete=models.CASCADE,
     )
 
-    # Tracks whether the user is currently present in the group
-    is_present = models.BooleanField(default=False)
-
     # Creator's have elavated permissions compared to moderators.
     is_creator = models.BooleanField(default=False)
 

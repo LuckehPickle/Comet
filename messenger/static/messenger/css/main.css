@@ -432,74 +432,124 @@ div[class^="chat-message-content"]{
                 align-items: stretch;
     }
 
-    .chat-list{
-        width: 320px;
-        min-width: 320px; /* Prevents flexbox from squashing this elem */
+    .chat-area-left{
+        min-width: 200px;
+        max-width: 320px;
         background-color: #F0F0F0;
+        -webkit-flex-grow: 1;
+                flex-grow: 1;
         overflow-x: hidden;
-        overflow-y: scroll;
-        position: relative; /* Allows chat-create to be positioned */
+        overflow-y: hidden;
+        display: -webkit-flex;
+                display: flex;
+        -webkit-flex-direction: column;
+                flex-direction: column;
     }
 
-    .chat-item{
+    .tab-heads{
         width: 100%;
-        max-width: 100%;
-        padding: 15px;
+        display: -webkit-flex;
+                display: flex;
+        -webkit-align-items: center;
+                align-items: center;
+    }
+
+    .tab-heads div{
+        -webkit-flex-grow: 1;
+                flex-grow: 1;
+        padding: 12px 0;
+        box-sizing: border-box;
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: bold;
+        font-size: 16px;
+        text-align: center;
+        text-transform: uppercase;
+        cursor: pointer;
+        background-color: transparent;
+        position: relative;
+        color: #6B6B6B;
+    }
+
+    .tab-heads div:not([active]){
+        background-color: white;
+        color: #8B8B8B;
+    }
+
+    .tab-body{
+        width: 100%;
+        -webkit-flex-grow: 1;
+                flex-grow: 1;
+        overflow-x: hidden;
+        overflow-y: scroll; /* TODO remove scrollbars */
+    }
+
+    .tab-body:not([active]){
+        display: none;
+    }
+
+    .friend-container{
+        width: 100%;
+        padding: 10px 12px;
         box-sizing: border-box;
         -webkit-display: flex;
                 display: flex;
         -webkit-align-items: center;
                 align-items: center;
         cursor: pointer;
-        background-color: white;
+        position: relative;
     }
 
-    .chat-item:not(.active){
-        background-color: transparent;
-    }
-
-    .chat-item-image{
-        width: 45px;
-        min-width: 45px;
-        height: 45px;
+    .friend-image{
+        width: 35px;
+        min-width: 35px;
+        height: 35px;
         border-radius: 2px;
         background-color: rgba(0, 0, 0, 0.1);
         display: inline-block;
         pointer-events: none;
+        margin-right: 10px;
     }
 
-    .chat-item-wrapper{
-        width: 100%;
-        flex-grow: 1;
-        overflow: hidden;
-        margin-left: 10px;
-        -webkit-display: flex;
-                display: flex;
-        -webkit-align-items: center;
-                align-items: center;
-        -webkit-flex-direction: column;
-                flex-direction: column;
-        pointer-events: none;
-    }
-
-    .chat-item-wrapper p{
-        display: inline-block;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+    .friend-username{
         margin: 0;
-        width: 100%;
         font-family: 'Roboto', sans-serif;
         font-size: 15px;
+        -webkit-flex-grow: 1;
+                flex-grow: 1;
     }
 
-    .chat-item-title{
+    div[class^="friend-status-"]{
+        margin-left: auto;
+        width: 8px;
+        min-width: 8px;
+        height: 8px;
+        border-radius: 4px;
+        background-color: blue;
+    }
+
+    .friend-status-online{
+        background-color: #06B827 !important;
+    }
+
+    .friend-status-offline{
+        background-color: #8B8B8B !important;
+    }
+
+    .no-friends{
+        width: 100%;
+        padding: 10px;
+        box-sizing: border-box;
+        margin-top: 50px;
+        text-align: center;
+        font-family: 'Source Sans Pro', sans-serif;
         font-weight: bold;
+        font-size: 16px;
+        color: #3B3B3B;
     }
 
     .chat{
-        -webkit-flex-grow: 1;
-                flex-grow: 1;
+        -webkit-flex-grow: 2;
+                flex-grow: 2;
         display: -webkit-flex;
                 display: flex;
         -webkit-flex-direction: column;

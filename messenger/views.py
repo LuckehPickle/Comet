@@ -90,13 +90,14 @@ def group(request, group_id=None):
     # If the request makes it this far, they are free to join the group.
     # TODO Add socket data here
     # TODO If connection is denied disable the text input
-    return renderMessenger(request, title=group)
+    return renderMessenger(request, title=group, group_id=group_id)
 
-def renderMessenger(request, title, form=CreateChatForm()):
+def renderMessenger(request, title, form=CreateChatForm(), group_id=None):
     return render(request, "messenger/index.html", {
         "title": (config.TITLE_FORMAT % title),
         "user_id": str(request.user.user_id)[:8],
         "create_chat_form": form,
+        "group_id": group_id,
     })
 
 # CREATE

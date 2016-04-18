@@ -14,6 +14,7 @@
 #   limitations under the License.
 
 # Django Imports
+from django.core import serializers
 from django.shortcuts import get_object_or_404
 from django.utils.html import escape
 
@@ -29,7 +30,7 @@ from messenger.models import ChatGroup
 @events.on_message(channel="^group-")
 def message(request, socket, context, message):
     # Check if the user is authenticated
-    if not user.is_authenticated():
+    if not request.user.is_authenticated():
         # TODO See if HttpResponse will work here
         return
 
@@ -37,4 +38,59 @@ def message(request, socket, context, message):
     if message["action"] == "message":
         message["message"] = escape(message["message"])
 
-    return
+    if message["action"] == "participants":
+        json_participants = serializers.serialize(
+            "json",
+            group.users.all(),
+            fields=("username")
+        )
+        socket.send({"action": "participants", "json_participants": json_participants});
+
+@events.on_finish(channel="^group-")
+def finish(request, socket, context):
+    data = {
+        "action": "user_disconnect",
+        "username": request.user.username,
+        "user_id": str(request.user.user_id),
+    }
+    socket.broadcast_channel(data)
+
+# TODO Check for permissions first
+@events.on_connect
+def connect(request, socket, context):
+    # Get friends list and serialize in a JSON format
+    json_friends = serializers.serialize(
+        "json",
+        request.user.friends.all(),
+        fields=("username", "user_id", "is_online"),
+    )
+
+    # Get groups list
+    json_groups = serializers.serialize(
+        "json",
+        request.user.groups.all(),
+        fields=("name", "users"),
+    )
+
+    # Return friends list back to the socket
+    socket.send({
+        "action": "friends",
+        "json_data": json_friends,
+    })
+
+    socket.send({
+        "action": "groups",
+        "json_data": json_groups,
+    })
+
+#@events.on_disconnect(channel="^group-")
+#def disconnect(request, socket, context):
+#    data = {
+#        "action": "disconnect",
+#        "username": request.user.username,
+#        "user_id": str(request.user.user_id)[:8],
+#    }
+#    socket.broadcast_channel(data)
+
+#@events.on_subscribe(channel="^group-")
+#def subscribe(request, socket, context, channel):

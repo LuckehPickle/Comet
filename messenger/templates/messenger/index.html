@@ -33,6 +33,7 @@
         <script src="//use.edgefonts.net/bebas-neue:n4.js"></script>
         {% load socketio_tags %}
         {% socketio %}
+        <script>{% if group_id != None %}window.group_id = "{{ group_id }}";{% else %}window.group_id = null;{% endif %}</script>
     </head>
     <body>
         <script src="{% static 'shared/js/mo.min.js' %}"></script>
@@ -68,8 +69,8 @@
             <div class="desktop-tools">
                 <!-- Chat List Tools -->
                 <div id="list">
-                    <i class="material-icons" id="search-icon">search</i>
-                    <input type="text" spellcheck="false" placeholder="Search...">
+                    <!--<i class="material-icons" id="search-icon">search</i>
+                    <input type="text" spellcheck="false" placeholder="Search...">-->
                     <i class="material-icons js-transit create-group-trigger" data-transit-id="create-chat">add</i>
                 </div>
 
@@ -100,7 +101,22 @@
         <div class="chat-wrap">
             <div class="chat-area">
 
-                <!-- List of chats -->
+                <div class="chat-area-left">
+                    <!-- TABS HEAD -->
+                    <div class="tab-heads">
+                        <!-- TODO Store active tab in cookes -->
+                        <div class="tab-head noselect" data-tab="friends" active>Friends</div>
+                        <div class="tab-head noselect" data-tab="groups">Groups</div>
+                    </div>
+
+                    <!-- TABS BODY -->
+                    <div class="tab-body tab-friends" active>
+                        <div class="no-friends">You don't have any friends yet. TODO Make this look fancy, and add a tip on how to add a friend.</div>
+                    </div>
+                    <div class="tab-body tab-groups">You don't have any groups yet.</div>
+                </div>
+
+                <!-- List of chats
                 <div class="chat-list">
                     <div class="chat-item active">
                         <div class="chat-item-image"></div>
@@ -116,7 +132,7 @@
                             <p>Proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
                         </div>
                     </div>
-                </div>
+                </div>-->
 
                 <!-- Chat -->
                 <div class="chat">
