@@ -85,7 +85,7 @@ def group(request, group_id=None):
             ban_reason = escape(perms.ban_reason)
 
         messages.add_message(request, messages.ERROR, "You have been banned from this group for the following reason: <div class=\"pmessage-well\">%s</div> <p class=\"pmessage\">Normally a ban appeal message would go here, but ban appealing hasn't been implemented yet.</p>" % ban_reason)
-        return renderMessenger(request, title="Banned")
+        return renderMessenger(request, title="Banned", )
 
     # If the request makes it this far, they are free to join the group.
     # TODO Add socket data here
@@ -97,6 +97,7 @@ def renderMessenger(request, title, form=CreateChatForm(), group_id=None):
         "title": (config.TITLE_FORMAT % title),
         "user_id": str(request.user.user_id)[:8],
         "create_chat_form": form,
+        "group": request.COOKIES.get("tab") == "groups",
         "group_id": group_id,
     })
 

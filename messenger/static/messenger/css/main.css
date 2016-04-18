@@ -487,7 +487,7 @@ div[class^="chat-message-content"]{
         display: none;
     }
 
-    .friend-container{
+    .friend-container, .group-container{
         width: 100%;
         padding: 10px 12px;
         box-sizing: border-box;
@@ -497,9 +497,10 @@ div[class^="chat-message-content"]{
                 align-items: center;
         cursor: pointer;
         position: relative;
+        text-decoration: none;
     }
 
-    .friend-image{
+    .friend-image, .group-image{
         width: 35px;
         min-width: 35px;
         height: 35px;
@@ -510,12 +511,25 @@ div[class^="chat-message-content"]{
         margin-right: 10px;
     }
 
-    .friend-username{
-        margin: 0;
-        font-family: 'Roboto', sans-serif;
-        font-size: 15px;
+    .friend-container div[class=""], .group-container div{
         -webkit-flex-grow: 1;
                 flex-grow: 1;
+        max-width: calc(100% - 30px);
+    }
+
+    .friend-username, .friend-tag, .group-name, .group-message{
+        margin: 0;
+        font-family: 'Roboto', sans-serif;
+        font-weight: bold;
+        font-size: 15px;
+        color: #3B3B3B;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .group-message, .friend-tag{
+        font-weight: 400;
     }
 
     div[class^="friend-status-"]{
@@ -535,7 +549,7 @@ div[class^="chat-message-content"]{
         background-color: #8B8B8B !important;
     }
 
-    .no-friends{
+    .no-friends, .no-groups{
         width: 100%;
         padding: 10px;
         box-sizing: border-box;

@@ -105,15 +105,44 @@
                     <!-- TABS HEAD -->
                     <div class="tab-heads">
                         <!-- TODO Store active tab in cookes -->
-                        <div class="tab-head noselect" data-tab="friends" active>Friends</div>
-                        <div class="tab-head noselect" data-tab="groups">Groups</div>
+                        <div class="tab-head noselect" data-tab="friends" {% if not group %}active{% endif %}>Friends</div>
+                        <div class="tab-head noselect" data-tab="groups" {% if group %}active{% endif %}>Groups</div>
                     </div>
 
-                    <!-- TABS BODY -->
-                    <div class="tab-body tab-friends" active>
-                        <div class="no-friends">You don't have any friends yet. TODO Make this look fancy, and add a tip on how to add a friend.</div>
+                    <!-- FRIENDS LIST -->
+                    <div class="tab-body tab-friends" {% if not group %}active{% endif %}>
+                        {% if request.user.friends.count != 0 %}
+                            {% for friend in request.user.friends.all %}
+                                <div class="friend-container">
+                                    <div class="friend-image"></div>
+                                    <div>
+                                        <p class="friend-username">{{ friend.username }} {% comment "TODO" %}{{ friend.nickname }}{% endcomment %}</p>
+                                        <p class="friend-tag">Beta-Tester</p> <!-- TODO Allow custom tags -->
+                                    </div>
+                                    <div class="friend-status-{% if friend.is_online %}online{% else %}offline{% endif %}"></div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="no-friends">You don't have any friends yet. TODO Make this look fancy, and add a tip on how to add a friend.</div>
+                        {% endif %}
                     </div>
-                    <div class="tab-body tab-groups">You don't have any groups yet.</div>
+
+                    <!-- GROUPS LIST -->
+                    <div class="tab-body tab-groups" {% if group %}active{% endif %}>
+                        {% if request.user.groups.count != 0 %}
+                            {% for group in request.user.groups.all %}
+                                <a class="group-container" href="{{ group.get_absolute_url }}">
+                                    <div class="group-image"></div>
+                                    <div>
+                                        <p class="group-name">{{ group.name }}</p>
+                                        <p class="group-message">Placeholder message for now. Really long too.</p>
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        {% else %}
+                            <div class="no-groups">You don't have any friends yet. TODO Make this look fancy, and add a tip on how to add a friend.</div>
+                        {% endif %}
+                    </div>
                 </div>
 
                 <!-- List of chats

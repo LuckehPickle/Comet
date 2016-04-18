@@ -106,7 +106,7 @@ function openTab(tab){
     }
     tab.setAttribute("active", "");
     document.querySelector(".tab-" + tab.getAttribute("data-tab")).setAttribute("active", "");
-    document.cookie
+    document.cookie = "tab=" + tab.getAttribute("data-tab") + ";";
 }
 
 // Iterate over each tab to add an event listener
@@ -122,112 +122,12 @@ for(var i = 0; i < tab_heads.length; i++){
 }
 
 /* SOCKETIO */
-var friends = null;
-var groups = null;
-var participants = null;
-
-var friends_list = document.querySelectorAll(".tab-body")[0];
-var groups_list = document.querySelectorAll(".tab-body")[1];
-
-function updateList(group){
-    var list = group ? groups_list : friends_list;
-    var data = group ? groups : friends;
-    var prefix = group ? "group-" : "friend-";
-
-    // http://stackoverflow.com/a/3955238
-    while(list.firstChild){
-        list.removeChild(list.firstChild);
-    }
-
-    for(var i = 0; i < data.length; i++){
-        var item = data[i];
-
-        var container = document.createElement("a");
-        container.className = prefix + "container";
-
-        var image = document.createElement("div");
-        image.className = prefix + "image";
-        container.appendChild(image);
-
-        var username = document.createElement("p");
-        username.className = prefix + (group ? "name" : "username");
-        username.innerHTML = group ?
-            item.fields.name :
-            item.fields.username + " (" + String(item.pk).substring(0, 8) + ")";
-        container.appendChild(username);
-
-        if(group){
-            //TODO Add latest message
-            container.href = "/messages/" + item.pk;
-        }
-
-        if(!group){
-            var status = document.createElement("div");
-            status.className = item.fields.is_online ? "friend-status-online" : "friend-status-offline";
-            container.appendChild(status);
-        }
-
-        list.appendChild(container);
-    }
-}
 
 $(function(){
 
     $("#chat-form").submit(function(){
         var message = $("#chat-message").val();
     });
-
-    // Sets a particular users activity state.
-    // @parameter data - Data from the incomming packet
-    // @parameter active - Is the user active?
-    var setActiveFriend = function(data, active){
-        if(friends != null){
-            for(var i = 0; i < friends.length; i++){
-                console.log(friends[i].pk + " " + data.user_id);
-                if(friends[i].pk == data.user_id){
-                    friends[i].fields.is_online = active;
-                    break;
-                }
-            }
-            updateList(false);
-        }
-    }
-
-    // Handles an incomming friends list
-    var handleFriends = function(data){
-        friends = JSON.parse(data.json_data);
-        updateList(false);
-    }
-
-    var handleGroups = function(data){
-        groups = JSON.parse(data.json_data);
-        updateList(true);
-    }
-
-    var addParticipant = function(data, add){
-        if(participants != null){
-            for(var i = 0; i < participants.length; i++){
-                if(participants[i].pk == data.user_id){
-                    if(!add){
-                        participants[i].remove();
-                    }
-                    return;
-                }
-            }
-            if(add){
-                participants[participants.length] = JSON.parse(data.json_participant);
-            }
-        }
-    }
-
-    var getParticipants = function(){
-        if(window.group_id != null)
-            socket.send({group_id: window.group_id, action: "participants"});
-    }
-
-    var handleParticipants = function(data){
-        participants = JSON.parse(data.json_participants);
-    }
 
     var announceSystemMessage = function(data){
 
@@ -238,7 +138,6 @@ $(function(){
             return;
         }
         socket.subscribe("group-" + window.group_id);
-        getParticipants();
     };
 
     var disconnected;
@@ -246,31 +145,6 @@ $(function(){
     // Handles general message from client to server
     var messaged = function(data){
         switch(data.action){
-            // Friends
-            case "friend_connect":
-                setActiveFriend(data, true);
-                break;
-            case "friend_disconnect":
-                setActiveFriend(data, false);
-                break;
-            case "friends":
-                handleFriends(data);
-                break;
-            //Groups
-            case "groups":
-                handleGroups(data);
-                break;
-            // Participants
-            case "add_participant":
-                addParticipant(data, true);
-                break;
-            case "remove_participant":
-                addParticipant(data, false);
-                break;
-            case "participants":
-                handleParticipants(data);
-                break;
-            // Misc
             case "system_message":
                 announceSystemMessage(data);
                 break;

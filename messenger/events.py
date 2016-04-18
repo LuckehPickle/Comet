@@ -58,30 +58,32 @@ def finish(request, socket, context):
 # TODO Check for permissions first
 @events.on_connect
 def connect(request, socket, context):
+    return
+
     # Get friends list and serialize in a JSON format
-    json_friends = serializers.serialize(
-        "json",
-        request.user.friends.all(),
-        fields=("username", "user_id", "is_online"),
-    )
+    #json_friends = serializers.serialize(
+    #    "json",
+    #    request.user.friends.all(),
+    #    fields=("username", "user_id", "is_online"),
+    #)
 
     # Get groups list
-    json_groups = serializers.serialize(
-        "json",
-        request.user.groups.all(),
-        fields=("name", "users"),
-    )
+    #json_groups = serializers.serialize(
+    #    "json",
+    #    request.user.groups.all(),
+    #    fields=("name", "users"),
+    #)
 
     # Return friends list back to the socket
-    socket.send({
-        "action": "friends",
-        "json_data": json_friends,
-    })
+    #socket.send({
+    #    "action": "friends",
+    #    "json_data": json_friends,
+    #})
 
-    socket.send({
-        "action": "groups",
-        "json_data": json_groups,
-    })
+    #socket.send({
+    #    "action": "groups",
+    #    "json_data": json_groups,
+    #})
 
 #@events.on_disconnect(channel="^group-")
 #def disconnect(request, socket, context):
