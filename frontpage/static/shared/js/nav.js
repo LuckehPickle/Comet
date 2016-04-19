@@ -55,7 +55,7 @@ for(var i = 0; i < transit_items.length; i++){
 		duration: 400,
 		type: 'circle',
 		radius: {0: 21},
-		fill: 'transparent',
+		fill: 'rgba(0, 0, 0, 0.4)',
 		stroke: 'rgba(0, 0, 0, 0.4)',
 		strokeWidth: {15:0},
 		opacity: 0.6,

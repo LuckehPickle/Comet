@@ -105,14 +105,14 @@ class ChatInvite(models.Model):
     recipient = models.ForeignKey(
         "accounts.User",
         on_delete=models.CASCADE,
-        related_name="recipient",
+        related_name="group_recipient",
     )
 
     # The user that sent the invite
     sender = models.ForeignKey(
         "accounts.User",
         on_delete=models.CASCADE,
-        related_name="sender",
+        related_name="group_sender",
     )
 
     # The group that the recipient was invited to

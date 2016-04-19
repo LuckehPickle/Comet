@@ -141,3 +141,18 @@ class User(AbstractBaseUser):
 
     def get_absolute_url(self):
         return reverse("messenger.views.private", args=[str(self.user_url)])
+
+class FriendInvites(models.Model):
+    recipient = models.ForeignKey(
+        "User",
+        on_delete=models.CASCADE,
+        related_name="friend_recipient",
+    )
+
+    sender = models.ForeignKey(
+        "User",
+        on_delete=models.CASCADE,
+        related_name="friend_sender",
+    )
+
+    sent = models.DateTimeField(default=timezone.now)

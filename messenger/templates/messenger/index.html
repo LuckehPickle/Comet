@@ -33,7 +33,10 @@
         <script src="//use.edgefonts.net/bebas-neue:n4.js"></script>
         {% load socketio_tags %}
         {% socketio %}
-        <script>{% if group_id != None %}window.group_id = "{{ group_id }}";{% else %}window.group_id = null;{% endif %}</script>
+        <script>
+            {% if group_id != None %}window.group_id = "{{ group_id }}";{% else %}window.group_id = null;{% endif %}
+            {% if user_url != None %}window.user_url = "{{ user_url }}";{% else %}window.urser_url = null;{% endif %}
+        </script>
     </head>
     <body>
         {% load messenger_tags %}
@@ -44,7 +47,6 @@
         <!-- Modals -->
         <div class="modal-wrapper">
             {% include 'messenger/create.html' %}
-            {% include 'messenger/user_search.html' %}
         </div>
 
         <!-- Toolbar -->
@@ -67,36 +69,32 @@
                 {% endcomment %}
             </div>
 
-            <!-- Desktop Toolbar -->
+            <!-- DESKTOP TOOLS -->
             <div class="desktop-tools">
-                <!-- Chat List Tools -->
-                <div id="list">
-                    <!--<i class="material-icons" id="search-icon">search</i>
-                    <input type="text" spellcheck="false" placeholder="Search...">-->
-                    <i class="material-icons js-transit create-group-trigger" data-transit-id="create-chat">add</i>
-                    <i class="material-icons js-transit user-search-trigger" data-transit-id="user-search">pregnant_woman</i>
+                <i class="material-icons js-transit create-group-trigger" data-transit-id="create-chat">add</i>
+                <!-- SEARCH -->
+                <div class="tools-input-wrapper">
+                    <i class="material-icons noselect">search</i>
+                    <input type="text" spellcheck="false" placeholder="Search...">
+                    
+                    <!-- DROPDOWN -->
+                    <div class="tools-input-dropdown">
+                        <section class="dropdown-users">
+                            <p class="dropdown-title">Users</p>
+                            <p class="dropdown-no-results">No results found.</p>
+                        </section>
+                        <section class="dropdown-pages">
+                            <p class="dropdown-title">Docs</p>
+                            <p class="dropdown-no-results">No results found.</p>
+                        </section>
+                        <section>
+                            <a class="dropdown-silent">
+                                See all results
+                                <link class="rippleJS">
+                            </a>
+                        </section>
+                    </div>
                 </div>
-
-                <!-- Chat Body Tools -->
-                <div>
-
-                </div>
-                <!--<i class="material-icons js-transit" data-transit-id="search">search</i>
-                <p id="title">This is a really long title</p>
-                <i class="material-icons js-transit" data-transit-id="add_user">person_add</i>
-                <i class="material-icons js-transit" data-transit-id="link">link</i>
-                <i class="material-icons js-transit dropdown-trigger" data-transit-id="more">
-                    more_vert
-                    <ul class="dropdown">
-                        <li><a href="/"><i class="material-icons">photo</i>Edit chat picture</a></li>
-                        <li><a href="/"><i class="material-icons">title</i>Edit chat name</a></li>
-                        <li><a href="/"><i class="material-icons">group</i>Edit participants</a></li>
-                        <li><a href="/"><i class="material-icons">gavel</i>Manage moderators</a></li>
-                        <li><a href="/"><i class="material-icons">gavel</i>View commands</a></li>
-                        <li><a href="/"><i class="material-icons">exit_to_app</i>Leave chat</a></li>
-                    </ul>
-                    <script src="{% static 'shared/js/dropdown.js' %}"></script>
-                </i>-->
             </div>
         </div>
 
@@ -116,14 +114,15 @@
                     <div class="tab-body tab-friends" {% if not is_group %}active{% endif %}>
                         {% if request.user.friends.count != 0 %}
                             {% for friend in request.user.friends.all|sort_by:"is_online" %}
-                                <a class="friend-container" href="{{ friend.get_absolute_url }}" {% if not is_group and user_url == friend.user_url %}active{% endif %}>
+                                <div class="friend-container" data-url="{{ friend.get_absolute_url }}" {% if not is_group and user_url == friend.user_url %}active{% endif %}>
                                     <div class="friend-image"></div>
                                     <div>
                                         <p class="friend-username">{{ friend.username }} {% comment "TODO" %}{{ friend.nickname }}{% endcomment %}</p>
                                         <p class="friend-tag">Beta-Tester</p> <!-- TODO Allow custom tags -->
                                     </div>
                                     <div class="friend-status-{% if friend.is_online %}online{% else %}offline{% endif %}"></div>
-                                </a>
+                                    <link class="rippleJS"/>
+                                </div>
                             {% endfor %}
                         {% else %}
                             <div class="no-friends">You don't have any friends yet. TODO Make this look fancy, and add a tip on how to add a friend.</div>
@@ -134,13 +133,14 @@
                     <div class="tab-body tab-groups" {% if is_group %}active{% endif %}>
                         {% if request.user.groups.count != 0 %}
                             {% for group in request.user.groups.all|sort_by:"last_message" %}
-                                <a class="group-container" href="{{ group.get_absolute_url }}" {% if is_group and group_id == group.group_id %}active{% endif %}>
+                                <div class="group-container" data-url="{{ group.get_absolute_url }}" {% if is_group and group_id == group.group_id %}active{% endif %}>
                                     <div class="group-image"></div>
                                     <div>
                                         <p class="group-name">{{ group.name }}</p>
                                         <p class="group-message">Placeholder message for now. Really long too.</p>
                                     </div>
-                                </a>
+                                    <link class="rippleJS"/>
+                                </div>
                             {% endfor %}
                         {% else %}
                             <div class="no-groups">You don't have any friends yet. TODO Make this look fancy, and add a tip on how to add a friend.</div>

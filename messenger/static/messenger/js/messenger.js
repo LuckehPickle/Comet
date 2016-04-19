@@ -22,8 +22,6 @@
 var modal_wrapper = document.querySelector(".modal-wrapper");
 var modal_create = document.querySelector(".modal-create");
 var createGroupTriggers = document.querySelectorAll(".create-group-trigger");
-var modal_user_search = document.querySelector(".modal-user-search");
-var user_search_triggers = document.querySelectorAll(".user-search-trigger");
 var easingPath = mojs.easing.path('M0,100 Q0,0 100,0');
 
 var modal_animations = {};
@@ -41,24 +39,6 @@ modal_animations["create-show"] = new mojs.Tween({
     onComplete: function(){
         modal_create.removeAttribute("data-animating");
         modal_create.setAttribute("data-enabled", "");
-        modal_wrapper.removeAttribute("data-animating");
-        modal_wrapper.setAttribute("data-enabled", "");
-    },
-});
-
-modal_animations["user-search-show"] = new mojs.Tween({
-    duration: 250,
-    onStart: function(){
-        modal_user_search.setAttribute("data-animating", "");
-        modal_wrapper.setAttribute("data-animating", "");
-    },
-    onUpdate: function(progress){
-        modal_user_search.style.opacity = easingPath(progress);
-        modal_wrapper.style.opacity = easingPath(progress);
-    },
-    onComplete: function(){
-        modal_user_search.removeAttribute("data-animating");
-        modal_user_search.setAttribute("data-enabled", "");
         modal_wrapper.removeAttribute("data-animating");
         modal_wrapper.setAttribute("data-enabled", "");
     },
@@ -83,25 +63,6 @@ modal_animations["create-hide"] = new mojs.Tween({
     },
 });
 
-modal_animations["user-search-hide"] = new mojs.Tween({
-    duration: 300,
-    delay: 120,
-    onStart: function(){
-        modal_user_search.removeAttribute("data-enabled");
-        modal_user_search.setAttribute("data-animating", "");
-        modal_wrapper.removeAttribute("data-enabled");
-        modal_wrapper.setAttribute("data-animating", "");
-    },
-    onUpdate: function(progress){
-        modal_user_search.style.opacity = (1 - easingPath(progress));
-        modal_wrapper.style.opacity = (1 - easingPath(progress));
-    },
-    onComplete: function(){
-        modal_user_search.removeAttribute("data-animating");
-        modal_wrapper.removeAttribute("data-animating");
-    },
-});
-
 var modal_create_cancel = document.querySelector(".modal-create-cancel");
 
 modal_create_cancel.addEventListener("click", function(){
@@ -112,13 +73,6 @@ for(var i = 0; i < createGroupTriggers.length; i++){
     var trigger = createGroupTriggers[i];
     trigger.addEventListener("click", function(){
         toggleModal(modal_create);
-    });
-}
-
-for(var i = 0; i < user_search_triggers.length; i++){
-    var trigger = user_search_triggers[i];
-    trigger.addEventListener("click", function(){
-        toggleModal(modal_user_search);
     });
 }
 
@@ -151,7 +105,6 @@ function openTab(tab){
     }
     tab.setAttribute("active", "");
     document.querySelector(".tab-" + tab.getAttribute("data-tab")).setAttribute("active", "");
-    document.querySelector(".tab-footer-" + tab.getAttribute(data-tab)).setAttribute("active", "")
     document.cookie = "tab=" + tab.getAttribute("data-tab") + ";path=/messages";
 }
 
@@ -167,23 +120,122 @@ for(var i = 0; i < tab_heads.length; i++){
     });
 }
 
+/* Search bar */
+$(".tools-input-wrapper:not([active]) > i").on("click", function(){
+    $(".tools-input-wrapper > input").focus();
+});
+
+$(".tools-input-wrapper:not([active]) > input").on("focus", function(){
+    $(".tools-input-dropdown").hide();
+    $(this).parent().attr("active", "");
+    setTimeout(function(){
+        $(".tools-input-dropdown").slideDown(200);
+    }, 300);
+});
+
+$("html").on("click", function(event){
+    if(!$(event.target).closest(".tools-input-wrapper").length && !$(event.target).is(".tools-input-wrapper")){
+        $(".tools-input-wrapper").removeAttr("active");
+        $(".tools-input-dropdown").hide();
+    }
+});
+
 /* SOCKETIO */
 
 $(function(){
 
+    $("[data-url]").on("click", function(){
+        window.location.href = $(this).attr("data-url");
+    });
+
     $("#chat-form").submit(function(){
         var message = $("#chat-message").val();
     });
+
+    var typing_timer;
+    var done_typing_interval = 500;
+    var $input = $(".tools-input-wrapper > input");
+
+    $input.on("keyup", function(){
+        clearTimeout(typing_timer);
+        typing_timer = setTimeout(doneTyping, done_typing_interval);
+    });
+
+    $input.on("keydown", function(){
+        clearTimeout(typing_timer);
+    });
+
+    function doneTyping(){
+        requestQueryResponse($input.val());
+    }
+
+    var requestQueryResponse = function(query){
+        if(query != "" && query != null && query.length >= 3){
+            console.log("Searching for users named '" + query + "'");
+            socket.send({action: "search", data: query, group_id: window.group_id});
+        }
+    }
+
+    var handleQueryResponse = function(data){
+        console.log("Response received.");
+        var users = JSON.parse(data.users);
+        updateSearchList(users);
+    }
+
+    var users_sec = document.querySelector(".dropdown-users");
+    function updateSearchList(data){
+        if(data.length == 0){ // No data returned (ie Empty result)
+            clearSearchList();
+            $(".dropdown-users").append("<p class=\"dropdown-no-results\">No results found.</p>");
+            return;
+        }
+
+        clearSearchList();
+
+        jQuery.each(data, function(){
+            $(".dropdown-users").append(
+            "<div class=\"dropdown-results-container\">" +
+                "<div class=\"dropdown-result-image\"></div>" +
+                "<section>" +
+                    "<p class=\"dropdown-result-username\">" + this.fields.username + " (" + this.pk.substring(0, 8).toUpperCase() + ")</p>" +
+                    "<p class=\"dropdown-result-tags\">Beta Tester</p>" +
+                "</section>" +
+                "<div class=\"dropdown-result-add\" data-user-id=" + this.pk + "><i class=\"material-icons\">add</i> Add<link class=\"rippleJS\"/></div>" +
+                //"<link class=\"rippleJS\"/>" +
+            "</div>");
+        });
+
+        $(".dropdown-result-add").on("click", function(){
+            sendFriendRequest($(this).attr("data-user-id"));
+        });
+    }
+
+    function clearSearchList(){
+        for(var i = 0; i < users_sec.children.length; i++){ //Iterate over children
+            if(users_sec.children[i].className == "dropdown-results-container" ||
+            users_sec.children[i].className == "dropdown-no-results"){
+                users_sec.children[i].remove(); // Remove stale results
+            }
+        }
+    }
+
+    var sendFriendRequest = function(user_id){
+        socket.send({action: "friend_req", user_id: user_id, group_id: window.group_id});
+        console.log("Friend request sent to user '" + user_id + "'");
+    }
 
     var announceSystemMessage = function(data){
 
     }
 
     var connected = function(){
-        if(window.group_id == null){
-            return;
+        if(window.group_id != null){
+            socket.subscribe("group-" + window.group_id);
+            console.log("Subscribing to group-" + window.group_id);
+        }else if(window.user_url != null){
+            socket.subscribe("user-" + window.user_url);
+            console.log("Subscribing to user-" + window.user_url);
         }
-        socket.subscribe("group-" + window.group_id);
     };
 
     var disconnected;
@@ -191,6 +243,9 @@ $(function(){
     // Handles general message from client to server
     var messaged = function(data){
         switch(data.action){
+            case "search":
+                handleQueryResponse(data);
+                break;
             case "system_message":
                 announceSystemMessage(data);
                 break;
