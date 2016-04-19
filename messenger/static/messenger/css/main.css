@@ -202,6 +202,9 @@ div[class^="chat-message-content"]{
     margin-right: 72px;
 }
 
+input::-moz-selection{background: #F1592B;color:#EBEBEB;}
+input::selection{background: #F1592B;color:#EBEBEB;}
+
 /* For mobile phones and other small devices */
 @media screen and (max-width: 40.5em){
     .toolbar{
@@ -404,7 +407,7 @@ div[class^="chat-message-content"]{
     }
 
     .tools-input-wrapper[active] input{
-        width: 360px;
+        width: 400px;
         color: #454545;
         cursor: text;
     }
@@ -471,14 +474,18 @@ div[class^="chat-message-content"]{
         background-color: #EBEBEB;
     }
 
-    .dropdown-result-add{
+    .dropdown-result-button-add{
         display: -webkit-flex;
                 display: flex;
         -webkit-align-items: center;
                 align-items: center;
+        padding: 5px !important;
+        padding-right: 10px !important;
+    }
+
+    div[class^="dropdown-result-button-"]{
         background-color: #F1592B;
-        padding: 5px;
-        padding-right: 10px;
+        padding: 5px 10px;
         box-sizing: border-box;
         border-radius: 2px;
         color: #EBEBEB;
@@ -489,7 +496,7 @@ div[class^="chat-message-content"]{
         position: relative;
     }
 
-    .dropdown-result-add i{
+    .dropdown-result-button-add i{
         padding: 0 !important;
         color: #EBEBEB !important;
         font-size: 15px !important;
@@ -654,7 +661,7 @@ div[class^="chat-message-content"]{
     }
 
     .friend-status-offline{
-        background-color: #8B8B8B !important;
+        background-color: #CBCBCB !important;
     }
 
     .no-friends, .no-groups{

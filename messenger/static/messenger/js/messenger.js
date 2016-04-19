@@ -128,6 +128,7 @@ $(".tools-input-wrapper:not([active]) > i").on("click", function(){
 $(".tools-input-wrapper:not([active]) > input").on("focus", function(){
     $(".tools-input-dropdown").hide();
     $(this).parent().attr("active", "");
+    $(this).select();
     setTimeout(function(){
         $(".tools-input-dropdown").slideDown(200);
     }, 300);
@@ -179,20 +180,38 @@ $(function(){
     var handleQueryResponse = function(data){
         console.log("Response received.");
         var users = JSON.parse(data.users);
-        updateSearchList(users);
+        var friends = data.friends;
+        updateSearchList(users, friends);
     }
 
-    var users_sec = document.querySelector(".dropdown-users");
-    function updateSearchList(data){
+    function updateSearchList(data, friends){
+        clearSearchList();
         if(data.length == 0){ // No data returned (ie Empty result)
-            clearSearchList();
             $(".dropdown-users").append("<p class=\"dropdown-no-results\">No results found.</p>");
             return;
         }
 
-        clearSearchList();
-
         jQuery.each(data, function(){
+            var user_type = "<i class=\"material-icons\">add</i> Add";
+            var class_type = "add";
+
+            if(this.pk in friends){
+                switch(friends[this.pk]){
+                    case "friend":
+                        user_type = "Friends";
+                        class_type = "friend";
+                        break;
+                    case "request_sent":
+                        user_type = "Request Sent";
+                        class_type = "sent";
+                        break;
+                    case "request_received":
+                        user_type = "Accept Request";
+                        class_type = "request";
+                        break;
+                }
+            }
+
             $(".dropdown-users").append(
             "<div class=\"dropdown-results-container\">" +
                 "<div class=\"dropdown-result-image\"></div>" +
@@ -200,23 +219,33 @@ $(function(){
                     "<p class=\"dropdown-result-username\">" + this.fields.username + " (" + this.pk.substring(0, 8).toUpperCase() + ")</p>" +
                     "<p class=\"dropdown-result-tags\">Beta Tester</p>" +
                 "</section>" +
-                "<div class=\"dropdown-result-add\" data-user-id=" + this.pk + "><i class=\"material-icons\">add</i> Add<link class=\"rippleJS\"/></div>" +
+                "<div class=\"dropdown-result-button-" + class_type + "\" data-user-id=" + this.pk + " data-user-url=" + this.fields.user_url + ">" + user_type + "<link class=\"rippleJS\"/></div>" +
                 //"<link class=\"rippleJS\"/>" +
             "</div>");
         });
 
-        $(".dropdown-result-add").on("click", function(){
+        $(".dropdown-result-button-add").on("click", function(){
             sendFriendRequest($(this).attr("data-user-id"));
+            requestQueryResponse($(".tools-input-wrapper input").val());
+        });
+
+        $(".dropdown-result-button-request").on("click", function(){
+            sendFriendRequest($(this).attr("data-user-id"));
+            requestQueryResponse($(".tools-input-wrapper input").val());
+        });
+
+        $(".dropdown-results-container").on("click", function(){
+            var child_elem = $(this).find(".dropdown-result-button-friend");
+            if(child_elem.length != 0){
+                window.location.href = "/messages/user/" + child_elem.attr("data-user-url");
+            }
         });
     }
 
     function clearSearchList(){
-        for(var i = 0; i < users_sec.children.length; i++){ //Iterate over children
-            if(users_sec.children[i].className == "dropdown-results-container" ||
-            users_sec.children[i].className == "dropdown-no-results"){
-                users_sec.children[i].remove(); // Remove stale results
-            }
-        }
+        $(".dropdown-users").children(":not(.dropdown-title)").each(function(){
+            $(this).remove();
+        });
     }
 
     var sendFriendRequest = function(user_id){
@@ -226,6 +255,25 @@ $(function(){
 
     var announceSystemMessage = function(data){
 
+    }
+
+    /**
+     * Handles incoming pmessages in the same way that a database stored
+     * pmessage would be handled.
+     */
+    var handlePMessage = function(data){
+        console.log("Received pmessage of type '" + data.type + "'");
+        $(".pmessages").append(
+            "<div class=\"pmessage-container pmessage-container-" + data.type + "\" data-new>" +
+                "<svg class=\"pmessage-close pmessage-close-" + data.type + "\" viewBox=\"0 0 20 20\">" +
+                    "<path d=\"M0 3 L3 0 L10 7 L17 0 L20 3 L13 10 L20 17 L17 20 L10 13 L3 20 L0 17 L7 10 z\">" +
+                "</svg>" +
+                "<p class=\"pmessage pmessage-" + data.type + "\">" + data.message + "</p>" +
+            "</div>"
+        );
+
+        $(".pmessage-container[data-new]").children()[0].addEventListener("click", closeListener);
+        $(".pmessage-container[data-new]").removeAttr("data-new");
     }
 
     var connected = function(){
@@ -245,6 +293,9 @@ $(function(){
         switch(data.action){
             case "search":
                 handleQueryResponse(data);
+                break;
+            case "pmessage":
+                handlePMessage(data);
                 break;
             case "system_message":
                 announceSystemMessage(data);

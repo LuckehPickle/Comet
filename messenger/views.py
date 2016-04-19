@@ -59,11 +59,9 @@ def group(request, group_id=None):
 
     # Check if group is public
     if not group.is_public:
-        print("debug")
         print(str(is_member))
         # Group is private, handle membership/invites
         if not is_member:
-            print("Test")
             # User is not a member, check if they are invited.
             invites = ChatInvite.objects.filter(group=group, recipient=request.user)
             if invites.count() >= 1:

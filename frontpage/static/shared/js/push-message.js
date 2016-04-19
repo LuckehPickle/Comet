@@ -22,30 +22,32 @@ var easingPath = mojs.easing.path('M0,100 Q0,0 100,0');
 // Init
 for(var i = 0; i < messages.length; i++){ //Iterate over messages
     var message = messages[i];
+    registerPMessage(message);
+}
+
+function registerPMessage(element){
+    message.children[0].addEventListener("click", closeListener);
     slideIn(message); //Animate in
+}
 
-    // Add Event Listener
-    message.children[0].addEventListener("click", function(event){
+function closeListener(event){
+    var source = event.target; //Get event target
+    while(source.tagName != "DIV"){ //Move up the element tree until you reach a div
+        source = source.parentNode;
+    }
 
-        var source = event.target; //Get event target
-        while(source.tagName != "DIV"){ //Move up the element tree until you reach a div
-            source = source.parentNode;
-        }
-
-        //Animate
-        var start_height = source.offsetHeight;
-        new mojs.Tween({
-            duration: 300,
-            onUpdate: function(progress){
-                source.style.height = ((1 - easingPath(progress)) * start_height) + "px";
-                source.style.marginBottom = ((1 - easingPath(progress)) * 3) + "px";
-            },
-            onComplete: function(){
-                source.style.display = "none";
-                source.style.height = "";
-            },
-        }).run();
-    });
+    //Animate
+    var start_height = source.offsetHeight;
+    new mojs.Tween({
+        duration: 300,
+        onUpdate: function(progress){
+            source.style.height = ((1 - easingPath(progress)) * start_height) + "px";
+            source.style.marginBottom = ((1 - easingPath(progress)) * 3) + "px";
+        },
+        onComplete: function(){
+            source.remove();
+        },
+    }).run();
 }
 
 function slideIn(element){

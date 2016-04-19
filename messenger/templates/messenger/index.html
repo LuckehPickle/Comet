@@ -41,7 +41,7 @@
     <body>
         {% load messenger_tags %}
         <script src="{% static 'shared/js/mo.min.js' %}"></script>
-        {% include 'shared/push-messages.min.html' %}
+        {% include 'shared/push-messages.html' %}
         {% include 'shared/nav.html' %}
 
         <!-- Modals -->
@@ -76,7 +76,7 @@
                 <div class="tools-input-wrapper">
                     <i class="material-icons noselect">search</i>
                     <input type="text" spellcheck="false" placeholder="Search...">
-                    
+
                     <!-- DROPDOWN -->
                     <div class="tools-input-dropdown">
                         <section class="dropdown-users">
@@ -113,7 +113,7 @@
                     <!-- FRIENDS LIST -->
                     <div class="tab-body tab-friends" {% if not is_group %}active{% endif %}>
                         {% if request.user.friends.count != 0 %}
-                            {% for friend in request.user.friends.all|sort_by:"is_online" %}
+                            {% for friend in request.user.friends.all|sort_by:"-is_online" %}
                                 <div class="friend-container" data-url="{{ friend.get_absolute_url }}" {% if not is_group and user_url == friend.user_url %}active{% endif %}>
                                     <div class="friend-image"></div>
                                     <div>
@@ -132,7 +132,7 @@
                     <!-- GROUPS LIST -->
                     <div class="tab-body tab-groups" {% if is_group %}active{% endif %}>
                         {% if request.user.groups.count != 0 %}
-                            {% for group in request.user.groups.all|sort_by:"last_message" %}
+                            {% for group in request.user.groups.all|sort_by:"-last_message" %}
                                 <div class="group-container" data-url="{{ group.get_absolute_url }}" {% if is_group and group_id == group.group_id %}active{% endif %}>
                                     <div class="group-image"></div>
                                     <div>
@@ -189,7 +189,7 @@
 
                     <!-- Chat Footer -->
                     <div class="chat-footer">
-                        <form id="chat-form" novalidate>
+                        <form id="chat-form" novalidate{% if group_id == None and user_url == None %} disabled{% endif %}>
                             <input id="chat-message" name="name" type="text" maxlength="256" placeholder="Send message">
                             <div class="chat-send">
                                 <i class="material-icons">send</i>
