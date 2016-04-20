@@ -136,21 +136,31 @@ $(".tools-input-wrapper:not([active]) > input").on("focus", function(){
 
 $("html").on("click", function(event){
     if(!$(event.target).closest(".tools-input-wrapper").length && !$(event.target).is(".tools-input-wrapper")){
-        $(".tools-input-wrapper").removeAttr("active");
-        $(".tools-input-dropdown").hide();
+        if($(".tools-input-wrapper")[0].hasAttribute("active")){
+            $(".tools-input-wrapper").removeAttr("active");
+            $(".tools-input-dropdown").hide();
+        }
     }
 });
 
 /* SOCKETIO */
 
 $(function(){
+    var socket_type = {
+        NONE: 0,
+        USER: 1,
+        GROUP: 2,
+    }
+
+    var SOCKET_TYPE = socket_type.NONE;
+    if(window.group_id != null){
+        SOCKET_TYPE = socket_type.GROUP;
+    }else if(window.user_url != null){
+        SOCKET_TYPE = socket_type.USER;
+    }
 
     $("[data-url]").on("click", function(){
         window.location.href = $(this).attr("data-url");
-    });
-
-    $("#chat-form").submit(function(){
-        var message = $("#chat-message").val();
     });
 
     var typing_timer;
@@ -253,10 +263,6 @@ $(function(){
         console.log("Friend request sent to user '" + user_id + "'");
     }
 
-    var announceSystemMessage = function(data){
-
-    }
-
     /**
      * Handles incoming pmessages in the same way that a database stored
      * pmessage would be handled.
@@ -274,6 +280,72 @@ $(function(){
 
         $(".pmessage-container[data-new]").children()[0].addEventListener("click", closeListener);
         $(".pmessage-container[data-new]").removeAttr("data-new");
+    }
+
+    /**
+     * Handles the submit function on the chat form.
+     */
+    $(".chat-form").submit(function(){
+        input = $(".chat-form-input");
+        sendMessage(input.text());
+        input.text("");
+        return false; // Lets the VM now we've handled the event
+    });
+
+    /**
+     * Handles the 'send' button click event.
+     */
+    $(".chat-send").on("click", function(){
+        $(".chat-form").submit();
+    });
+
+    /**
+     * Handles 'enter' key presses on the contenteditable div.
+     * Note: If the user presses 'ctrl+enter' then the form should
+     * not be submitted, rather a new line should be inserted.
+     */
+    $(".chat-form-input").on("keydown", function(event){
+        if(event.which == 13){
+            $(".chat-form").submit();
+            return false;
+        }
+
+        // Make sure the key pressed wasn't delete
+        if(event.which != 8 && $(".chat-form-input").text().length > 256){
+            $(".chat-form-input").text($(".chat-form-input").text().substring(0, 256));
+        }
+    });
+
+    /**
+     * Sends a message through the socket to be sent to all other connected
+     * sockets.
+     */
+    var sendMessage = function(message){
+        if(message == null || message == ""){
+            console.log("cancelled " + message);
+            return;
+        }
+
+        var data = {
+            action: "message",
+            message: message,
+        }
+
+        if(SOCKET_TYPE == socket_type.GROUP){
+            data["group_id"] = window.group_id;
+        }else if(SOCKET_TYPE == socket_type.USER){
+            data["user_url"] = window.user_url;
+        }
+
+        socket.send(data);
+        console.log("Message sent");
+    }
+
+    /**
+     * Handles incomming messages.
+     */
+    var handleMessage = function(data){
+        console.log(data["message"]);
     }
 
     var connected = function(){
@@ -297,11 +369,8 @@ $(function(){
             case "pmessage":
                 handlePMessage(data);
                 break;
-            case "system_message":
-                announceSystemMessage(data);
-                break;
             case "message":
-                addMessage(data);
+                handleMessage(data);
                 break;
         }
     };

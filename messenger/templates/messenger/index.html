@@ -125,7 +125,10 @@
                                 </div>
                             {% endfor %}
                         {% else %}
-                            <div class="no-friends">You don't have any friends yet. TODO Make this look fancy, and add a tip on how to add a friend.</div>
+                            <div class="no-friends">
+                                 Looks like you don't have any friends yet.
+                                 <img src="{% static 'messenger/img/tutorial_users.gif' %}">
+                            </div>
                         {% endif %}
                     </div>
 
@@ -135,36 +138,21 @@
                             {% for group in request.user.groups.all|sort_by:"-last_message" %}
                                 <div class="group-container" data-url="{{ group.get_absolute_url }}" {% if is_group and group_id == group.group_id %}active{% endif %}>
                                     <div class="group-image"></div>
-                                    <div>
+                                    <section>
                                         <p class="group-name">{{ group.name }}</p>
                                         <p class="group-message">Placeholder message for now. Really long too.</p>
-                                    </div>
+                                    </section>
                                     <link class="rippleJS"/>
                                 </div>
                             {% endfor %}
                         {% else %}
-                            <div class="no-groups">You don't have any friends yet. TODO Make this look fancy, and add a tip on how to add a friend.</div>
+                            <div class="no-groups">
+                                Looks like your not in any groups yet. Create one by clicking the 'plus' icon in the toolbar.
+                                <img src="{% static 'messenger/img/tutorial_groups.gif' %}">
+                            </div>
                         {% endif %}
                     </div>
                 </div>
-
-                <!-- List of chats
-                <div class="chat-list">
-                    <div class="chat-item active">
-                        <div class="chat-item-image"></div>
-                        <div class="chat-item-wrapper">
-                            <p class="chat-item-title">This is a really long title</p>
-                            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                        </div>
-                    </div>
-                    <div class="chat-item">
-                        <div class="chat-item-image"></div>
-                        <div class="chat-item-wrapper">
-                            <p class="chat-item-title">Hello World</p>
-                            <p>Proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                        </div>
-                    </div>
-                </div>-->
 
                 <!-- Chat -->
                 <div class="chat">
@@ -189,8 +177,8 @@
 
                     <!-- Chat Footer -->
                     <div class="chat-footer">
-                        <form id="chat-form" novalidate{% if group_id == None and user_url == None %} disabled{% endif %}>
-                            <input id="chat-message" name="name" type="text" maxlength="256" placeholder="Send message">
+                        <form class="chat-form" novalidate{% if group_id == None and user_url == None %} disabled{% endif %}>
+                            <div class="chat-form-input" contenteditable="true"></div>
                             <div class="chat-send">
                                 <i class="material-icons">send</i>
                                 <link class="rippleJS"/>

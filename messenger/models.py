@@ -17,15 +17,19 @@
 from django.db import models
 from django.utils import timezone
 from django.core.urlresolvers import reverse
+from django.contrib.auth import get_user_model
 
 # Other Imports
 import uuid
 from . import identifier as ident
 
-# Chat Group Class
-# Represents the database model that each chatgroup, public or private,
-# must adopt.
 class ChatGroup(models.Model):
+    """
+    A ChatGroup is any group, public or private, which has an associated
+    Socket IO Channel.
+    TODO Find a better way to link the database model and the Socket IO
+    channnel.
+    """
 
     # The name can be changed at anytime by the rooms moderators.
     # Does not have to be unique, and should not be use as the primary
@@ -66,7 +70,46 @@ class ChatGroup(models.Model):
     #@models.permalink
     def get_absolute_url(self):
         return reverse("messenger.views.group", args=[str(self.group_id)])
-        #return "/messages/%s" % str(self.identifier)
+
+def get_sentinel_user():
+    """
+    Returns a sentinel user. This user is used in place of a deleted user.
+    It must be unique enough that any other user named "deleted" is not
+    retrieved instead. Since this user doesn't have a username or password
+    we can safely set its super user status to TRUE, which as of right now
+    makes it completely unique.
+    """
+    return get_user_model().objects.get_or_create(
+        username="deleted",
+        is_active=False,
+        is_super_user=True
+    )[0]
+
+class ChatMessage(models.Model):
+    """
+    This model essential stores a message in the database. They automatically
+    expire after one (1) week and keep reference to their sender and channel.
+    """
+    sender = models.ForeignKey(
+        "accounts.User",
+        on_delete=models.SET(get_sentinel_user),
+    )
+
+    contents = models.CharField(max_length=256)
+    channel_id = models.CharField(max_length=20)
+    time_sent = models.DateTimeField(default=timezone.now)
+    is_group = models.BooleanField(default=True)
+
+    def get_absolute_url(self):
+        view = "messenger.views.group"
+        if not self.is_group:
+            view = "messenger.views.private"
+        return reverse(view, args=[str(self.channel_id)])
+
+    def get_parent_model(self):
+        if self.is_group:
+            return ChatGroup.objects.get(group_id=self.channel_id)
+        return get_user_model().objects.get(user_url=self.channel_id)
 
 class ChatPermissions(models.Model):
     # The group that these permissions apply to

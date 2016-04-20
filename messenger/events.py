@@ -21,7 +21,7 @@ from django.db.models import Q
 
 # Other Imports
 from django_socketio import events
-from messenger.models import ChatGroup
+from messenger.models import ChatGroup, ChatMessage
 from accounts.models import User, FriendInvites
 
 @events.on_message(channel=".")
@@ -34,24 +34,64 @@ def channel_message(request, socket, context, message):
     """
     if not request.user.is_authenticated():
         return
-    if message["action"] == "search" and "data" in message:
-        handleSearch(request, socket, message)
-    if message["action"] == "friend_req" and "user_id" in message:
-        handleFriendRequest(request, socket, message)
+    if "action" in message:
+        if message["action"] == "message" and "message" in message:
+            handleMessage(request, socket, message)
+        if message["action"] == "search" and "data" in message:
+            handleSearch(request, socket, message)
+        if message["action"] == "friend_req" and "user_id" in message:
+            handleFriendRequest(request, socket, message)
 
 @events.on_message
 def message(request, socket, context, message):
     """
     For some reason, putting both decorators on the same method does not work as
     expected, so for now this method will handle everything that occurs on the
-    front messaging page. It is essentially a duplicate of the above.
+    front messaging page. It is essentially a duplicate of the above, without
+    channel specific events.
     """
     if not request.user.is_authenticated():
         return
-    if message["action"] == "search" and "data" in message:
-        handleSearch(request, socket, message)
-    if message["action"] == "friend_req" and "user_id" in message:
-        handleFriendRequest(request, socket, message)
+    if "action" in message:
+        if message["action"] == "search" and "data" in message:
+            handleSearch(request, socket, message)
+        if message["action"] == "friend_req" and "user_id" in message:
+            handleFriendRequest(request, socket, message)
+
+def handleMessage(request, socket, message):
+    """
+    Handles messages sent via a channel, saving them to the database
+    and then sending them to all sockets subscribed to the channel.
+    """
+    if not request.user.is_authenticated():
+        return
+
+    channel_id = None
+    is_group = False
+    if "group_id" in message:
+        channel_id = message["group_id"]
+        is_group = True
+    if "user_url" in message:
+        channel_id = message["user_url"]
+    if channel_id == None: # No channel ID was sent
+        return
+
+    user_message = escape(message["message"])
+
+    # Create model instance
+    ChatMessage.objects.create(
+        sender=request.user,
+        contents=user_message,
+        channel_id=channel_id,
+        is_group=is_group,
+    )
+
+    # Send back to sockets TODO Add the message clientside first, then right 'sent'
+    # once your socket receives your own message back.
+    socket.send_and_broadcast_channel({
+        "action": "message",
+        "message": user_message,
+    }, channel=("group-" + channel_id) if is_group else ("user-" + channel_id))
 
 def handleSearch(request, socket, message):
     """
@@ -153,6 +193,7 @@ def on_connect(request, socket, context):
     """
     if request.user.is_authenticated:
         request.user.is_online = True
+        request.user.socket_session = socket.session.session_id
         request.user.save()
 
 @events.on_disconnect

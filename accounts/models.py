@@ -80,7 +80,6 @@ class User(AbstractBaseUser):
     user_id = models.UUIDField( # UUID for uniquely identifying user accounts.
         primary_key=True, # The UUID needs to be the primary key
         default=uuid.uuid4,
-        editable=False,
     )
 
     email = models.EmailField(
@@ -125,6 +124,7 @@ class User(AbstractBaseUser):
     is_online = models.BooleanField(default=False)
     is_super_user = models.BooleanField(default=False)
     is_premium = models.BooleanField(default=False)
+    socket_session = models.CharField(max_length=20, blank=True)
 
     objects = UserManager() # Reference to the UserManager class above.
 
@@ -146,13 +146,13 @@ class FriendInvites(models.Model):
     recipient = models.ForeignKey(
         "User",
         on_delete=models.CASCADE,
-        related_name="friend_recipient",
+        related_name="request_sender",
     )
 
     sender = models.ForeignKey(
         "User",
         on_delete=models.CASCADE,
-        related_name="friend_sender",
+        related_name="request_recipient",
     )
 
     sent = models.DateTimeField(default=timezone.now)
