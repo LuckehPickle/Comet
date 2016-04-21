@@ -71,6 +71,10 @@ class ChatGroup(models.Model):
     def get_absolute_url(self):
         return reverse("messenger.views.group", args=[str(self.group_id)])
 
+    def get_latest_message(self):
+        query_set = ChatMessage.objects.filter(is_group=True, channel_id=self.group_id).order_by("-time_sent")[:1]
+        return str(query_set[0].sender) + ": " + str(query_set[0].contents)
+
 def get_sentinel_user():
     """
     Returns a sentinel user. This user is used in place of a deleted user.

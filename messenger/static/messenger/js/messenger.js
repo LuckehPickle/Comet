@@ -141,52 +141,91 @@ $("html").on("click", function(event){
             $(".tools-input-dropdown").hide();
         }
     }
+
+    if(!$(event.target).closest(".tool-container").length && !$(event.target).is(".tool-container")){
+        $(".tool-container-dropdown").hide();
+    }
 });
 
-/* SOCKETIO */
+/**
+ * Handles tool container dropdown clicks.
+ */
+$(".tool-container").on("click", function(event){
+    if(!$(event.target).closest(".tool-container-dropdown").length && !$(event.target).is(".tool-container-dropdown")){
+        $(this).children(".tool-container-dropdown").slideDown(200);
+    }
+});
+
+$(".tool-container-dropdown").on("click", function(){
+    $(this).hide();
+});
 
 $(function(){
-    var socket_type = {
-        NONE: 0,
-        USER: 1,
-        GROUP: 2,
-    }
+    // Scroll to bottom on load
+    $(".chat-body").animate({
+        scrollTop: $(".chat-body").prop("scrollHeight")
+    }, 300);
 
-    var SOCKET_TYPE = socket_type.NONE;
-    if(window.group_id != null){
-        SOCKET_TYPE = socket_type.GROUP;
-    }else if(window.user_url != null){
-        SOCKET_TYPE = socket_type.USER;
-    }
-
+    /**
+     * Essentially turns DIV's with a 'data-url' attribute into links.
+     * TODO Find a way to remove this so that users can open in new tab.
+     * If it is removed currently, the JS Ripple will be link coloured in
+     * a hideous explosion of colour.
+     */
     $("[data-url]").on("click", function(){
         window.location.href = $(this).attr("data-url");
     });
 
+    /**
+     * Handles the typing timeout. Each time a key is pressed the timer
+     * is reset.
+     */
     var typing_timer;
-    var done_typing_interval = 500;
+    var DONE_TYPING_INTERVAL = 500;
     var $input = $(".tools-input-wrapper > input");
 
+    /**
+     * Listens for 'keyup' events to reset the typing typing_timer
+     */
     $input.on("keyup", function(){
         clearTimeout(typing_timer);
-        typing_timer = setTimeout(doneTyping, done_typing_interval);
+        typing_timer = setTimeout(doneTyping, DONE_TYPING_INTERVAL);
     });
 
+    /**
+     * Clears the  timer but doesn't restart it, as the key is still pressed.
+     */
     $input.on("keydown", function(){
         clearTimeout(typing_timer);
     });
 
+    /**
+     * Function which runs whenever the typing timer runs out. It essentially
+     * means the user has finished typing.
+     */
     function doneTyping(){
         requestQueryResponse($input.val());
     }
 
+    /**
+     * Request a response to the search query. The request is sent via
+     * Socket IO.
+     */
     var requestQueryResponse = function(query){
         if(query != "" && query != null && query.length >= 3){
             console.log("Searching for users named '" + query + "'");
-            socket.send({action: "search", data: query, group_id: window.group_id});
+            socket.send({
+                action: "search",
+                data: query,
+                channel_id: window.channel_id,
+                is_group: window.is_group,
+            });
         }
     }
 
+    /**
+     * Handles incoming query responses from the Socket IO server.
+     */
     var handleQueryResponse = function(data){
         console.log("Response received.");
         var users = JSON.parse(data.users);
@@ -194,6 +233,9 @@ $(function(){
         updateSearchList(users, friends);
     }
 
+    /**
+     * Updates the search list with new data, removing stale data as well.
+     */
     function updateSearchList(data, friends){
         clearSearchList();
         if(data.length == 0){ // No data returned (ie Empty result)
@@ -317,44 +359,88 @@ $(function(){
     });
 
     /**
-     * Sends a message through the socket to be sent to all other connected
-     * sockets.
+     * Sends a message to the Socket IO server. To be sent to all other sockets.
      */
     var sendMessage = function(message){
         if(message == null || message == ""){
-            console.log("cancelled " + message);
             return;
         }
 
-        var data = {
+        handleMessage({
+            message: message,
+            sender: "me",
+            sender_id: "me",
+            sent_time: Date.now(),
+        });
+
+        socket.send({
             action: "message",
             message: message,
-        }
-
-        if(SOCKET_TYPE == socket_type.GROUP){
-            data["group_id"] = window.group_id;
-        }else if(SOCKET_TYPE == socket_type.USER){
-            data["user_url"] = window.user_url;
-        }
-
-        socket.send(data);
+            channel_id: window.channel_id,
+            is_group: window.is_group,
+        });
         console.log("Message sent");
     }
 
     /**
-     * Handles incomming messages.
+     * Handles a message. Accepts either a dict or a string and creates
+     * a message element in the chat body.
+     * TODO Check the time period. If > 5 mins do not tag.
+     * TODO Clean up
      */
     var handleMessage = function(data){
-        console.log(data["message"]);
+        // Check the most recent message to see if we can tag
+        var most_recent = $(".chat-body").children().last();
+        var time = new Date(data.sent_time).toLocaleTimeString(navigator.language, {
+            hour: "numeric",
+            minute: "numeric",
+            hour12: false,
+        });
+        var other = (data.sender_id == "me") ? "" : "-other";
+
+        if(most_recent.attr("data-user-id") == data.sender_id){
+            // A new message from the same user. We can safely tag.
+            most_recent.children(".chat-message-sender" + other).remove();
+            most_recent.append(
+                "<p class=\"chat-message-sender" + other + "\">" + data.sender + " (" + time + ")</p>"
+            );
+
+            // Add the tag message
+            most_recent.children("section").append(
+                "<div class=\"chat-message-content" + other + "-tag\">" + data.message + "</div>"
+            );
+        }else{
+            // From a new user, append.
+            $(".chat-body").append(
+                "<div class=\"chat-message-container" + other + "\" data-user-id=\"" + data.sender_id + "\">" +
+                    "<div class=\"chat-message-image" + other + "\"></div>" +
+                    "<span class=\"triangle-top-" + (other ? "right" : "left") + "\"></span>" +
+                    "<section>" +
+                        "<div class=\"chat-message-content" + other + "\">" + data.message + "</div>" +
+                    "</section>" +
+                    "<p class=\"chat-message-sender" + other + "\">" + data.sender + " (" + time + ")</p>" +
+                "</div>"
+            );
+        }
+
+        // Make sure that the body is scrolled to the bottom
+        $(".chat-body").animate({
+            scrollTop: $(".chat-body").prop("scrollHeight")
+        }, 300);
     }
 
+    /**
+     * Automatically subscribes this Socket to the appropriate channel.
+     */
     var connected = function(){
-        if(window.group_id != null){
-            socket.subscribe("group-" + window.group_id);
-            console.log("Subscribing to group-" + window.group_id);
-        }else if(window.user_url != null){
-            socket.subscribe("user-" + window.user_url);
-            console.log("Subscribing to user-" + window.user_url);
+        if(window.channel_id != null){
+            if(window.is_group){
+                socket.subscribe("group-" + window.channel_id);
+                console.log("Subscribing to group-" + window.channel_id);
+            }else{
+                socket.subscribe("user-" + window.channel_id);
+                console.log("Subscribing to user-" + window.channel_id);
+            }
         }
     };
 
@@ -371,6 +457,9 @@ $(function(){
                 break;
             case "message":
                 handleMessage(data);
+                break;
+            case "message_sent":
+
                 break;
         }
     };

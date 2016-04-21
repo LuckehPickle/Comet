@@ -36,11 +36,11 @@ def channel_message(request, socket, context, message):
         return
     if "action" in message:
         if message["action"] == "message" and "message" in message:
-            handleMessage(request, socket, message)
+            handle_message(request, socket, message)
         if message["action"] == "search" and "data" in message:
-            handleSearch(request, socket, message)
+            handle_search(request, socket, message)
         if message["action"] == "friend_req" and "user_id" in message:
-            handleFriendRequest(request, socket, message)
+            handle_friend_request(request, socket, message)
 
 @events.on_message
 def message(request, socket, context, message):
@@ -50,50 +50,43 @@ def message(request, socket, context, message):
     front messaging page. It is essentially a duplicate of the above, without
     channel specific events.
     """
-    if not request.user.is_authenticated():
-        return
     if "action" in message:
         if message["action"] == "search" and "data" in message:
-            handleSearch(request, socket, message)
+            handle_search(request, socket, message)
         if message["action"] == "friend_req" and "user_id" in message:
-            handleFriendRequest(request, socket, message)
+            handle_friend_request(request, socket, message)
 
-def handleMessage(request, socket, message):
+def handle_message(request, socket, message):
     """
     Handles messages sent via a channel, saving them to the database
     and then sending them to all sockets subscribed to the channel.
     """
-    if not request.user.is_authenticated():
-        return
-
-    channel_id = None
-    is_group = False
-    if "group_id" in message:
-        channel_id = message["group_id"]
-        is_group = True
-    if "user_url" in message:
-        channel_id = message["user_url"]
-    if channel_id == None: # No channel ID was sent
-        return
-
+    channel_id = message["channel_id"]
+    is_group = message["is_group"]
     user_message = escape(message["message"])
 
     # Create model instance
-    ChatMessage.objects.create(
+    model = ChatMessage.objects.create(
         sender=request.user,
         contents=user_message,
         channel_id=channel_id,
         is_group=is_group,
     )
 
-    # Send back to sockets TODO Add the message clientside first, then right 'sent'
-    # once your socket receives your own message back.
-    socket.send_and_broadcast_channel({
+    # Send back to sockets
+    socket.broadcast_channel({
         "action": "message",
         "message": user_message,
+        "sender": request.user.username,
+        "sender_id": str(request.user.user_id),
+        "sent_time": model.time_sent.isoformat(),
     }, channel=("group-" + channel_id) if is_group else ("user-" + channel_id))
 
-def handleSearch(request, socket, message):
+    socket.send({
+        "action": "message_sent",
+    })
+
+def handle_search(request, socket, message):
     """
     Collects the first five (5) results of a database query, serializes them in
     JSON and then sends them back to the user via django-socketio.
@@ -123,7 +116,7 @@ def handleSearch(request, socket, message):
 
     socket.send({"action": "search", "users": json_users, "friends": friends_in_query})
 
-def handleFriendRequest(request, socket, message):
+def handle_friend_request(request, socket, message):
     """
     Handles incoming friend requests, and checks to ensure that a friend request
     hasn't already been sent. Also notifies the target user about their new

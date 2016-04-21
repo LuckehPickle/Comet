@@ -34,8 +34,10 @@
         {% load socketio_tags %}
         {% socketio %}
         <script>
-            {% if group_id != None %}window.group_id = "{{ group_id }}";{% else %}window.group_id = null;{% endif %}
-            {% if user_url != None %}window.user_url = "{{ user_url }}";{% else %}window.urser_url = null;{% endif %}
+            {% if channel_id != None %}
+                window.channel_id = "{{ channel_id }}";
+                window.is_group = {{ is_group|yesno:"true,false" }};
+            {% endif %}
         </script>
     </head>
     <body>
@@ -71,12 +73,22 @@
 
             <!-- DESKTOP TOOLS -->
             <div class="desktop-tools">
-                <i class="material-icons js-transit create-group-trigger" data-transit-id="create-chat">add</i>
+                <div class="tool-container" style="margin-right:10px;">
+                    <span style="padding-right:5px;">
+                        Create Group
+                        <i class="material-icons">keyboard_arrow_down</i>
+                    </span>
+                    <link class="rippleJS"/>
+                    <ul class="tool-container-dropdown">
+                        <li class="create-group-trigger">Private Group</li>
+                        <li class="create-group-trigger">Public Group</li>
+                    </ul>
+                </div>
+
                 <!-- SEARCH -->
                 <div class="tools-input-wrapper">
                     <i class="material-icons noselect">search</i>
                     <input type="text" spellcheck="false" placeholder="Search...">
-
                     <!-- DROPDOWN -->
                     <div class="tools-input-dropdown">
                         <section class="dropdown-users">
@@ -95,6 +107,27 @@
                         </section>
                     </div>
                 </div>
+
+                <!-- CHAT TITLE -->
+                <p class="chat-title">
+                    {% if chat_title != None %}
+                        {{ chat_title }}
+                        <span class="chat-nick">
+                            {% if chat_nick != None %}
+                                ({{ chat_nick }})
+                            {% endif %}
+                        </span>
+                    {% else %}
+                        No channel
+                    {% endif %}
+                </p>
+
+                {% if is_group %}
+                    <div class="tool-container">
+                        <span>Add Users</span>
+                        <link class="rippleJS"/>
+                    </div>
+                {% endif %}
             </div>
         </div>
 
@@ -114,7 +147,7 @@
                     <div class="tab-body tab-friends" {% if not is_group %}active{% endif %}>
                         {% if request.user.friends.count != 0 %}
                             {% for friend in request.user.friends.all|sort_by:"-is_online" %}
-                                <div class="friend-container" data-url="{{ friend.get_absolute_url }}" {% if not is_group and user_url == friend.user_url %}active{% endif %}>
+                                <div class="friend-container" data-url="{{ friend.get_absolute_url }}" {% if not is_group and friend.user_url in channel_id %}active{% endif %}>
                                     <div class="friend-image"></div>
                                     <div>
                                         <p class="friend-username">{{ friend.username }} {% comment "TODO" %}{{ friend.nickname }}{% endcomment %}</p>
@@ -136,18 +169,18 @@
                     <div class="tab-body tab-groups" {% if is_group %}active{% endif %}>
                         {% if request.user.groups.count != 0 %}
                             {% for group in request.user.groups.all|sort_by:"-last_message" %}
-                                <div class="group-container" data-url="{{ group.get_absolute_url }}" {% if is_group and group_id == group.group_id %}active{% endif %}>
+                                <div class="group-container" data-url="{{ group.get_absolute_url }}" {% if is_group and channel_id == group.group_id %}active{% endif %}>
                                     <div class="group-image"></div>
                                     <section>
                                         <p class="group-name">{{ group.name }}</p>
-                                        <p class="group-message">Placeholder message for now. Really long too.</p>
+                                        <p class="group-message">{{ group.get_latest_message }}</p>
                                     </section>
                                     <link class="rippleJS"/>
                                 </div>
                             {% endfor %}
                         {% else %}
                             <div class="no-groups">
-                                Looks like your not in any groups yet. Create one by clicking the 'plus' icon in the toolbar.
+                                Looks like your not in any groups yet. Create one by clicking 'Create Group' on the toolbar above.
                                 <img src="{% static 'messenger/img/tutorial_groups.gif' %}">
                             </div>
                         {% endif %}
@@ -158,21 +191,22 @@
                 <div class="chat">
                     <!-- Chat Body -->
                     <div class="chat-body">
-                        <!--<div class="chat-message-container-other">
-                            <div class="chat-message-image-other"></div>
-                            <span class="triangle-top-right"></span>
-                            <div class="chat-message-content-other">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
-                        </div>
-
-                        <div class="chat-message-container">
-                            <div class="chat-message-image"></div>
-                            <span class="triangle-top-left"></span>
-                            <div class="chat-message-content">Proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
-                        </div>
-
-                        <div class="chat-message-container-tag">
-                            <div class="chat-message-content">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</div>
-                        </div>-->
+                        {% if last_fifteen_messages != None %}
+                            {% for message in last_fifteen_messages reversed %}
+                                {% with other=message|is_other:request.user.user_id %}
+                                    <div class="chat-message-container{{ other }}">
+                                        <div class="chat-message-image{{ other }}"></div>
+                                        <span class="triangle-top-{% if message|is_other:request.user.user_id == "" %}left{% else %}right{% endif %}"></span>
+                                        <section>
+                                            <div class="chat-message-content{{ other }}">{{ message.contents }}</div>
+                                        </section>
+                                        <p class="chat-message-sender{{ other }}">{{ message.sender }} ({{ message.time_sent|date:"H:i" }})</p>
+                                    </div>
+                                {% endwith %}
+                            {% endfor %}
+                        {% else %}
+                            No messages TODO make this fancy
+                        {% endif %}
                     </div>
 
                     <!-- Chat Footer -->

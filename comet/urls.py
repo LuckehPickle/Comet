@@ -20,6 +20,7 @@ from django.contrib import admin
 # Other Imports
 from accounts import views as accounts
 from frontpage import views as front
+from comet import views as comet
 
 # URL Patterns
 urlpatterns = [
@@ -31,4 +32,14 @@ urlpatterns = [
     url('', include('django_socketio.urls')),
     url(r'^chat/', include('chat_test.urls')),
     url(r'^admin/', admin.site.urls),
+    url(r'^400', comet.bad_request, name="400"),
+    url(r'^403', comet.permission_denied, name="403"),
+    url(r'^404', comet.page_not_found, name="404"),
+    url(r'^500', comet.server_error, name="500"),
 ]
+
+# Error Handlers
+handler400 = 'comet.views.bad_request'
+handler403 = 'comet.views.permission_denied'
+handler404 = 'comet.views.page_not_found'
+handler500 = 'comet.views.sever_error'

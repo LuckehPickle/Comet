@@ -1,4 +1,4 @@
-# [Messenger] MESSENGER_TAGS.PY - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
+# [Comet] VIEWS.PY - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
 # Powered by Django (https://www.djangoproject.com/) - Not endorsed by Django
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,20 +14,24 @@
 #   limitations under the License.
 
 # Django Imports
-from django import template
+from django.shortcuts import render
 
-register = template.Library()
+def bad_request(request):
+return render(request, "shared/error.html", {
+    "title": "Bad Request",
+})
 
-@register.filter(name="field_type")
-def field_type(field):
-    return field.field.widget.__class__.__name__
+def permission_denied(request):
+return render(request, "shared/error.html", {
+    "title": "Permission Denied",
+})
 
-@register.filter(name="sort_by")
-def sort_by(queryset, order):
-    return queryset.order_by(order)
+def page_not_found(request):
+    return render(request, "shared/error.html", {
+        "title": "Page not found",
+    })
 
-@register.filter(name="is_other")
-def is_other(model, user_id):
-    if model.sender_id == user_id:
-        return ""
-    return "-other"
+def server_error(request):
+    return render(request, "shared/error.html", {
+        "title": "Server Error",
+    })

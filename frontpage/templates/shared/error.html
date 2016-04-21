@@ -1,0 +1,40 @@
+<!--
+ [Shared] ERROR.HTML - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
+ Powered by Django (https://www.djangoproject.com/) - Not endorsed by Django
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+ Looking for source code? Check it out here: https://github.com/LuckehPickle/chat
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{ title }}</title>
+        {% load staticfiles %}
+        <meta charset="UTF-8">
+        <meta name="theme-color" content="#3B3B3B">
+        <meta name="msapplication-navbutton-color" content="#3B3B3B">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+        <link rel="icon" type="image/ico" href="{% static 'shared/favicon.ico' %}">
+        <link href="{% static 'shared/css/error.css' %}" type="text/css" rel="stylesheet">
+        <script src="//use.edgefonts.net/bebas-neue:n4.js"></script>
+    </head>
+    <body>
+        <script src="{% static 'shared/js/mo.min.js' %}"></script>
+        {% include 'shared/push-messages.html' %}
+        An error occured and I haven't made this page yet.<br>
+        Its probably a '{{ title }}'
+    </body>
+</html>

@@ -124,7 +124,6 @@ class User(AbstractBaseUser):
     is_online = models.BooleanField(default=False)
     is_super_user = models.BooleanField(default=False)
     is_premium = models.BooleanField(default=False)
-    socket_session = models.CharField(max_length=20, blank=True)
 
     objects = UserManager() # Reference to the UserManager class above.
 
@@ -141,6 +140,24 @@ class User(AbstractBaseUser):
 
     def get_absolute_url(self):
         return reverse("messenger.views.private", args=[str(self.user_url)])
+
+class UserGroup(models.Model):
+    """
+    A private group between two users.
+    """
+    user_one = models.ForeignKey(
+        "User",
+        on_delete=models.CASCADE,
+        related_name="user_group_one",
+    )
+
+    user_two = models.ForeignKey(
+        "User",
+        on_delete=models.CASCADE,
+        related_name="user_group_two",
+    )
+
+    channel_id = models.CharField(max_length=40)
 
 class FriendInvites(models.Model):
     recipient = models.ForeignKey(

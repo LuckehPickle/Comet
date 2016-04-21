@@ -23,9 +23,9 @@ from django.utils.html import escape
 import cr_config as config
 from comet.decorators import login_required_message
 from messenger.forms import CreateChatForm
-from messenger.models import ChatGroup, ChatPermissions, ChatInvite
+from messenger.models import ChatGroup, ChatPermissions, ChatInvite, ChatMessage
 from messenger.identifier import generate
-from accounts.models import User
+from accounts.models import User, UserGroup
 
 # INDEX
 # Currently just renders the messenger interface from the template.
@@ -33,25 +33,57 @@ from accounts.models import User
 def index(request):
     return renderMessenger(request, title="Messages")
 
-# PRIVATE
-# Renders a page that allows you to interact with a specific user.
-# Note: Will provide an error if you are not on the users contacts list
-# and the user has "only_from_contacts" setting set to TRUE.
-# IDEA: Allow users to set unique alliases for their URL.
-# TODO Add user blocking
 @login_required_message
 def private(request, identifier=None):
+    """
+    Renders a page that allows you to interact with a specific user.
+    Note: Will provide an error if you are not on the users contacts list
+    and the user has "only_from_contacts" setting set to TRUE.
+    IDEA: Allow users to set unique alliases for their URL.
+    TODO Add user blocking
+    TODO Add settings such as only_from_contacts
+    TODO Make sure their friends first
+    """
     # Get the user that the user is attempting to message
     user = get_object_or_404(User, user_url=identifier)
-    return renderMessenger(request, title=user, user_url=user.user_url)
+    channel_id = None
 
-# GROUP
-# Renders a page that allows you to message a particular group.
-# IDEA: Allow groups to create unique aliases for their URL. This will make
-# it easier to share the URL of public chats.
-# TODO Show an error modal if someone tries to join a group and is denied.
+    if UserGroup.objects.filter(user_one=user, user_two=request.user).count() != 0:
+        # UserGroup exists in the opposite direction, join it instead.
+        channel_id = UserGroup.objects.get(user_one=user, user_two=request.user).channel_id
+    elif UserGroup.objects.filter(user_one=request.user, user_two=user).count() != 0:
+        # UserGroup exists in this direction, join it.
+        channel_id = UserGroup.objects.get(user_one=request.user, user_two=user).channel_id
+    else:
+        # No UserGroup exists, create one in this direction and join it.
+        group = UserGroup.objects.create(
+            user_one=request.user,
+            user_two=user,
+            channel_id=request.user.user_url + "-" + user.user_url
+        )
+        channel_id = group.channel_id
+
+    last_fifteen_messages = ChatMessage.objects.filter(
+        is_group=False,
+        channel_id=channel_id,
+    ).order_by("-time_sent")[:15]
+
+    return renderMessenger(
+        request,
+        title=user,
+        channel_id=channel_id,
+        chat_title=user.username,
+        last_fifteen_messages=last_fifteen_messages
+    )
+
 @login_required_message
 def group(request, group_id=None):
+    """
+    Renders a page that allows you to message a particular group.
+    IDEA: Allow groups to create unique aliases for their URL. This will make
+    it easier to share the URL of public chats.
+    TODO Show an error modal if someone tries to join a group and is denied.
+    """
     # Get the group that the user is attempting to connect to
     group = get_object_or_404(ChatGroup, group_id=group_id)
     # Get the user's membership status
@@ -74,7 +106,7 @@ def group(request, group_id=None):
                 print("failure membered")
                 # User has not been invited, refuse connection
                 messages.add_message(request, messages.ERROR, "Sorry, this group is private. You will soon be able to send a request to the groups moderators.")
-                return renderMessenger(request, title="Private Group", is_group=True)
+                return renderMessenger(request, title="Private Group", is_group=True, chat_title="Private Group")
     else:
         if not is_member:
             is_member = True
@@ -92,21 +124,37 @@ def group(request, group_id=None):
             ban_reason = escape(perms.ban_reason)
 
         messages.add_message(request, messages.ERROR, "You have been banned from this group for the following reason: <div class=\"pmessage-well\">%s</div> <p class=\"pmessage\">Normally a ban appeal message would go here, but ban appealing hasn't been implemented yet.</p>" % ban_reason)
-        return renderMessenger(request, title="Banned", is_group=True)
+        return renderMessenger(request, title="Banned", is_group=True, chat_title="Banned")
 
     # If the request makes it this far, they are free to join the group.
-    # TODO Add socket data here
     # TODO If connection is denied disable the text input
-    return renderMessenger(request, title=group, is_group=True, group_id=group_id)
 
-def renderMessenger(request, title, form=CreateChatForm(), is_group=False, group_id=None, user_url=None):
+    last_fifteen_messages = ChatMessage.objects.filter(
+        is_group=True,
+        channel_id=group_id,
+    ).order_by("-time_sent")[:15]
+
+    return renderMessenger(
+        request,
+        title=group,
+        is_group=True,
+        channel_id=group_id,
+        chat_title=group.name,
+        last_fifteen_messages=last_fifteen_messages,
+    )
+
+def renderMessenger(request, title, form=CreateChatForm(), is_group=False, channel_id=None, chat_title=None, last_fifteen_messages=None):
+    """
+
+    """
     return render(request, "messenger/index.html", {
         "title": (config.TITLE_FORMAT % title),
         "user_id": str(request.user.user_id)[:8],
         "create_chat_form": form,
         "is_group": is_group,
-        "group_id": group_id,
-        "user_url": user_url,
+        "channel_id": channel_id,
+        "chat_title": chat_title,
+        "last_fifteen_messages": last_fifteen_messages,
     })
 
 # CREATE

@@ -33,6 +33,7 @@ body{
     -webkit-flex-direction: column;
             flex-direction: column;
     z-index: 110;
+    pointer-events: none;
 }
 
 /* Contains a messages elements */
@@ -43,6 +44,7 @@ body{
     border-left-style: solid;
     overflow: hidden;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    pointer-events: all;
 }
 
 .pmessage, .pmessage a{
