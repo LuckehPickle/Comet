@@ -49,6 +49,7 @@ frontpage/static/shared/BebasKai_gdi.woff
 frontpage/static/shared/jquery.address-1.5.js
 frontpage/static/shared/jquery.address-1.5.min.js
 frontpage/static/shared/mo.min.js
+chat_test
 */migrations/
 */apps.py
 */admin.py

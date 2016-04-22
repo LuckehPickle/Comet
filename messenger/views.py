@@ -26,6 +26,7 @@ from messenger.forms import CreateChatForm
 from messenger.models import ChatGroup, ChatPermissions, ChatInvite, ChatMessage
 from messenger.identifier import generate
 from accounts.models import User, UserGroup
+from django_socketio import broadcast_channel
 
 # INDEX
 # Currently just renders the messenger interface from the template.
@@ -63,17 +64,11 @@ def private(request, identifier=None):
         )
         channel_id = group.channel_id
 
-    last_fifteen_messages = ChatMessage.objects.filter(
-        is_group=False,
-        channel_id=channel_id,
-    ).order_by("-time_sent")[:15]
-
     return renderMessenger(
         request,
         title=user,
         channel_id=channel_id,
         chat_title=user.username,
-        last_fifteen_messages=last_fifteen_messages
     )
 
 @login_required_message
@@ -129,10 +124,13 @@ def group(request, group_id=None):
     # If the request makes it this far, they are free to join the group.
     # TODO If connection is denied disable the text input
 
-    last_fifteen_messages = ChatMessage.objects.filter(
-        is_group=True,
-        channel_id=group_id,
-    ).order_by("-time_sent")[:15]
+    if created:
+        # Announce to the channel that a user has joined.
+        # Perhaps this should occur in private messages?
+        broadcast_channel(message = {
+            "action": "user_join",
+            "username": request.user.username,
+        }, channel="group-" + group_id)
 
     return renderMessenger(
         request,
@@ -140,13 +138,9 @@ def group(request, group_id=None):
         is_group=True,
         channel_id=group_id,
         chat_title=group.name,
-        last_fifteen_messages=last_fifteen_messages,
     )
 
-def renderMessenger(request, title, form=CreateChatForm(), is_group=False, channel_id=None, chat_title=None, last_fifteen_messages=None):
-    """
-
-    """
+def renderMessenger(request, title, form=CreateChatForm(), is_group=False, channel_id=None, chat_title=None):
     return render(request, "messenger/index.html", {
         "title": (config.TITLE_FORMAT % title),
         "user_id": str(request.user.user_id)[:8],
@@ -154,8 +148,18 @@ def renderMessenger(request, title, form=CreateChatForm(), is_group=False, chann
         "is_group": is_group,
         "channel_id": channel_id,
         "chat_title": chat_title,
-        "last_fifteen_messages": last_fifteen_messages,
+        "latest_messages": get_latest_messages(channel_id),
     })
+
+def get_latest_messages(channel_id):
+    """
+    Gathers the fifteen (15) most recent messages sent in any group.
+    """
+    if channel_id == None:
+        return None
+    return ChatMessage.objects.filter(
+        channel_id=channel_id,
+    ).order_by("-time_sent")[:15]
 
 # CREATE
 # Handles the form submissions from the chat creation modal.

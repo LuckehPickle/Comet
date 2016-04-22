@@ -353,6 +353,7 @@ $(function(){
         }
 
         // Make sure the key pressed wasn't delete
+        // TODO fix
         if(event.which != 8 && $(".chat-form-input").text().length > 256){
             $(".chat-form-input").text($(".chat-form-input").text().substring(0, 256));
         }
@@ -368,9 +369,10 @@ $(function(){
 
         handleMessage({
             message: message,
-            sender: "me",
-            sender_id: "me",
-            sent_time: Date.now(),
+            sender: window.username,
+            sender_id: window.user_id,
+            time_sent: Date.now(),
+            local: true,
         });
 
         socket.send({
@@ -391,12 +393,14 @@ $(function(){
     var handleMessage = function(data){
         // Check the most recent message to see if we can tag
         var most_recent = $(".chat-body").children().last();
-        var time = new Date(data.sent_time).toLocaleTimeString(navigator.language, {
+        var other = (data.sender_id == window.user_id) ? "" : "-other";
+        var time = new Date(data.time_sent).toLocaleTimeString(navigator.language, {
             hour: "numeric",
             minute: "numeric",
             hour12: false,
         });
-        var other = (data.sender_id == "me") ? "" : "-other";
+
+        $(".no-messages").remove();
 
         if(most_recent.attr("data-user-id") == data.sender_id){
             // A new message from the same user. We can safely tag.
@@ -406,9 +410,7 @@ $(function(){
             );
 
             // Add the tag message
-            most_recent.children("section").append(
-                "<div class=\"chat-message-content" + other + "-tag\">" + data.message + "</div>"
-            );
+            most_recent.children("section").append("<div class=\"chat-message-content" + other + "-tag\" data-new></div>");
         }else{
             // From a new user, append.
             $(".chat-body").append(
@@ -416,12 +418,17 @@ $(function(){
                     "<div class=\"chat-message-image" + other + "\"></div>" +
                     "<span class=\"triangle-top-" + (other ? "right" : "left") + "\"></span>" +
                     "<section>" +
-                        "<div class=\"chat-message-content" + other + "\">" + data.message + "</div>" +
+                        "<div class=\"chat-message-content" + other + "\" data-new></div>" +
                     "</section>" +
                     "<p class=\"chat-message-sender" + other + "\">" + data.sender + " (" + time + ")</p>" +
                 "</div>"
             );
         }
+
+        // Add the message afterwards via .text() to escape HTML
+        $messageContent = $("[class^=\"chat-message-content\"][data-new]");
+        $messageContent.text(data.message);
+        $messageContent.removeAttr("data-new");
 
         // Make sure that the body is scrolled to the bottom
         $(".chat-body").animate({
@@ -444,6 +451,14 @@ $(function(){
         }
     };
 
+    /**
+     * Announces when a new user joins a group.
+     */
+    var announceUserJoin = function(data){
+        $(".chat-body").append("<p class=\"user-join\">" + data.username + " has joined the group.</p>")
+        console.log(data.username + " has joined the group.");
+    }
+
     var disconnected;
 
     // Handles general message from client to server
@@ -460,6 +475,9 @@ $(function(){
                 break;
             case "message_sent":
 
+                break;
+            case "user_join":
+                announceUserJoin(data);
                 break;
         }
     };

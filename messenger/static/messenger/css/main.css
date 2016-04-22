@@ -119,6 +119,11 @@ body{
     display: inline-block;
 }
 
+.chat-form[disabled] .chat-form-input::before{
+    content: "No Channel";
+    color: #858585;
+}
+
 .chat-body{
     padding: 0 15px;
     box-sizing: border-box;
@@ -127,7 +132,7 @@ body{
 div[class^="chat-message-container"]{
     width: 100%;
     padding: 10px;
-    margin-top: 15px;
+    margin-top: 10px;
     box-sizing: border-box;
     -webkit-display: flex;
             display: flex;
@@ -136,10 +141,15 @@ div[class^="chat-message-container"]{
     position: relative;
 }
 
-.chat-message-container section{
+div[class^="chat-message-container"] p{
+    margin: 0;
+}
+
+div[class^="chat-message-container"] section{
     background-color: #DBDBDB;
     border-radius: 3px 0px 3px 3px;
     margin-left: 72px;
+    padding: 10px 15px;
 }
 
 .chat-message-container-other section{
@@ -181,7 +191,6 @@ div[class^="chat-message-image"]{
 div[class^="chat-message-content"]{
     font-family: 'Roboto', sans-serif;
     font-size: 15px;
-    padding: 10px 15px;
     color: #454545;
 }
 
@@ -208,6 +217,13 @@ p[class^="chat-message-sender"]{
     left: 70px;
     right: auto;
     text-align: left !important;
+}
+
+.no-messages, .no-channel, .user-join{
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    color: #454545;
+    text-align: center;
 }
 
 ::-moz-selection{background: #F1592B;color:#EBEBEB;}
@@ -800,6 +816,12 @@ p[class^="chat-message-sender"]{
 
     .chat-send::before{
         content: "Send";
+    }
+
+    .chat-form[disabled] .chat-send{
+        background-color: #F1592B;
+        cursor: default;
+        pointer-events: none;
     }
 
     .compact-footer{

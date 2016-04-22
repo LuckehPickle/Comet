@@ -16,11 +16,14 @@
 # Django Imports
 from django.core import serializers
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 from django.utils.html import escape
 from django.db.models import Q
+from django.contrib import messages
 
 # Other Imports
 from django_socketio import events
+from messenger import notify
 from messenger.models import ChatGroup, ChatMessage
 from accounts.models import User, FriendInvites
 
@@ -60,31 +63,55 @@ def handle_message(request, socket, message):
     """
     Handles messages sent via a channel, saving them to the database
     and then sending them to all sockets subscribed to the channel.
+    If a message is marked to be tagged, it will be concatenated to
+    the previous message from the same user.
     """
     channel_id = message["channel_id"]
     is_group = message["is_group"]
     user_message = escape(message["message"])
 
-    # Create model instance
-    model = ChatMessage.objects.create(
-        sender=request.user,
-        contents=user_message,
-        channel_id=channel_id,
-        is_group=is_group,
-    )
+    # Check if a messsage has been sent in this channel before.
+    most_recent = ChatMessage.objects.filter(channel_id=channel_id).order_by("-time_sent")
+    if most_recent.count() != 0:
+        # A message has been sent, retrieve the most recent
+        most_recent = most_recent[0]
+
+        if most_recent.sender == request.user:
+            # This user sent the most recent message, tag it instead of creating a new one.
+            most_recent.contents += "\n" + user_message
+            most_recent.time_sent = timezone.now()
+            most_recent.save()
+        else:
+            most_recent = None
+    else:
+        most_recent = None
+
+    if most_recent == None:
+        most_recent = create_message(request.user, user_message, channel_id, is_group)
 
     # Send back to sockets
     socket.broadcast_channel({
         "action": "message",
-        "message": user_message,
+        "message": message["message"], # Do not broadcast back the escaped string.
         "sender": request.user.username,
         "sender_id": str(request.user.user_id),
-        "sent_time": model.time_sent.isoformat(),
+        "time_sent": most_recent.time_sent.isoformat(),
     }, channel=("group-" + channel_id) if is_group else ("user-" + channel_id))
 
     socket.send({
         "action": "message_sent",
     })
+
+def create_message(sender, contents, channel_id, is_group):
+    """
+    Creates a new chat message instance.
+    """
+    return ChatMessage.objects.create(
+        sender=sender,
+        contents=contents,
+        channel_id=channel_id,
+        is_group=is_group,
+    )
 
 def handle_search(request, socket, message):
     """
@@ -157,26 +184,24 @@ def handle_friend_request(request, socket, message):
             "type":"info",
             "message":"Friend request successfully sent to {0}.".format(target.username)
         })
-        # TODO Notify target user
+        # Notify target user
+        notify.notifyUser(target, messages.INFO,
+            "You have received a friend request from {0}. <div class=\"button-request-accept\" data-user-id=\"{1}\">Accept Request</div><div class=\"button-request-deny\" data-user-id=\"{1}\">Deny</div>".format(request.user.username, str(request.user.user_id))
+        )
     else:
         # There is a pending invite from the recipient, add friends
         request.user.friends.add(target)
         FriendInvites.objects.get(sender=target, recipient=request.user).delete()
+
+        # Notify
         socket.send({
             "action":"pmessage",
             "type":"info",
             "message":"You are now friends with {0}. You can now message them here: <div class=\"pmessage-well\"><a href=\"{1}\">{1}</a></div>".format(target.username, target.get_absolute_url())
         })
-        # TODO Notify target user
 
-@events.on_finish(channel="^group-")
-def finish(request, socket, context):
-    data = {
-        "action": "user_disconnect",
-        "username": request.user.username,
-        "user_id": str(request.user.user_id),
-    }
-    socket.broadcast_channel(data)
+        # Notify target user
+        notify.notifyUser(target, messages.INFO, "You are now friends with {0}. You can now message them here: <div class=\"pmessage-well\"><a href=\"{1}\">{1}</a></div>".format(request.user.username, request.user.get_absolute_url()))
 
 @events.on_connect
 def on_connect(request, socket, context):
@@ -189,8 +214,8 @@ def on_connect(request, socket, context):
         request.user.socket_session = socket.session.session_id
         request.user.save()
 
-@events.on_disconnect
-def on_disconnect(request, socket, context):
+@events.on_finish(channel=".")
+def finish(request, socket, context):
     """
     Handles socket disconnects. Each time a user disconnects from the socket server
     this event is fired. It is very similar to the above event, yet in reverse.

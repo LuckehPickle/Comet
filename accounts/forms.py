@@ -20,8 +20,10 @@
 
 # Django Imports
 from django import forms
-from .models import User
 from django.utils.translation import ugettext as _
+
+# Other Imports
+from accounts.models import User
 
 # Registration Form Class
 # Contains information and a cleaning function for the registration

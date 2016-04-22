@@ -72,8 +72,12 @@ class ChatGroup(models.Model):
         return reverse("messenger.views.group", args=[str(self.group_id)])
 
     def get_latest_message(self):
-        query_set = ChatMessage.objects.filter(is_group=True, channel_id=self.group_id).order_by("-time_sent")[:1]
-        return str(query_set[0].sender) + ": " + str(query_set[0].contents)
+        query_set = ChatMessage.objects.filter(is_group=True, channel_id=self.group_id).order_by("-time_sent")
+        if query_set.count() != 0:
+            query_set = query_set[0]
+        else:
+            return None
+        return str(query_set.sender) + ": " + str(query_set.contents)
 
 def get_sentinel_user():
     """
@@ -116,6 +120,9 @@ class ChatMessage(models.Model):
         return get_user_model().objects.get(user_url=self.channel_id)
 
 class ChatPermissions(models.Model):
+    """
+    Stores user specific permissions for each group.
+    """
     # The group that these permissions apply to
     chat_group = models.ForeignKey(
         ChatGroup,
@@ -167,3 +174,22 @@ class ChatInvite(models.Model):
         "ChatGroup",
         on_delete=models.CASCADE,
     )
+
+class Notification(models.Model):
+    """
+    A notification that is stored in the database whilst the user is offline.
+    When the user logs on again they are sent via Django's message API. It must
+    be stored here so that it can be deleted if the socket handles the hard work.
+    """
+    user = models.ForeignKey(
+        "accounts.User",
+        on_delete=models.CASCADE,
+    )
+
+    message_id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4
+    )
+
+    message_type = models.IntegerField()
+    message = models.CharField(max_length=512)

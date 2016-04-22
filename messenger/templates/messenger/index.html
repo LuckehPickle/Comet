@@ -38,6 +38,16 @@
                 window.channel_id = "{{ channel_id }}";
                 window.is_group = {{ is_group|yesno:"true,false" }};
             {% endif %}
+            window.username = "{{ request.user.username }}";
+            window.user_id = "{{ request.user.user_id }}";
+
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+            ga('create', 'UA-76754525-1', 'auto');
+            ga('send', 'pageview');
         </script>
     </head>
     <body>
@@ -145,45 +155,41 @@
 
                     <!-- FRIENDS LIST -->
                     <div class="tab-body tab-friends" {% if not is_group %}active{% endif %}>
-                        {% if request.user.friends.count != 0 %}
-                            {% for friend in request.user.friends.all|sort_by:"-is_online" %}
-                                <div class="friend-container" data-url="{{ friend.get_absolute_url }}" {% if not is_group and friend.user_url in channel_id %}active{% endif %}>
-                                    <div class="friend-image"></div>
-                                    <div>
-                                        <p class="friend-username">{{ friend.username }} {% comment "TODO" %}{{ friend.nickname }}{% endcomment %}</p>
-                                        <p class="friend-tag">Beta-Tester</p> <!-- TODO Allow custom tags -->
-                                    </div>
-                                    <div class="friend-status-{% if friend.is_online %}online{% else %}offline{% endif %}"></div>
-                                    <link class="rippleJS"/>
+                        {% for friend in request.user.friends.all|sort_by:"-is_online" %}
+                            <div class="friend-container" data-url="{{ friend.get_absolute_url }}" {% if not is_group and friend.user_url in channel_id %}active{% endif %}>
+                                <div class="friend-image"></div>
+                                <div>
+                                    <p class="friend-username">{{ friend.username }}</p>
+                                    <p class="friend-tag">Beta-Tester</p>
                                 </div>
-                            {% endfor %}
-                        {% else %}
+                                <div class="friend-status-{% if friend.is_online %}online{% else %}offline{% endif %}"></div>
+                                <link class="rippleJS"/>
+                            </div>
+                        {% empty %}
                             <div class="no-friends">
                                  Looks like you don't have any friends yet.
                                  <img src="{% static 'messenger/img/tutorial_users.gif' %}">
                             </div>
-                        {% endif %}
+                        {% endfor %}
                     </div>
 
                     <!-- GROUPS LIST -->
                     <div class="tab-body tab-groups" {% if is_group %}active{% endif %}>
-                        {% if request.user.groups.count != 0 %}
-                            {% for group in request.user.groups.all|sort_by:"-last_message" %}
-                                <div class="group-container" data-url="{{ group.get_absolute_url }}" {% if is_group and channel_id == group.group_id %}active{% endif %}>
-                                    <div class="group-image"></div>
-                                    <section>
-                                        <p class="group-name">{{ group.name }}</p>
-                                        <p class="group-message">{{ group.get_latest_message }}</p>
-                                    </section>
-                                    <link class="rippleJS"/>
-                                </div>
-                            {% endfor %}
-                        {% else %}
+                        {% for group in request.user.groups.all|sort_by:"-last_message" %}
+                            <div class="group-container" data-url="{{ group.get_absolute_url }}" {% if is_group and channel_id == group.group_id %}active{% endif %}>
+                                <div class="group-image"></div>
+                                <section>
+                                    <p class="group-name">{{ group.name }}</p>
+                                    <p class="group-message">{{ group.get_latest_message }}</p>
+                                </section>
+                                <link class="rippleJS"/>
+                            </div>
+                        {% empty %}
                             <div class="no-groups">
                                 Looks like your not in any groups yet. Create one by clicking 'Create Group' on the toolbar above.
                                 <img src="{% static 'messenger/img/tutorial_groups.gif' %}">
                             </div>
-                        {% endif %}
+                        {% endfor %}
                     </div>
                 </div>
 
@@ -191,28 +197,30 @@
                 <div class="chat">
                     <!-- Chat Body -->
                     <div class="chat-body">
-                        {% if last_fifteen_messages != None %}
-                            {% for message in last_fifteen_messages reversed %}
+                        {% if channel_id != None %}
+                            {% for message in latest_messages reversed %}
                                 {% with other=message|is_other:request.user.user_id %}
-                                    <div class="chat-message-container{{ other }}">
+                                    <div class="chat-message-container{{ other }}" data-user-id="{{ message.sender_id }}">
                                         <div class="chat-message-image{{ other }}"></div>
                                         <span class="triangle-top-{% if message|is_other:request.user.user_id == "" %}left{% else %}right{% endif %}"></span>
                                         <section>
-                                            <div class="chat-message-content{{ other }}">{{ message.contents }}</div>
+                                            <div class="chat-message-content{{ other }}">{{ message.contents|safe|linebreaks }}</div>
                                         </section>
                                         <p class="chat-message-sender{{ other }}">{{ message.sender }} ({{ message.time_sent|date:"H:i" }})</p>
                                     </div>
                                 {% endwith %}
+                            {% empty %}
+                                <p class="no-messages">No messages have been sent in this group yet.</p>
                             {% endfor %}
                         {% else %}
-                            No messages TODO make this fancy
+                            <p class="no-channel">You're not currently connected to a channel.</p>
                         {% endif %}
                     </div>
 
                     <!-- Chat Footer -->
                     <div class="chat-footer">
-                        <form class="chat-form" novalidate{% if group_id == None and user_url == None %} disabled{% endif %}>
-                            <div class="chat-form-input" contenteditable="true"></div>
+                        <form class="chat-form" novalidate{% if channel_id == None %} disabled{% endif %}>
+                            <div class="chat-form-input" {% if channel_id != None %}contenteditable="true"{% endif %}></div>
                             <div class="chat-send">
                                 <i class="material-icons">send</i>
                                 <link class="rippleJS"/>

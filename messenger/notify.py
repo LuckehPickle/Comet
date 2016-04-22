@@ -17,11 +17,34 @@
 from django.contrib import messages
 
 # Other Imports
-from django_socketio import channels
+import uuid
+from django_socketio import send
+from messenger.models import Notification
 
-# Attempts to push a notification to a user. If they are online and connected
-# to a socket, then the notification will be pushed via that socket.
-# However, if the user is not online then a message will be stored in the
-# database until they return.
-def notifyUser(user, message):
-    return
+def notifyUser(user, message_type, message):
+    """
+    Attempts to push a notification to a user. If they are online and connected
+    to a socket, then the notification will be pushed via that socket.
+    However, if the user is not online then a message will be stored in the
+    database until they return.
+    """
+    if user.is_online and user.socket_session != None:
+        # User is online, try sending them a message. Client will need to confirm
+        # that the message was received.
+        message_id = uuid.uuid4()
+
+        # Attempt to send the message via Socket IO
+        send(session_id=user.socket_session, message={
+            "action": "pmessage",
+            "type": message_type,
+            "message": message,
+            "request_confirmation": True,
+            "message_id": str(message_id),
+        })
+        
+    Notification.objects.create(
+        user=user,
+        message_id=message_id,
+        message_type=message_type,
+        message=message,
+    )

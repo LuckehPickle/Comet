@@ -101,6 +101,32 @@ body{
     content: "Warning: ";
 }
 
+div[class^="pmessage-container"] section{
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+div[class^="pmessage-container"] div[class^="button-request-"]{
+    font-family: 'Source Sans Pro', sans-serif;
+    padding: 8px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.button-request-accept{
+    background-color: #F37021;
+    color: #EBEBEB;
+}
+
+.button-request-deny{
+    color: #454545;
+}
+
+.button-request-deny:hover{
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
 /* For landscape mobile phones and up */
 @media screen and (min-width: 28.75em){
     .pmessages{

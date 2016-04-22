@@ -21,6 +21,10 @@ from django.contrib import admin
 from accounts import views as accounts
 from frontpage import views as front
 from comet import views as comet
+from comet.startup import on_startup
+
+# Call startup code
+on_startup()
 
 # URL Patterns
 urlpatterns = [
@@ -30,7 +34,6 @@ urlpatterns = [
     url(r'^logout', accounts.logout, name="logout"),
     url(r'^messages/', include("messenger.urls")),
     url('', include('django_socketio.urls')),
-    url(r'^chat/', include('chat_test.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^400', comet.bad_request, name="400"),
     url(r'^403', comet.permission_denied, name="403"),

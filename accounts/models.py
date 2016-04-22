@@ -124,6 +124,7 @@ class User(AbstractBaseUser):
     is_online = models.BooleanField(default=False)
     is_super_user = models.BooleanField(default=False)
     is_premium = models.BooleanField(default=False)
+    socket_session = models.CharField(max_length=20, blank=True)
 
     objects = UserManager() # Reference to the UserManager class above.
 

@@ -14,7 +14,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 
- TODO STARS! Make an animated stars jumbo to compare with current jumbo
+ TODO Create a base template with push messages, styling and GA
  Looking for source code? Check it out here: https://github.com/LuckehPickle/chat
 -->
 <!DOCTYPE html>
@@ -32,10 +32,19 @@
         <link rel="stylesheet" type="text/css" href="{% static 'frontpage/main.css' %}">
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
         <script src="//use.edgefonts.net/bebas-neue:n4.js"></script>
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+            ga('create', 'UA-76754525-1', 'auto');
+            ga('send', 'pageview');
+        </script>
     </head>
     <body>
         <script src="{% static 'shared/js/mo.min.js' %}"></script>
-        {% include 'shared/push-messages.min.html' %}
+        {% include 'shared/push-messages.html' %}
         {% include "shared/nav.html" %}
 
         <!-- Jumbo -->

@@ -1,4 +1,4 @@
-# [Comet] VIEWS.PY - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
+# [Comet] STARTUP.PY - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
 # Powered by Django (https://www.djangoproject.com/) - Not endorsed by Django
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,25 +13,14 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-# Django Imports
-from django.shortcuts import render
+# Other Imports
+from accounts.models import User
 
-def bad_request(request):
-    return render(request, "shared/error.html", {
-        "title": "Bad Request",
-    })
-
-def permission_denied(request):
-    return render(request, "shared/error.html", {
-        "title": "Permission Denied",
-    })
-
-def page_not_found(request):
-    return render(request, "shared/error.html", {
-        "title": "Page not found",
-    })
-
-def server_error(request):
-    return render(request, "shared/error.html", {
-        "title": "Server Error",
-    })
+def on_startup():
+    """
+    Code that is run once whenever the server starts.
+    """
+    User.objects.all().update(is_online=False)
+    print
+    print("Cleared online status of users")
+    print
