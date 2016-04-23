@@ -17,8 +17,12 @@
 import base64
 import uuid
 
-# Generates a random 7 character long base64 string
 def generate():
-    u = uuid.uuid4()
-    b64 = base64.urlsafe_b64encode(str(u))[:7]
+    """
+    Generates a random seven (7) character long base64 string to be used
+    as a user friendly url for various models (users, chat groups etc).
+    The string is based off of the Python implementation of UUID's.
+    """
+    u = uuid.uuid4() # Generate a new UUID
+    b64 = base64.urlsafe_b64encode(str(u))[:7] # Encode in base64, splice to 7 chars
     return b64

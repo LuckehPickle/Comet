@@ -382,7 +382,7 @@ p[class^="chat-message-sender"]{
 /* For Desktops and some tablets only */
 @media screen and (min-width: 40.5em){
     .pmessages{
-        top: 120px;
+        top: 125px;
     }
 
     .toolbar{
@@ -863,9 +863,9 @@ p[class^="chat-message-sender"]{
         display: none;
     }
 
-    .modal-wrapper[data-enabled], .modal-wrapper[data-animating]{
-        display: -webkit-flex;
-                display: flex;
+    .modal-wrapper[active]{
+        display: -webkit-flex !important;
+                display: flex !important;
         -webkit-justify-content: center;
                 justify-content: center;
         -webkit-align-items: center;
@@ -879,6 +879,11 @@ p[class^="chat-message-sender"]{
         background-color: #F2F2F2;
         border-radius: 3px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+        display: none;
+    }
+
+    .modal-create[active]{
+        display: block;
     }
 
     .modal-title{

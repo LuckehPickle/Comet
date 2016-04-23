@@ -21,30 +21,51 @@ import uuid
 from django_socketio import send
 from messenger.models import Notification
 
-def notifyUser(user, message_type, message):
+def notify_user(user, message_type, message):
     """
     Attempts to push a notification to a user. If they are online and connected
     to a socket, then the notification will be pushed via that socket.
     However, if the user is not online then a message will be stored in the
     database until they return.
     """
+    message_id = uuid.uuid4()
     if user.is_online and user.socket_session != None:
         # User is online, try sending them a message. Client will need to confirm
-        # that the message was received.
-        message_id = uuid.uuid4()
+        # that the message was received in order to remove the database instance.
 
         # Attempt to send the message via Socket IO
-        send(session_id=user.socket_session, message={
-            "action": "pmessage",
-            "type": message_type,
-            "message": message,
-            "request_confirmation": True,
-            "message_id": str(message_id),
-        })
-        
+        try:
+            send(session_id=user.socket_session, message={
+                "action": "pmessage",
+                "type": message_type,
+                "message": message,
+                "request_confirmation": True,
+                "message_id": str(message_id),
+            })
+        except:
+            pass
+
+    # Save in the database
     Notification.objects.create(
         user=user,
         message_id=message_id,
         message_type=message_type,
         message=message,
     )
+
+def check_notifications(request):
+    """
+    Checks for waiting notifications for a user, and adds them to the request
+    via Django's messaging framework.
+    """
+    idle_notifications = Notification.objects.filter(user=request.user)
+    for notification in idle_notifications:
+        messages.add_message(request, notification.message_type, notification.message)
+        notification.delete()
+
+def notification_seen(message_id):
+    """
+    Removes database reference to the notification after the client has confirmed
+    it to be seen.
+    """
+    Notification.objects.get(message_id=message_id).delete()

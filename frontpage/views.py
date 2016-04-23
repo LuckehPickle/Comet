@@ -17,6 +17,9 @@
 from django.shortcuts import render
 from django.contrib import messages
 
+# Messenger Imports
+# from messenger import notify
+
 # Other Imports
 import cr_config
 
@@ -26,6 +29,7 @@ def index(request):
     user_id = None
     if request.user.is_authenticated():
         user_id = str(request.user.user_id)[:8]
+        # TODO requires Socket connection - notify.check_notifications(request)
     return render(request, "frontpage/index.html", {
         "title": cr_config.TITLE,
         "user_id": user_id,

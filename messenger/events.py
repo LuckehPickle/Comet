@@ -27,6 +27,7 @@ from messenger import notify
 from messenger.models import ChatGroup, ChatMessage
 from accounts.models import User, FriendInvites
 
+
 @events.on_message(channel=".")
 def channel_message(request, socket, context, message):
     """
@@ -40,10 +41,15 @@ def channel_message(request, socket, context, message):
     if "action" in message:
         if message["action"] == "message" and "message" in message:
             handle_message(request, socket, message)
-        if message["action"] == "search" and "data" in message:
+        if message["action"] == "search" and "query" in message:
             handle_search(request, socket, message)
         if message["action"] == "friend_req" and "user_id" in message:
             handle_friend_request(request, socket, message)
+        if message["action"] == "answer_friend_req" and "user_id" in message:
+            handle_friend_request_response(request, socket, message)
+        if message["action"] == "message_confirm" and "message_id" in message:
+            notify.notification_seen(message["message_id"])
+
 
 @events.on_message
 def message(request, socket, context, message):
@@ -54,10 +60,15 @@ def message(request, socket, context, message):
     channel specific events.
     """
     if "action" in message:
-        if message["action"] == "search" and "data" in message:
+        if message["action"] == "search" and "query" in message:
             handle_search(request, socket, message)
         if message["action"] == "friend_req" and "user_id" in message:
             handle_friend_request(request, socket, message)
+        if message["action"] == "answer_friend_req" and "user_id" in message:
+            handle_friend_request_response(request, socket, message)
+        if message["action"] == "message_confirm" and "message_id" in message:
+            notify.notification_seen(message["message_id"])
+
 
 def handle_message(request, socket, message):
     """
@@ -102,6 +113,7 @@ def handle_message(request, socket, message):
         "action": "message_sent",
     })
 
+
 def create_message(sender, contents, channel_id, is_group):
     """
     Creates a new chat message instance.
@@ -113,6 +125,7 @@ def create_message(sender, contents, channel_id, is_group):
         is_group=is_group,
     )
 
+
 def handle_search(request, socket, message):
     """
     Collects the first five (5) results of a database query, serializes them in
@@ -121,7 +134,7 @@ def handle_search(request, socket, message):
     and update the button beside their username accordingly.
     """
     query_set = User.objects.filter(
-        Q(username__icontains=message["data"]) &
+        Q(username__icontains=message["query"]) &
         ~Q(user_id=request.user.user_id) # ~Q negates (not)
     ).order_by("username")[:5]
 
@@ -142,6 +155,7 @@ def handle_search(request, socket, message):
     )
 
     socket.send({"action": "search", "users": json_users, "friends": friends_in_query})
+
 
 def handle_friend_request(request, socket, message):
     """
@@ -185,8 +199,8 @@ def handle_friend_request(request, socket, message):
             "message":"Friend request successfully sent to {0}.".format(target.username)
         })
         # Notify target user
-        notify.notifyUser(target, messages.INFO,
-            "You have received a friend request from {0}. <div class=\"button-request-accept\" data-user-id=\"{1}\">Accept Request</div><div class=\"button-request-deny\" data-user-id=\"{1}\">Deny</div>".format(request.user.username, str(request.user.user_id))
+        notify.notify_user(target, messages.INFO,
+            "You have received a friend request from {0}<section><div class=\"button-request-accept\" data-user-id=\"{1}\" data-new>Accept Request<link class=\"rippleJS\"/></div><div class=\"button-request-deny\" data-user-id=\"{1}\" data-new>Deny Request<link class=\"rippleJS\"/></div></section>".format(request.user.username, str(request.user.user_id))
         )
     else:
         # There is a pending invite from the recipient, add friends
@@ -201,7 +215,31 @@ def handle_friend_request(request, socket, message):
         })
 
         # Notify target user
-        notify.notifyUser(target, messages.INFO, "You are now friends with {0}. You can now message them here: <div class=\"pmessage-well\"><a href=\"{1}\">{1}</a></div>".format(request.user.username, request.user.get_absolute_url()))
+        notify.notify_user(target, messages.INFO, "You are now friends with {0}. You can now message them here: <div class=\"pmessage-well\"><a href=\"{1}\">{1}</a></div>".format(request.user.username, request.user.get_absolute_url()))
+
+
+def handle_friend_request_response(request, socket, message):
+    """
+    Handles responses to friend requests.
+    """
+    target = None
+    try:
+        # Attempt to get the user
+        target = User.objects.get(user_id=message["user_id"])
+        # Attempts to delete the invitation instance
+        FriendInvites.objects.get(recipient=request.user, sender_id=target).delete()
+    except:
+        return
+
+    if message["accept"]:
+        request.user.friends.add(target)
+        socket.send({
+            "action":"pmessage",
+            "type":messages.INFO,
+            "message":"You are now friends with {0}. You can now message them here: <div class=\"pmessage-well\"><a href=\"{1}\">{1}</a></div>".format(target.username, target.get_absolute_url())
+        })
+        notify.notify_user(target, messages.INFO, "You are now friends with {0}. You can now message them here: <div class=\"pmessage-well\"><a href=\"{1}\">{1}</a></div>".format(request.user.username, request.user.get_absolute_url()))
+
 
 @events.on_connect
 def on_connect(request, socket, context):
@@ -213,6 +251,7 @@ def on_connect(request, socket, context):
         request.user.is_online = True
         request.user.socket_session = socket.session.session_id
         request.user.save()
+
 
 @events.on_finish(channel=".")
 def finish(request, socket, context):

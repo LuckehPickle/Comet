@@ -32,7 +32,7 @@ function registerPMessage(element){
 
 function closeListener(event){
     var source = event.target; //Get event target
-    while(source.tagName != "DIV"){ //Move up the element tree until you reach a div
+    while(source.className.indexOf("pmessage-container") == -1){ //Move up the element tree until you reach a div
         source = source.parentNode;
     }
 

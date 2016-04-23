@@ -149,12 +149,12 @@
                     <!-- TABS HEAD -->
                     <div class="tab-heads">
                         <!-- TODO Store active tab in cookes -->
-                        <div class="tab-head noselect" data-tab="friends" {% if not is_group %}active{% endif %}>Friends</div>
-                        <div class="tab-head noselect" data-tab="groups" {% if is_group %}active{% endif %}>Groups</div>
+                        <div class="tab-head noselect" data-tab="tab-friends" {% if not is_group %}active{% endif %}>Friends</div>
+                        <div class="tab-head noselect" data-tab="tab-groups" {% if is_group %}active{% endif %}>Groups</div>
                     </div>
 
                     <!-- FRIENDS LIST -->
-                    <div class="tab-body tab-friends" {% if not is_group %}active{% endif %}>
+                    <div class="tab-body" data-tab="tab-friends" {% if not is_group %}active{% endif %}>
                         {% for friend in request.user.friends.all|sort_by:"-is_online" %}
                             <div class="friend-container" data-url="{{ friend.get_absolute_url }}" {% if not is_group and friend.user_url in channel_id %}active{% endif %}>
                                 <div class="friend-image"></div>
@@ -174,7 +174,7 @@
                     </div>
 
                     <!-- GROUPS LIST -->
-                    <div class="tab-body tab-groups" {% if is_group %}active{% endif %}>
+                    <div class="tab-body" data-tab="tab-groups" {% if is_group %}active{% endif %}>
                         {% for group in request.user.groups.all|sort_by:"-last_message" %}
                             <div class="group-container" data-url="{{ group.get_absolute_url }}" {% if is_group and channel_id == group.group_id %}active{% endif %}>
                                 <div class="group-image"></div>

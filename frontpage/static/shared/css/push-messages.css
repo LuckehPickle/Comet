@@ -15,9 +15,6 @@
 #   limitations under the License.
 */
 
-/* Fonts */
-@import url(https://fonts.googleapis.com/css?family=Oxygen);
-
 body{
     overflow-x: hidden;
 }
@@ -48,7 +45,7 @@ body{
 }
 
 .pmessage, .pmessage a{
-    font-family: 'Oxygen', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 14px;
     margin: 12px;
     margin-right: 30px;
@@ -65,7 +62,8 @@ body{
     border-radius: 4px;
     padding: 10px;
     box-sizing: border-box;
-    margin: 0 10px;font-family: 'Oxygen', sans-serif;
+    margin: 0 10px;
+    font-family: 'Roboto', sans-serif;
     font-size: 14px;
     color: #3B3B3B;
 }
@@ -103,20 +101,25 @@ body{
 
 div[class^="pmessage-container"] section{
     width: 100%;
-    padding: 10px;
+    padding: 0 10px;
     box-sizing: border-box;
+    display: -webkit-flex;
+            display: flex;
 }
 
 div[class^="pmessage-container"] div[class^="button-request-"]{
-    font-family: 'Source Sans Pro', sans-serif;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
     padding: 8px 10px;
     border-radius: 3px;
     cursor: pointer;
+    position: relative;
 }
 
 .button-request-accept{
     background-color: #F37021;
     color: #EBEBEB;
+    margin-right: 8px;
 }
 
 .button-request-deny{

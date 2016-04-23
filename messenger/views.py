@@ -19,19 +19,23 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.utils.html import escape
 
-# Other Imports
-import cr_config as config
-from comet.decorators import login_required_message
+# Messenger Imports
+from messenger import notify
 from messenger.forms import CreateChatForm
 from messenger.models import ChatGroup, ChatPermissions, ChatInvite, ChatMessage
 from messenger.identifier import generate
+
+# Other Imports
+import cr_config as config
+from comet.decorators import login_required_message
 from accounts.models import User, UserGroup
 from django_socketio import broadcast_channel
 
-# INDEX
-# Currently just renders the messenger interface from the template.
 @login_required_message
 def index(request):
+    """
+    Currently just renders the messenger interface from the template.
+    """
     return renderMessenger(request, title="Messages")
 
 @login_required_message
@@ -43,7 +47,6 @@ def private(request, identifier=None):
     IDEA: Allow users to set unique alliases for their URL.
     TODO Add user blocking
     TODO Add settings such as only_from_contacts
-    TODO Make sure their friends first
     """
     # Get the user that the user is attempting to message
     user = get_object_or_404(User, user_url=identifier)
@@ -141,6 +144,7 @@ def group(request, group_id=None):
     )
 
 def renderMessenger(request, title, form=CreateChatForm(), is_group=False, channel_id=None, chat_title=None):
+    notify.check_notifications(request) # Check for new messages
     return render(request, "messenger/index.html", {
         "title": (config.TITLE_FORMAT % title),
         "user_id": str(request.user.user_id)[:8],
