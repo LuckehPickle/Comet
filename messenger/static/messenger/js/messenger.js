@@ -1,6 +1,6 @@
 /**
  * @license Copyright (c) 2016 - Sean Bailey - All Rights Reserved
- * Looking for source code? Check it out here: https://github.com/LuckehPickle/comet
+ * Looking for source code? Check it out here: https://github.com/LuckehPickle/Comet
  */
 
 /**
@@ -303,7 +303,7 @@ $(function(){
 
         print(false, "Received message of type '" + data.type + "'. Displaying.");
         $(".pmessages").append(
-            "<div class=\"pmessage-container pmessage-container-" + data.type + "\" data-new>" +
+            "<div class=\"pmessage-container pmessage-container-" + data.type + "\">" +
                 "<svg class=\"pmessage-close pmessage-close-" + data.type + "\" viewBox=\"0 0 20 20\">" +
                     "<path d=\"M0 3 L3 0 L10 7 L17 0 L20 3 L13 10 L20 17 L17 20 L10 13 L3 20 L0 17 L7 10 z\">" +
                 "</svg>" +
@@ -311,15 +311,11 @@ $(function(){
             "</div>"
         );
 
-        // Add events listeners
-        $(".pmessage-container[data-new]").children().on("click", closeListener);
-        $(".pmessage-container[data-new]").removeAttr("data-new");
-
         // Handle any buttons that could be appended to the message
         $("[class^=\"button-request-\"][data-user-id][data-new]").on("click", function(event){
-            var accept = $(this).className.indexOf("accept") != -1;
+            var accept = $(this).is("[class*=\"accept\"]");
             answerFriendRequest(accept, $(this).attr("data-user-id"));
-            closeListener(event);
+            closePushMessage($(this));
             $(this).removeAttr("data-new");
         });
 

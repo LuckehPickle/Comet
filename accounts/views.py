@@ -100,7 +100,7 @@ def renderLogin(request, next_dir="", form=AuthenticationForm()):
     if not next_dir == "":
         next_dir = "?next=" + next_dir
 
-    return render(request, "accounts/index.html", { #" + cr_config.FILE_SUFFIX + "
+    return render(request, "accounts/index.html", {
         "title": (cr_config.TITLE_FORMAT % PAGE_NAME),
         "next_dir": next_dir,
         "form": form,

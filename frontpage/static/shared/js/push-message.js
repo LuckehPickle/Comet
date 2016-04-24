@@ -1,66 +1,67 @@
-/*
-# [Shared] MESSAGE.JS - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
-# Powered by Django (https://www.djangoproject.com/) - Not endorsed by Django
-#
-#   Licensed under the Apache License, Version 2.0 (the "License");
-#   you may not use this file except in compliance with the License.
-#   You may obtain a copy of the License at
-#
-#       http://www.apache.org/licenses/LICENSE-2.0
-#
-#   Unless required by applicable law or agreed to in writing, software
-#   distributed under the License is distributed on an "AS IS" BASIS,
-#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#   See the License for the specific language governing permissions and
-#   limitations under the License.
-*/
+/**
+ * @license Copyright (c) 2016 - Sean Bailey - All Rights Reserved
+ * Looking for source code? Check it out here: https://github.com/LuckehPickle/Comet
+ */
 
-// Variables
-var messages = document.querySelectorAll(".pmessage-container"); //Get all message objects
-var easingPath = mojs.easing.path('M0,100 Q0,0 100,0');
+/**
+ * [Shared] PUSH-MESSAGE.JS - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
+ * Powered by Django (https://www.djangoproject.com/) - Not endorsed by Django
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-// Init
-for(var i = 0; i < messages.length; i++){ //Iterate over messages
-    var message = messages[i];
-    registerPMessage(message);
-}
 
-function registerPMessage(element){
-    message.children[0].addEventListener("click", closeListener);
-    slideIn(message); //Animate in
-}
-
-function closeListener(event){
-    var source = event.target; //Get event target
-    while(source.className.indexOf("pmessage-container") == -1){ //Move up the element tree until you reach a div
-        source = source.parentNode;
+/**
+ * Close Push Message
+ * Closes a puch message and sends a confirmation response to the server
+ * if necessary. TODO Confirmation response. If it's here than pmessages
+ * will last accross page loads.
+ * @param {Element} source Element which fired the event.
+ */
+function closePushMessage(source){
+    // Move up the DOM until you reach the container
+    while(!source.hasClass("pmessage-container")){
+        source = source.parent();
     }
 
-    //Animate
-    var start_height = source.offsetHeight;
-    new mojs.Tween({
-        duration: 300,
-        onUpdate: function(progress){
-            source.style.height = ((1 - easingPath(progress)) * start_height) + "px";
-            source.style.marginBottom = ((1 - easingPath(progress)) * 3) + "px";
-        },
-        onComplete: function(){
-            source.remove();
-        },
-    }).run();
+    source.slideUp(300, function(){
+        source.remove();
+        print(false, "Push message closed.");
+    });
 }
 
-function slideIn(element){
-    var translateMagnitude = element.offsetWidth + 50;
-    element.style.transform = "translateX(" + translateMagnitude + "px)";
-    new mojs.Tween({
-        duration: 325,
-        delay: (150 * i) + 100,
-        onUpdate: function(progress){
-            element.style.transform = "translateX(" + ((1 - easingPath(progress)) * translateMagnitude) + "px)";
-        },
-        onComplete: function(progress){
-            element.style.transform = "";
-        },
-    }).run();
-}
+
+/**
+ * JQuery Document Ready function. The following code is run whenever the page
+ * has finished loading and is ready to work with.
+ */
+$(function(){
+
+
+    /**
+     * Add Event Listeners
+     */
+    var addEventListeners = function(){
+        $("[class^=\"pmessage-container\"]").on("click", function(){
+            $(this).fadeIn(300);
+        });
+
+        $("[class^=\"pmessage-close\"], [class^=\"button-request-\"]").on("click", function(){
+            closePushMessage($(this));
+        });
+    };
+
+
+    addEventListeners();
+
+});
