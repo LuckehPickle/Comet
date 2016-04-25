@@ -89,6 +89,7 @@ $(function(){
 
     /** @const */ var SOCKET; // A reference to the Socket IO socket.
     /** @const */ var DONE_TYPING_INTERVAL = 500; // How long should typing last (milliseconds)
+    /** @const */ var SECURE = false; // Change depending on whether in production or development
     var typing_timer; // Tracks the typing timeout
 
     /**
@@ -98,7 +99,7 @@ $(function(){
      */
     var startSocket = function(){
         SOCKET = new io.Socket();
-        SOCKET.connect(); // Connect to Socket IO server
+        SOCKET.connect({secure: SECURE}); // Connect to Socket IO server
         SOCKET.on("connect", handleSocketConnect);
         SOCKET.on("message", handleSocketMessage);
     };

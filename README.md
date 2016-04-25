@@ -4,7 +4,7 @@ Comet is a private, open source messaging service built for the modern web. The 
 **What makes Comet different from other instant messaging services?**  
 Comet has a huge focus on user privacy and security. Unlike many other instant messaging services, we don't gather and sell your private information to pay our bills.
 
-**Things TODO (In order to reach beta)**  
+**Things TODO (In order to *reach* beta)**  
  - User settings
  - Email verification
  - Redo user dropdown
@@ -32,3 +32,7 @@ Comet has a huge focus on user privacy and security. Unlike many other instant m
  - User profiles on hover.
  - Add custom scrollbars
  - Open socket connections on all pages to catch friend requests etc.
+
+**Things TODO (In order to *leave* beta)**
+ - Migrate from django_socketio to exclusively using gevent-socketio
+ - End-to-end encryption of all packets.
