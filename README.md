@@ -10,14 +10,14 @@ Comet has a huge focus on user privacy and security. Unlike many other instant m
  - Redo user dropdown
  - Group settings
  - Nicknames
- - Redo push messages
+ - ~~Redo push messages~~
  - Add base template
  - Redo modal for creating a new chat
  - Add modal for adding users to group
  - Notification sounds
  - Find a way to alert user of new messages in other channels
  - Fix toolbar appearance, especially title and buttons.
- - Migrate announceUserJoin to the new messenger.js
+ - ~~Migrate announceUserJoin to the new messenger.js~~
  - Mobile and tablet support
  - Fix footer + add version number
  - <https://github.com/youtube/spfjs>
