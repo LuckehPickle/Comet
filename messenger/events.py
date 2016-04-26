@@ -211,11 +211,11 @@ def handle_friend_request(request, socket, message):
         socket.send({
             "action":"pmessage",
             "type":"info",
-            "message":"You are now friends with {0}. You can now message them here: <div class=\"pmessage-well\"><a href=\"{1}\">{1}</a></div>".format(target.username, target.get_absolute_url())
+            "message":"You are now friends with {0}. You can now message them here: <div class=\"push-message-well\"><a href=\"{1}\">{1}</a></div>".format(target.username, target.get_absolute_url())
         })
 
         # Notify target user
-        notify.notify_user(target, messages.INFO, "You are now friends with {0}. You can now message them here: <div class=\"pmessage-well\"><a href=\"{1}\">{1}</a></div>".format(request.user.username, request.user.get_absolute_url()))
+        notify.notify_user(target, messages.INFO, "You are now friends with {0}. You can now message them here: <div class=\"push-message-well\"><a href=\"{1}\">{1}</a></div>".format(request.user.username, request.user.get_absolute_url()))
 
 
 def handle_friend_request_response(request, socket, message):
@@ -236,9 +236,9 @@ def handle_friend_request_response(request, socket, message):
         socket.send({
             "action":"pmessage",
             "type":messages.INFO,
-            "message":"You are now friends with {0}. You can now message them here: <div class=\"pmessage-well\"><a href=\"{1}\">{1}</a></div>".format(target.username, target.get_absolute_url())
+            "message":"You are now friends with {0}. You can now message them here: <div class=\"push-message-well\"><a href=\"{1}\">{1}</a></div>".format(target.username, target.get_absolute_url())
         })
-        notify.notify_user(target, messages.INFO, "You are now friends with {0}. You can now message them here: <div class=\"pmessage-well\"><a href=\"{1}\">{1}</a></div>".format(request.user.username, request.user.get_absolute_url()))
+        notify.notify_user(target, messages.INFO, "You are now friends with {0}. You can now message them here: <div class=\"push-message-well\"><a href=\"{1}\">{1}</a></div>".format(request.user.username, request.user.get_absolute_url()))
 
 
 @events.on_connect

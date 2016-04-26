@@ -68,13 +68,18 @@ function print(error, out){
  */
 function createPushMessage(type, message){
     $(".push-messages").append(
-        "<div class=\"push-message-container-" + type + "\">" +
+        "<div class=\"push-message-container-" + type + "\" data-new>" +
             "<svg class=\"push-message-close-" + type + "\" viewBox=\"0 0 20 20\">" +
                 "<path d=\"M0 3 L3 0 L10 7 L17 0 L20 3 L13 10 L20 17 L17 20 L10 13 L3 20 L0 17 L7 10 z\">" +
             "</svg>" +
             "<p class=\"push-message-content-" + type + "\">" + message + "</p>" +
         "</div>"
     );
+    $("[class^=\"push-message-container\"][data-new]").fadeIn(300);
+    $("[class^=\"push-message-container\"][data-new]").removeAttr("data-new");
+    $("[class^=\"push-message-close\"]").on("click", function(){
+        closePushMessage($(this));
+    });
 }
 
 
