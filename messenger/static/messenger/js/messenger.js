@@ -22,23 +22,6 @@
 
 
 /**
- * Print
- * Formats and outputs a string to the console.
- * @param {boolean} error Show as an error
- * @param {string} out Message to output
- */
-function print(error, out){
-    var date = new Date();
-    var message = "[" + date.getHours() + ":" + date.getMinutes() + "] [Comet] " + out;
-    if(error){
-        console.error(message);
-        return;
-    }
-    console.log(message);
-}
-
-
-/**
  * Open Tab
  * Closes all tabs, then opens the tab-head that is passed.
  * @param {Element} tab The 'tab-head' or 'tab-body' to be opened.
@@ -89,7 +72,6 @@ $(function(){
 
     /** @const */ var SOCKET; // A reference to the Socket IO socket.
     /** @const */ var DONE_TYPING_INTERVAL = 500; // How long should typing last (milliseconds)
-    /** @const */ var SECURE = false; // Change depending on whether in production or development
     var typing_timer; // Tracks the typing timeout
 
     /**
@@ -99,7 +81,7 @@ $(function(){
      */
     var startSocket = function(){
         SOCKET = new io.Socket();
-        SOCKET.connect({secure: SECURE}); // Connect to Socket IO server
+        SOCKET.connect(); // Connect to Socket IO server
         SOCKET.on("connect", handleSocketConnect);
         SOCKET.on("message", handleSocketMessage);
     };
@@ -303,22 +285,15 @@ $(function(){
         }
 
         print(false, "Received message of type '" + data.type + "'. Displaying.");
-        $(".pmessages").append(
-            "<div class=\"pmessage-container pmessage-container-" + data.type + "\">" +
-                "<svg class=\"pmessage-close pmessage-close-" + data.type + "\" viewBox=\"0 0 20 20\">" +
-                    "<path d=\"M0 3 L3 0 L10 7 L17 0 L20 3 L13 10 L20 17 L17 20 L10 13 L3 20 L0 17 L7 10 z\">" +
-                "</svg>" +
-                "<p class=\"pmessage pmessage-" + data.type + "\">" + data.message + "</p>" +
-            "</div>"
-        );
+        createPushMessage(data.type, data.message);
 
         // Handle any buttons that could be appended to the message
         $("[class^=\"button-request-\"][data-user-id][data-new]").on("click", function(event){
             var accept = $(this).is("[class*=\"accept\"]");
             answerFriendRequest(accept, $(this).attr("data-user-id"));
             closePushMessage($(this));
-            $(this).removeAttr("data-new");
         });
+        $("[class^=\"button-request-\"][data-user-id][data-new]").removeAttr("data-new");
 
         if(data.request_confirmation && "message_id" in data){
             // Server has asked the client to confirm that it received this message
@@ -409,6 +384,17 @@ $(function(){
 
         // Make sure that the body is scrolled to the bottom
         scrollToBottom();
+    }
+
+
+    /**
+     * Announce User Join
+     * Adds a message each time a user joins the current channel.
+     * @param {Object} data Data from Socket IO server
+     */
+    var announceUserJoin = function(data){
+        $(".chat-body").append("<p class=\"user-join\">" + data.username + " has joined the group.</p>")
+        print(false, data.username + " has joined the group.");
     }
 
 

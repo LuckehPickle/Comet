@@ -36,3 +36,5 @@ Comet has a huge focus on user privacy and security. Unlike many other instant m
 **Things TODO (In order to *leave* beta)**
  - Migrate from django_socketio to exclusively using gevent-socketio
  - End-to-end encryption of all packets.
+ - Android app
+ - Premium

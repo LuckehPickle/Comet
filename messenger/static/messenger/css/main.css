@@ -381,8 +381,8 @@ p[class^="chat-message-sender"]{
 
 /* For Desktops and some tablets only */
 @media screen and (min-width: 40.5em){
-    .pmessages{
-        top: 125px;
+    .push-messages{
+        top: 123px;
     }
 
     .toolbar{
