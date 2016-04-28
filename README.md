@@ -39,3 +39,4 @@ Comet has a huge focus on user privacy and security. Unlike many other instant m
  - Android app
  - Premium
  - Two Factor Authentication (Google Authenticator?)
+ - Desktop App (Electron?)
