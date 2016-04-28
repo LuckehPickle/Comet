@@ -1,5 +1,5 @@
 # Alpha Survey
-[Click here to complete the survey](https://docs.google.com/forms/d/1G1yLNbPZyqJ7wvHwZ2MqJEnzW_lZ2v9i6lNo9NRFJsY/viewform)  
+[Click here to complete the survey](http://goo.gl/forms/k33mT9Kuvn)  
 **Note:** Responses from users that are not a part of the Closed Alpha will be removed.
 
 # Comet (Messaging)
