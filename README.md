@@ -38,3 +38,4 @@ Comet has a huge focus on user privacy and security. Unlike many other instant m
  - End-to-end encryption of all packets.
  - Android app
  - Premium
+ - Two Factor Authentication (Google Authenticator?)
