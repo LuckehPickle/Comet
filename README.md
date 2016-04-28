@@ -1,3 +1,7 @@
+# Alpha Survey
+[Click here to complete the survey](https://docs.google.com/forms/d/1G1yLNbPZyqJ7wvHwZ2MqJEnzW_lZ2v9i6lNo9NRFJsY/viewform)  
+**Note:** Responses from users that are not a part of the Closed Alpha will be removed.
+
 # Comet (Messaging)
 Comet is a private, open source messaging service built for the modern web. The site is currently still in development, with an expected closed Beta to begin sometime in April. I am developing this service single handedly as part of my 2016 HSC Major Design and Technology project.
 
