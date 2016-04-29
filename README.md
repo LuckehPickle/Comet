@@ -37,6 +37,7 @@ Comet has a huge focus on user privacy and security. Unlike many other instant m
  - Add custom scrollbars
  - Open socket connections on all pages to catch friend requests etc.
  - Hover over name to show profile information
+ - Load video and images on hover
 
 **Things TODO (In order to *leave* beta)**
  - Migrate from django_socketio to exclusively using gevent-socketio
@@ -45,3 +46,4 @@ Comet has a huge focus on user privacy and security. Unlike many other instant m
  - Premium
  - Two Factor Authentication (Google Authenticator?)
  - Desktop App (Electron?)
+ - Profile pictures
