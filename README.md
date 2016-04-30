@@ -1,7 +1,3 @@
-# Alpha Survey
-[Click here to complete the survey](http://goo.gl/forms/k33mT9Kuvn)  
-**Note:** Responses from users that are not a part of the Closed Alpha will be removed.
-
 # Comet (Messaging)
 Comet is a private, open source messaging service built for the modern web. The site is currently still in development, with an expected closed Beta to begin sometime in April. I am developing this service single handedly as part of my 2016 HSC Major Design and Technology project.
 
@@ -38,6 +34,7 @@ Comet has a huge focus on user privacy and security. Unlike many other instant m
  - Open socket connections on all pages to catch friend requests etc.
  - Hover over name to show profile information
  - Load video and images on hover
+ - Automatic reconnect to Socket server with a modal to notify the user. A button which says run in background will cause it to hide whilst a connection is re-established.
 
 **Things TODO (In order to *leave* beta)**
  - Migrate from django_socketio to exclusively using gevent-socketio
