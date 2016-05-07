@@ -29,7 +29,7 @@ from messenger.identifier import generate
 import cr_config as config
 from comet.decorators import login_required_message
 from accounts.models import User, UserGroup
-from django_socketio import broadcast_channel
+# from django_socketio import broadcast_channel
 
 @login_required_message
 def index(request):

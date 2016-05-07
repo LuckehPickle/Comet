@@ -1,97 +1,46 @@
-<!--
- [FrontPage] INDEX.HTML - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
- Powered by Django (https://www.djangoproject.com/) - Not endorsed by Django
+{% extends 'shared/base.html' %}
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+{% load staticfiles %}
+{% block title %}{{ title }} | Private, Open Source Messaging{% endblock %}
+{% block extra_css %}<link rel="stylesheet" type="text/css" href="{% static 'frontpage/main.css' %}">{% endblock %}
 
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-
- TODO Create a base template with push messages, styling and GA
- Looking for source code? Check it out here: https://github.com/LuckehPickle/chat
--->
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>{{ title }} | Private, Open Source Messaging</title>
-        {% load staticfiles %}
-        <meta charset="UTF-8">
-        <meta name="theme-color" content="#3B3B3B">
-        <meta name="msapplication-navbutton-color" content="#3B3B3B">
-        <meta name="apple-mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
-        <link rel="icon" type="image/ico" href="{% static 'shared/favicon.ico' %}">
-        <link rel="stylesheet" type="text/css" href="{% static 'frontpage/main.css' %}">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-        <script src="//use.edgefonts.net/bebas-neue:n4.js"></script>
-        <script>
-            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-            })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-            ga('create', 'UA-76754525-1', 'auto');
-            ga('send', 'pageview');
-        </script>
-    </head>
-    <body>
-        <script src="{% static 'shared/js/mo.min.js' %}"></script>
-        {% include 'shared/push-messages.html' %}
-        {% include "shared/nav.html" %}
-
-        <!-- Jumbo -->
-        <div class="jumbo">
-            <div class="wrapper">
-                <p id="head">Private, Open Source Messaging.</p>
-                <p id="description">Free instant messaging, built for everyone - the way it should be.</p>
-                {% if request.user.is_authenticated %}
-                    <a href="{% url 'messages' %}" class="btn-sheen noselect">Open Messenger</a>
-                {% else %}
-                    <a href="{% url 'register' %}" class="btn-sheen noselect">Join the Comet Beta</a>
-                {% endif %}
-                <div class="placeholder"></div>
-            </div>
-        </div>
-
-
-        <!-- Beta Warning -->
-        <div class="beta">
-            <div class="wrapper">
-                <i class="material-icons beta-item">warning</i>
-                <p class="beta-item">This project is still in development.</p>
-                <a class="beta-item" href="/beta">Find out what this means for you.</a>
-            </div>
-        </div>
-
-        <!-- About -->
+{% block body %}
+    <!-- Jumbo -->
+    <div class="jumbo">
         <div class="wrapper">
-            <div class="about">
-                <div class="topic"></div>
-                <div class="topic"></div>
-                <div class="topic"></div>
-            </div>
+            <p id="head">Private, Open Source Messaging.</p>
+            <p id="description">Free instant messaging, built for everyone - the way it should be.</p>
+            {% if request.user.is_authenticated %}
+                <a href="{% url 'messages' %}" class="btn-sheen noselect">Open Messenger</a>
+            {% else %}
+                <a href="{% url 'register' %}" class="btn-sheen noselect">Join the Comet Beta</a>
+            {% endif %}
+            <div class="placeholder"></div>
         </div>
+    </div>
 
-        <!-- Features -->
-        <div class="features" id="features">
-            <div class="wrapper">
-                <div class="table"></div>
-            </div>
+    <!-- Beta Warning -->
+    <div class="beta">
+        <div class="wrapper">
+            <i class="material-icons beta-item">warning</i>
+            <p class="beta-item">This project is still in development.</p>
+            <a class="beta-item" href="/beta">Find out what this means for you.</a>
         </div>
+    </div>
 
-        <!-- Footer -->
-        {% include 'shared/footer.html' %}
-        <script src="{% static 'shared/js/nav.js' %}"></script>
-        <script src="{% static 'shared/js/jquery-2.2.2.min.js' %}"></script>
-        <script src="{% static 'shared/js/base.js' %}"></script>
-        <script src="https://cdn.rawgit.com/samthor/rippleJS/v1.0.2/ripple.min.js"></script>
-    </body>
-</html>
+    <!-- About -->
+    <div class="wrapper">
+        <div class="about">
+            <div class="topic"></div>
+            <div class="topic"></div>
+            <div class="topic"></div>
+        </div>
+    </div>
+
+    <!-- Features -->
+    <div class="features" id="features">
+        <div class="wrapper">
+            <div class="table"></div>
+        </div>
+    </div>
+{% endblock %}

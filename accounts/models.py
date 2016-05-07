@@ -121,7 +121,6 @@ class User(AbstractBaseUser):
     date_joined = models.DateTimeField(default=timezone.now)
     is_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
-    is_online = models.BooleanField(default=False)
     is_super_user = models.BooleanField(default=False)
     is_premium = models.BooleanField(default=False)
     socket_session = models.CharField(max_length=20, blank=True)

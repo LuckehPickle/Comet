@@ -32,36 +32,128 @@ function openTab(tab){
     print(false, "Opened tab with id '" + tab.attr("data-tab") + "'")
 }
 
+/*
+ * Sockets from here down
+ */
 
 /**
- * Toggle Modal
- * Toggles the modal that is passed to it.
- * @param {Element} modal The modal to show or hide.
+ * Request Query Response
+ * Request a response to the search query via Socket IO.
+ * @param {string} query Query to be requested.
  */
-function toggleModal(modal){
-    if(!modal.hasClass("_modal")){
-        print(true, "Attempted to toggle a modal but the element passed wasn't a valid modal.");
+var requestQueryResponse = function(query){
+    if(query == "" || query == null || query.length <= 3){
+        print(false, "Query cancelled (Possibly too short).");
         return;
     }
 
-    if(!modal.is("[active]")){
-        if(!$(".modal-wrapper").is("[active]")){
-            $(".modal-wrapper").fadeIn(300);
-            $(".modal-wrapper").attr("active", "");
-        }
-        modal.fadeIn(300);
-        modal.attr("active", "");
-        print(false, "Showing modal.");
-    }else{
-        $(".modal-wrapper").fadeOut(300, function(){
-            $(".modal-wrapper").removeAttr("active");
-        }).delay(120);
-        modal.fadeOut(300, function(){
-            modal.removeAttr("active");
-        }).delay(120);
-        print(false, "Hiding modal.");
+    send("search", query);
+    print(false, "Sent a query for users named '" + query + "'");
+};
+
+
+/**
+ * Handle Query Response
+ * Handles incoming query responses from the Socket IO server.
+ * @param {Object} data Data from Socket IO server
+ */
+function handleQueryResponse(data){
+    if(!("users" in data) || !("friends" in data)){
+        print(true, "A malformed message was received from the socket server. (Query Response)");
+        return;
     }
-}
+
+    print(false, "Query response received.");
+    var users = JSON.parse(data.users);
+    var friends = data.friends;
+    updateSearch(users, friends);
+};
+
+
+/**
+ * Update Search
+ * Removes stale search data and adds the latest data from the server.
+ * @param {JSON} users A list of users that mach the query
+ * @param {Object} friends A dict of friend statuses
+ */
+function updateSearch(users, friends){
+    removeStaleSearches();
+
+    if(users.length == 0){ // No data returned (i.e. Empty result)
+        $(".dropdown-users").append("<p class=\"dropdown-no-results\">No results found.</p>");
+        return;
+    }
+
+    // Iterate over each user
+    jQuery.each(users, function(){
+        // Defaults
+        var innerHTML = "<i class=\"material-icons\">add</i> Add";
+        var queryClass = "add"; // Class that the response should be given
+
+        if(this.pk in friends){
+            // There is a relationship between these two users
+            switch(friends[this.pk]){
+                case "friend":
+                    // Users are friends
+                    innerHTML = "Friends";
+                    queryClass = "friend";
+                    break;
+                case "request_sent":
+                    // User has sent a request to response user
+                    innerHTML = "Request Sent";
+                    queryClass = "sent";
+                    break;
+                case "request_received":
+                    // User has received a request from the response user
+                    innerHTML = "Accept Request";
+                    queryClass = "request";
+                    break;
+            }
+        }
+
+        $(".dropdown-users").append(
+        "<div class=\"dropdown-results-container\">" +
+            "<div class=\"dropdown-result-image\"></div>" +
+            "<section>" +
+                "<p class=\"dropdown-result-username\">" + this.fields.username + " (" + this.pk.substring(0, 8).toUpperCase() + ")</p>" +
+                "<p class=\"dropdown-result-tags\">Beta Tester</p>" +
+            "</section>" +
+            "<div class=\"dropdown-result-button-" + queryClass + "\" data-user-id=" + this.pk + " data-user-url=" + this.fields.user_url + ">" + innerHTML + "<link class=\"rippleJS\"/></div>" +
+            //"<link class=\"rippleJS\"/>" +
+        "</div>");
+    });
+
+    // Add event listeners to the new data
+    var queryItems = $(".dropdown-result-button-add, .dropdown-result-button-request");
+    queryItems.on("click", function(){
+        sendFriendRequest($(this).attr("data-user-id"));
+        // Update the old data by requesting a new query
+        requestQueryResponse($(".tools-input-wrapper input").val());
+    });
+};
+
+
+/**
+ * Remove Stale Searches
+ * Clears the search list of any stale data.
+ */
+var removeStaleSearches = function(){
+    var $children = $(".dropdown-users").children(":not(.dropdown-title)");
+    $children.each(function(){
+        $(this).remove();
+    });
+};
+
+
+/**
+ * Send Friend Request
+ * Sends a friend request to a given user (requires that users UUID).
+ * @param {string} user_id UUID of the target user
+ */
+var sendFriendRequest = function(user_id){
+    send("friend_req", user_id);
+    print(false, "Friend request sent to user with id '" + user_id + "'");
+};
 
 
 /**
@@ -70,35 +162,8 @@ function toggleModal(modal){
  */
 $(function(){
 
-    /** @const */ var SOCKET; // A reference to the Socket IO socket.
-    /** @const */ var DONE_TYPING_INTERVAL = 500; // How long should typing last (milliseconds)
+    /** @const */ var DONE_TYPING_INTERVAL = 300; // How long should typing last (milliseconds)
     var typing_timer; // Tracks the typing timeout
-
-    /**
-     * Start Socket
-     * Opens a connection with the socket server and subscribes to this pages
-     * channel (if there is one).
-     */
-    var startSocket = function(){
-        SOCKET = new io.Socket();
-        SOCKET.connect(); // Connect to Socket IO server
-        SOCKET.on("connect", handleSocketConnect);
-        SOCKET.on("message", handleSocketMessage);
-    };
-
-
-    /**
-     * Handle Socket Connect
-     * Subscribes to a channel if one exists.
-     */
-    var handleSocketConnect = function(){
-        if(window.channel_id != null){
-            var channel = window.is_group ? "group-" + window.channel_id : "user-" + window.channel_id;
-            SOCKET.subscribe(channel);
-            print(false, "Subscribing to channel of id '" + channel + "'");
-        }
-        print(false, "Connected to Socket IO server.");
-    };
 
 
     /**
@@ -126,182 +191,6 @@ $(function(){
             case "user_join":
                 announceUserJoin(data);
                 break;
-        }
-    };
-
-
-    /**
-     * Request Query Response
-     * Request a response to the search query via Socket IO.
-     * @param {string} query Query to be requested.
-     */
-    var requestQueryResponse = function(query){
-        if(query == "" || query == null || query.length <= 3){
-            print(false, "Query cancelled (Possibly too short).");
-            return;
-        }
-
-        SOCKET.send({
-            action: "search",
-            query: query,
-        });
-        print(false, "Sent a query for users named '" + query + "'");
-    };
-
-
-    /**
-     * Handle Query Response
-     * Handles incoming query responses from the Socket IO server.
-     * @param {Object} data Data from Socket IO server
-     */
-    var handleQueryResponse = function(data){
-        if(!("users" in data) || !("friends" in data)){
-            print(true, "A malformed message was received from the Socket IO server. (Query Response)");
-            return;
-        }
-
-        print(false, "Query response received.");
-        var users = JSON.parse(data.users);
-        var friends = data.friends;
-        updateSearch(users, friends);
-    };
-
-
-    /**
-     * Update Search
-     * Removes stale search data and adds the latest data from the server.
-     * @param {JSON} users A list of users that mach the query
-     * @param {Object} friends A dict of friend statuses
-     */
-    var updateSearch = function(users, friends){
-        removeStaleSearches();
-
-        if(users.length == 0){ // No data returned (i.e. Empty result)
-            $(".dropdown-users").append("<p class=\"dropdown-no-results\">No results found.</p>");
-            return;
-        }
-
-        // Iterate over each user
-        jQuery.each(users, function(){
-            // Defaults
-            var innerHTML = "<i class=\"material-icons\">add</i> Add";
-            var queryClass = "add"; // Class that the response should be given
-
-            if(this.pk in friends){
-                // There is a relationship between these two users
-                switch(friends[this.pk]){
-                    case "friend":
-                        // Users are friends
-                        innerHTML = "Friends";
-                        queryClass = "friend";
-                        break;
-                    case "request_sent":
-                        // User has sent a request to response user
-                        innerHTML = "Request Sent";
-                        queryClass = "sent";
-                        break;
-                    case "request_received":
-                        // User has received a request from the response user
-                        innerHTML = "Accept Request";
-                        queryClass = "request";
-                        break;
-                }
-            }
-
-            $(".dropdown-users").append(
-            "<div class=\"dropdown-results-container\">" +
-                "<div class=\"dropdown-result-image\"></div>" +
-                "<section>" +
-                    "<p class=\"dropdown-result-username\">" + this.fields.username + " (" + this.pk.substring(0, 8).toUpperCase() + ")</p>" +
-                    "<p class=\"dropdown-result-tags\">Beta Tester</p>" +
-                "</section>" +
-                "<div class=\"dropdown-result-button-" + queryClass + "\" data-user-id=" + this.pk + " data-user-url=" + this.fields.user_url + ">" + innerHTML + "<link class=\"rippleJS\"/></div>" +
-                //"<link class=\"rippleJS\"/>" +
-            "</div>");
-        });
-
-        // Add event listeners to the new data
-        var queryItems = $(".dropdown-result-button-add, .dropdown-result-button-request");
-        queryItems.on("click", function(){
-            sendFriendRequest($(this).attr("data-user-id"));
-            // Update the old data by requesting a new query
-            requestQueryResponse($(".tools-input-wrapper input").val());
-        });
-    };
-
-
-    /**
-     * Remove Stale Searches
-     * Clears the search list of any stale data.
-     */
-    var removeStaleSearches = function(){
-        var $children = $(".dropdown-users").children(":not(.dropdown-title)");
-        $children.each(function(){
-            $(this).remove();
-        });
-    };
-
-
-    /**
-     * Send Friend Request
-     * Sends a friend request to a given user (requires that users UUID).
-     * @param {string} user_id UUID of the target user
-     */
-    var sendFriendRequest = function(user_id){
-        SOCKET.send({
-            action: "friend_req", // TODO Make enum for actions
-            user_id: user_id,
-        });
-        print(false, "Friend request sent to user with id '" + user_id + "'");
-    };
-
-
-    /**
-     * Answer Friend Request
-     * Responds to a friend request.
-     * @param {boolean} accept Should the request be accepted
-     * @param {string} user_id UUID of the target user
-     */
-    var answerFriendRequest = function(accept, user_id){
-        SOCKET.send({
-            action: "answer_friend_req",
-            accept: accept,
-            user_id: user_id,
-        });
-        print(false, (accept ? "Accepted" : "Denied") + " friend request from user with id '" + user_id + "'.");
-    }
-
-
-    /**
-     * Handle Push Message
-     * Handles and displays an incoming push message in the same way that a
-     * message from Django's messaging framework would be handled.
-     * @param {Object} data Data from Socket IO server
-     */
-    var handlePushMessage = function(data){
-        if(!("type" in data) || !("message" in data)){
-            print(true, "A malformed message was received from the Socket IO server. (Push Message)");
-            return;
-        }
-
-        print(false, "Received message of type '" + data.type + "'. Displaying.");
-        createPushMessage(data.type, data.message);
-
-        // Handle any buttons that could be appended to the message
-        $("[class^=\"button-request-\"][data-user-id][data-new]").on("click", function(event){
-            var accept = $(this).is("[class*=\"accept\"]");
-            answerFriendRequest(accept, $(this).attr("data-user-id"));
-            closePushMessage($(this));
-        });
-        $("[class^=\"button-request-\"][data-user-id][data-new]").removeAttr("data-new");
-
-        if(data.request_confirmation && "message_id" in data){
-            // Server has asked the client to confirm that it received this message
-            SOCKET.send({
-                action: "message_confirm",
-                message_id: data.message_id,
-            })
-            print(false, "Message confirmation sent for message with id '" + data.message_id + "'");
         }
     };
 
@@ -431,7 +320,7 @@ $(function(){
          * Django's messaging framework, or the template.
          */
         $("[class^=\"button-request-\"][data-user-id]").on("click", function(event){
-            var accept = $(this).className.indexOf("accept") != -1;
+            var accept = $(this).is("[class*='-accept']");
             answerFriendRequest(accept, $(this).attr("data-user-id"));
             closeListener(event);
         });
@@ -552,5 +441,4 @@ $(function(){
 
     addEventListeners();
     scrollToBottom();
-    startSocket();
 });

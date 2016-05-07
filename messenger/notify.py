@@ -18,7 +18,7 @@ from django.contrib import messages
 
 # Other Imports
 import uuid
-from django_socketio import send
+from comet_socketio import utils
 from messenger.models import Notification
 
 def notify_user(user, message_type, message):
@@ -29,19 +29,25 @@ def notify_user(user, message_type, message):
     database until they return.
     """
     message_id = uuid.uuid4()
-    if user.is_online and user.socket_session != None:
+    if utils.is_connected(user) and user.socket_session != None:
         # User is online, try sending them a message. Client will need to confirm
         # that the message was received in order to remove the database instance.
 
         # Attempt to send the message via Socket IO
         try:
-            send(session_id=user.socket_session, message={
-                "action": "pmessage",
-                "type": message_type,
-                "message": message,
-                "request_confirmation": True,
-                "message_id": str(message_id),
-            })
+            socket = utils.get_socket(user)
+            for namespace in socket.active_ns:
+                try:
+                    namespace.emit("message", {
+                        "action": "push_message",
+                        "type": message_type,
+                        "message": message,
+                        "request_confirmation": True,
+                        "message_id": str(message_id),
+                    })
+                except:
+                    raise
+                return
         except:
             pass
 

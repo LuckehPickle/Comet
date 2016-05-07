@@ -12,11 +12,6 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
-#
-# This file contains all accounts related forms. The forms contained
-# within this file include:
-#   - Registration Form
-#   - Authentication Form
 
 # Django Imports
 from django import forms

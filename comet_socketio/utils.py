@@ -1,4 +1,4 @@
-# [Comet] STARTUP.PY - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
+# [Comet Socketio] UTILS.PY - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
 # Powered by Django (https://www.djangoproject.com/) - Not endorsed by Django
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,12 +15,28 @@
 
 # Other Imports
 from accounts.models import User
+server = None
 
-def on_startup():
+def set_server(s):
+    global server
+    server = s
+
+def get_socket(user):
     """
-    Code that is run once whenever the server starts.
+    Returns a socket from a user object
     """
-    User.objects.all().update(is_online=False)
-    print
-    print("Cleared online status of users")
-    print
+    if user.socket_session == None:
+        return None
+    return server.get_socket(sessid=user.socket_session)
+
+
+def is_connected(user):
+    """
+    Determines whether a user is connected or not
+    """
+    if not type(user) is User:
+        user = User.objects.get(user_id=user)
+    socket = get_socket(user)
+    if socket == None:
+        return False
+    return socket.connected

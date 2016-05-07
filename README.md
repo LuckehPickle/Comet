@@ -11,7 +11,7 @@ Comet has a huge focus on user privacy and security. Unlike many other instant m
  - Group settings
  - Nicknames
  - ~~Redo push messages~~
- - Add base template
+ - ~~Add base template~~
  - Redo modal for creating a new chat
  - Add modal for adding users to group
  - Notification sounds
@@ -31,10 +31,17 @@ Comet has a huge focus on user privacy and security. Unlike many other instant m
  - Update friends list with online statuses
  - User profiles on hover.
  - Add custom scrollbars
- - Open socket connections on all pages to catch friend requests etc.
+ - ~~Open socket connections on all pages to catch friend requests etc.~~
+ - Hover over name to show profile information
+ - Load video and images on hover
+ - ~~Automatic reconnect to Socket server with a modal to notify the user. A button which says run in background will cause it to hide whilst a connection is re-established.~~
 
 **Things TODO (In order to *leave* beta)**
- - Migrate from django_socketio to exclusively using gevent-socketio
  - End-to-end encryption of all packets.
  - Android app
  - Premium
+ - Two Factor Authentication (Google Authenticator?)
+ - Desktop App (Electron?)
+ - Profile pictures
+ - ~~Migrate from django_socketio to gevent-socketio.~~
+ - Add 'toggle-able' maintenance periods, in which developers are whitelisted.

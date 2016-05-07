@@ -101,7 +101,7 @@ def handle_message(request, socket, message):
         most_recent = create_message(request.user, user_message, channel_id, is_group)
 
     # Send back to sockets
-    socket.broadcast_channel({
+    socket.send_and_broadcast_channel({
         "action": "message",
         "message": message["message"], # Do not broadcast back the escaped string.
         "sender": request.user.username,

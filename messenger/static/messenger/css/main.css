@@ -226,9 +226,6 @@ p[class^="chat-message-sender"]{
     text-align: center;
 }
 
-::-moz-selection{background: #F1592B;color:#EBEBEB;}
-::selection{background: #F1592B;color:#EBEBEB;}
-
 /* For mobile phones and other small devices */
 @media screen and (max-width: 40.5em){
     .toolbar{
@@ -851,26 +848,6 @@ p[class^="chat-message-sender"]{
     }
 
     /* MODAL */
-
-    .modal-wrapper{
-        position: absolute;
-        top: 0;
-        right: 0;
-        left: 0;
-        bottom: 0;
-        background-color: rgba(0, 0, 0, 0.75);
-        z-index: 10000;
-        display: none;
-    }
-
-    .modal-wrapper[active]{
-        display: -webkit-flex !important;
-                display: flex !important;
-        -webkit-justify-content: center;
-                justify-content: center;
-        -webkit-align-items: center;
-                align-items: center;
-    }
 
     .modal-create{
         width: 360px;

@@ -15,16 +15,16 @@
 
 # Django Imports
 from django.conf.urls import include, url
-from django.contrib import admin
+
+# Socketio Imports
+import socketio.sdjango
+socketio.sdjango.autodiscover()
 
 # Other Imports
 from accounts import views as accounts
 from frontpage import views as front
 from comet import views as comet
-from comet.startup import on_startup
 
-# Call startup code
-on_startup()
 
 # URL Patterns
 urlpatterns = [
@@ -33,16 +33,16 @@ urlpatterns = [
     url(r'^login', accounts.login, name="login"),
     url(r'^logout', accounts.logout, name="logout"),
     url(r'^messages/', include("messenger.urls")),
-    url('', include('django_socketio.urls')),
-    url(r'^admin/', admin.site.urls),
-    url(r'^400', comet.bad_request, name="400"),
-    url(r'^403', comet.permission_denied, name="403"),
-    url(r'^404', comet.page_not_found, name="404"),
-    url(r'^500', comet.server_error, name="500"),
+    url(r'^socket\.io', include(socketio.sdjango.urls)),
+
+    # url(r'^400', comet.bad_request, name="400"),
+    # url(r'^403', comet.permission_denied, name="403"),
+    # url(r'^404', comet.page_not_found, name="404"),
+    # url(r'^500', comet.server_error, name="500"),
 ]
 
 # Error Handlers
-handler400 = 'comet.views.bad_request'
-handler403 = 'comet.views.permission_denied'
-handler404 = 'comet.views.page_not_found'
-handler500 = 'comet.views.sever_error'
+# handler400 = 'comet.views.bad_request'
+# handler403 = 'comet.views.permission_denied'
+# handler404 = 'comet.views.page_not_found'
+# handler500 = 'comet.views.sever_error'

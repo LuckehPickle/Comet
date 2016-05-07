@@ -15,19 +15,41 @@
 
 # Django Imports
 from django import template
-
 register = template.Library()
+
+# Other Imports
+from comet_socketio import utils
+
 
 @register.filter(name="field_type")
 def field_type(field):
+    """
+    Returns the field type
+    """
     return field.field.widget.__class__.__name__
+
 
 @register.filter(name="sort_by")
 def sort_by(queryset, order):
+    """
+    Sorts a query set by a certain parameter
+    """
     return queryset.order_by(order)
+
 
 @register.filter(name="is_other")
 def is_other(model, user_id):
+    """
+    Tests to see whether a user matches the current user
+    """
     if model.sender_id == user_id:
         return ""
     return "-other"
+
+
+@register.filter(name="is_online")
+def is_online(model):
+    """
+    Tests to see if a user is online
+    """
+    return utils.is_connected(model)
