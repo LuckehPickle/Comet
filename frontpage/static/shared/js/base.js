@@ -133,7 +133,11 @@ function showModal(modal, importance){
     print(false, "Showing modal");
     modal.attr("data-importance", importance.toString()); // Set the modals importance
     var modalInForeground = getModalInForeground();
-    if(modalInForeground == null || importance > parseInt(modalInForeground.attr("data-importance"), 10)){
+    if(modalInForeground == null){
+        setModalInForeground(modal);
+        return;
+    }else if(importance > parseInt(modalInForeground.attr("data-importance"), 10)){
+        // Despite doing the same task, these have to be seperate to avoid errors
         setModalInForeground(modal);
         return;
     }
@@ -157,7 +161,8 @@ function hideModal(modal){
     if(modal.is("[foreground]")){
         modal.removeAttr("foreground");
         $(".modal-wrapper").fadeOut(300, function(){
-            $(".modal-wrapper").removeAttr("active");
+            $(this).removeAttr("active");
+            $(this).hide();
         });
     }
 
@@ -192,8 +197,8 @@ function setModalInForeground(modal){
         return; // Modal is already in the foreground
 
     if(!$(".modal-wrapper").is["active"]){
-        $(".modal-wrapper").attr("active", "");
         $(".modal-wrapper").fadeIn(300);
+        $(".modal-wrapper").attr("active", "");
     }
 
     var modalInForeground = getModalInForeground();
@@ -202,6 +207,7 @@ function setModalInForeground(modal){
         setModalInBackground(modalInForeground, false);
     }
 
+    modal.fadeIn(300);
     modal.attr("foreground", "");
     modal.attr("active", "");
     modal.removeAttr("background");
@@ -226,6 +232,7 @@ function setModalInBackground(modal, check){
         });
     }
 
+    modal.fadeIn(300);
     modal.attr("background", "");
     modal.attr("active", "");
     modal.removeAttr("foreground");
@@ -428,6 +435,18 @@ $(function(){
         // Listens for click events on push message close buttons
         $("[class^=\"push-message-close\"], [class^=\"button-request-\"]").on("click", function(){
             closePushMessage($(this));
+        });
+
+        /**
+         * Listens for buttons with the class run-in-bg. These buttons will
+         * push a modal to the queue.
+         */
+        $(".run-in-bg").on("click", function(){
+            var parent = $(this).parent();
+            while(!parent.hasClass("_modal")){ // Scale the DOM tree
+                parent = parent.parent();
+            }
+            setModalInBackground(parent);
         });
     };
 

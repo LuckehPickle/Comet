@@ -111,15 +111,14 @@
             <!-- FRIENDS LIST -->
             <div class="tab-body" data-tab="tab-friends" {% if not is_group %}active{% endif %}>
                 {% for friend in request.user.friends.all %}
-                    <div class="friend-container" data-url="{{ friend.get_absolute_url }}" {% if not is_group and friend.user_url in channel_id %}active{% endif %}>
+                    <a class="friend-container spf-link" href="{{ friend.get_absolute_url }}" {% if not is_group and friend.user_url in channel_id %}active{% endif %}>
                         <div class="friend-image"></div>
                         <div>
                             <p class="friend-username">{{ friend.username }}</p>
                             <p class="friend-tag">Beta-Tester</p>
                         </div>
                         <div class="friend-status-{% if friend|is_online %}online{% else %}offline{% endif %}"></div>
-                        <link class="rippleJS"/>
-                    </div>
+                    </a>
                 {% empty %}
                     <div class="no-friends">
                          Looks like you don't have any friends yet.
@@ -131,14 +130,13 @@
             <!-- GROUPS LIST -->
             <div class="tab-body" data-tab="tab-groups" {% if is_group %}active{% endif %}>
                 {% for group in request.user.groups.all|sort_by:"-last_message" %}
-                    <div class="group-container" data-url="{{ group.get_absolute_url }}" {% if is_group and channel_id == group.group_id %}active{% endif %}>
+                    <a class="group-container spf-link" href="{{ group.get_absolute_url }}" {% if is_group and channel_id == group.group_id %}active{% endif %}>
                         <div class="group-image"></div>
                         <section>
                             <p class="group-name">{{ group.name }}</p>
                             <p class="group-message">{{ group.get_latest_message }}</p>
                         </section>
-                        <link class="rippleJS"/>
-                    </div>
+                    </a>
                 {% empty %}
                     <div class="no-groups">
                         Looks like your not in any groups yet. Create one by clicking 'Create Group' on the toolbar above.

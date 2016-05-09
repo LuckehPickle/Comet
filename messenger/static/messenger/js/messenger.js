@@ -42,7 +42,7 @@ function openTab(tab){
  * @param {string} query Query to be requested.
  */
 var requestQueryResponse = function(query){
-    if(query == "" || query == null || query.length <= 3){
+    if(query == "" || query == null || query.length < 2){
         print(false, "Query cancelled (Possibly too short).");
         return;
     }
@@ -162,7 +162,7 @@ var sendFriendRequest = function(user_id){
  */
 $(function(){
 
-    /** @const */ var DONE_TYPING_INTERVAL = 300; // How long should typing last (milliseconds)
+    /** @const */ var DONE_TYPING_INTERVAL = 100; // How long should typing last (milliseconds)
     var typing_timer; // Tracks the typing timeout
 
 
@@ -325,16 +325,6 @@ $(function(){
             closeListener(event);
         });
 
-        /**
-         * Essentially turns DIV's with a 'data-url' attribute into links.
-         * TODO Find a way to remove this so that users can open in new tab.
-         * If it is removed currently, the JS Ripple will be link coloured in
-         * a hideous explosion of colour.
-         */
-        $("[data-url]").on("click", function(){
-            window.location.href = $(this).attr("data-url");
-        });
-
 
         // Listens for 'keyup' events to reset the typing_timer
         $(".tools-input-wrapper > input").on("keyup", function(){
@@ -370,11 +360,6 @@ $(function(){
             if(event.which == 13){
                 $(".chat-form").submit();
                 return false;
-            }
-
-            // TODO fix
-            if(event.which != 8 && $(".chat-form-input").text().length > 256){
-                $(".chat-form-input").text($(".chat-form-input").text().substring(0, 256));
             }
         });
 
@@ -417,8 +402,12 @@ $(function(){
 
         $(".modal-wrapper, ._modal").hide();
 
-        $(".create-group-trigger, .modal-create-cancel").on("click", function(){
-            toggleModal($(".modal-create"));
+        $(".create-group-trigger").on("click", function(){
+            showModal($(".modal-create"), ModalImportance.MEDIUM);
+        });
+
+        $(".modal-create-cancel").on("click", function(){
+            hideModal($(".modal-create"));
         });
 
         // Clicking anywhere on the document.

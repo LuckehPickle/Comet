@@ -385,6 +385,8 @@ p[class^="chat-message-sender"]{
     .toolbar{
         top: 70px;
         padding: 0 12px;
+        box-shadow: 0px 10px 0px rgba(0, 0, 0, 0.15);
+        z-index: 1;
     }
 
     .mobile-tools{
@@ -601,6 +603,9 @@ p[class^="chat-message-sender"]{
         bottom: 35px;
         left: 0;
         right: 0;
+        background-image: url(/static/shared/img/jumbo-bg-alt.png);
+        background-size: cover;
+        z-index: 0;
     }
 
     .chat-area{
