@@ -17,10 +17,9 @@
 from django.shortcuts import render
 from django.contrib import messages
 
-# Messenger Imports
-from comet import Modal
-
 # Other Imports
+from comet import Modal
+from comet_socketio import utils
 import cr_config
 
 # FRONTPAGE
@@ -30,6 +29,9 @@ def index(request):
     if request.user.is_authenticated():
         user_id = str(request.user.user_id)[:8]
         # TODO requires Socket connection - notify.check_notifications(request)
+
+    print(str(utils.is_connected(request.user)))
+    print(str(utils.get_socket(request.user)))
 
     modals = []
     modals.append(Modal(

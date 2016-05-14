@@ -24,7 +24,7 @@ from socketio.namespace import BaseNamespace
 from socketio.sdjango import namespace
 
 # Other Imports
-from messenger import notify
+from comet_socketio import notify
 from accounts.models import User, FriendInvites
 
 
@@ -37,7 +37,6 @@ class MessengerNamespace(BaseNamespace):
     def on_connected(self):
         """
         Occurs whenever a user connects to the socket server.
-        FIXME
         """
         user = self.request.user
         if user.is_authenticated:
@@ -140,7 +139,7 @@ class MessengerNamespace(BaseNamespace):
 
             # Notify
             self.send_or_notify({
-                "action":"pmessage",
+                "action":"push_message",
                 "type":"info",
                 "message":"You are now friends with {0}. You can now message them here: <div class=\"push-message-well\"><a href=\"{1}\">{1}</a></div>".format(target.username, target.get_absolute_url())
             })

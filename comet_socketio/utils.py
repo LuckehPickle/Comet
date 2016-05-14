@@ -34,8 +34,6 @@ def is_connected(user):
     """
     Determines whether a user is connected or not
     """
-    if not type(user) is User:
-        user = User.objects.get(user_id=user)
     socket = get_socket(user)
     if socket == None:
         return False

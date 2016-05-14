@@ -209,19 +209,9 @@ $(function(){
             return;
         }
 
-        handleChatMessage({
-            message: message,
-            sender: window.username,
-            sender_id: window.user_id,
-            time_sent: Date.now(),
-            local: true,
-        });
-
-        SOCKET.send({
-            action: "message",
+        send("message", {
             message: message,
             channel_id: window.channel_id,
-            is_group: window.is_group,
         });
         print(false, "Chat message successfully sent to Socket IO server.");
     };
@@ -322,7 +312,6 @@ $(function(){
         $("[class^=\"button-request-\"][data-user-id]").on("click", function(event){
             var accept = $(this).is("[class*='-accept']");
             answerFriendRequest(accept, $(this).attr("data-user-id"));
-            closeListener(event);
         });
 
 

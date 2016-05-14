@@ -174,22 +174,3 @@ class ChatInvite(models.Model):
         "ChatGroup",
         on_delete=models.CASCADE,
     )
-
-class Notification(models.Model):
-    """
-    A notification that is stored in the database whilst the user is offline.
-    When the user logs on again they are sent via Django's message API. It must
-    be stored here so that it can be deleted if the socket handles the hard work.
-    """
-    user = models.ForeignKey(
-        "accounts.User",
-        on_delete=models.CASCADE,
-    )
-
-    message_id = models.UUIDField(
-        primary_key=True,
-        default=uuid.uuid4
-    )
-
-    message_type = models.IntegerField()
-    message = models.CharField(max_length=512)

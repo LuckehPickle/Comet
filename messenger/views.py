@@ -20,7 +20,7 @@ from django.contrib import messages
 from django.utils.html import escape
 
 # Messenger Imports
-from messenger import notify
+from comet_socketio import notify
 from messenger.forms import CreateChatForm
 from messenger.models import ChatGroup, ChatPermissions, ChatInvite, ChatMessage
 from messenger.identifier import generate

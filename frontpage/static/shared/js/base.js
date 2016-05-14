@@ -342,7 +342,7 @@ function checkQueue(){
             var item = queue[i];
             socket.emit(item["eventType"], item["value"]);
         }
-        print(true, "Emptied socket queue.");
+        print(false, "Emptied socket queue.");
     }
 }
 
@@ -455,6 +455,11 @@ $(function(){
             case "push_message":
                 handlePushMessage(data);
                 break;
+            case "message":
+                handleChatMessage(data);
+                break;
+            default:
+                print(false, "A message was received with an unrecognized action: '" + data.action + "'");
         }
     };
 
@@ -463,7 +468,7 @@ $(function(){
      * Handle Push Message
      * Handles and displays an incoming push message in the same way that a
      * message from Django's messaging framework would be handled.
-     * @param {Object} data Data from Socket IO server
+     * @param {Object} data Data from socket server
      */
     var handlePushMessage = function(data){
         if(!("type" in data) || !("message" in data)){
@@ -488,6 +493,15 @@ $(function(){
             print(false, "Message confirmation sent for message with id '" + data.message_id + "'");
         }
     };
+
+
+    /**
+     * Handle Chat Message
+     * @param {Object} data Data from the socket server
+     */
+    var handleChatMessage = function(data){
+
+    }
 
 
     // Fade in any idle push messages

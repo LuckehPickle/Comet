@@ -1,4 +1,4 @@
-# [Messenger] NOTIFY.PY - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
+# [Comet Socketio] NOTIFY.PY - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
 # Powered by Django (https://www.djangoproject.com/) - Not endorsed by Django
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,7 +19,7 @@ from django.contrib import messages
 # Other Imports
 import uuid
 from comet_socketio import utils
-from messenger.models import Notification
+from comet_socketio.models import Notification
 
 def notify_user(user, message_type, message):
     """
@@ -32,8 +32,6 @@ def notify_user(user, message_type, message):
     if utils.is_connected(user) and user.socket_session != None:
         # User is online, try sending them a message. Client will need to confirm
         # that the message was received in order to remove the database instance.
-
-        # Attempt to send the message via Socket IO
         try:
             socket = utils.get_socket(user)
             for namespace in socket.active_ns:
