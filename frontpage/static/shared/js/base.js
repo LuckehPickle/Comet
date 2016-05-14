@@ -20,10 +20,16 @@
  * limitations under the License.
  */
 
+
 /**
- * TODO Migrate friend requests
- * TODO replace JQuery animations with Mo.js
+ * indexOfEnd
+ * http://stackoverflow.com/a/18893403/5658441
+ * @return {number} Gets the index of the end of a substring
  */
+String.prototype.indexOfEnd = function(string) {
+    var io = this.indexOf(string);
+    return io == -1 ? -1 : io + string.length;
+}
 
 
 /**
@@ -121,23 +127,52 @@ var ModalImportance = {
     HIGH: 100, // Any modal with a pressing need to be seen by the user.
 }
 
+// Keeps track of all registered modals
+var modals = {};
+
+
+/**
+ * Modal
+ * Contains a modals foreground and background components as well as some
+ * other metadata (including importance).
+ */
+class Modal{
+    constructor(title, foreground, background, importance){
+        this.title = title;
+        this.foreground = $(foreground);
+        this.background = $(background);
+        this.importance = importance;
+    }
+
+    /**
+     * Is Foreground
+     * Checks if the modal is currently rendered in the foreground
+     * @return {boolean} Is the modal in the foreground
+     */
+    isForeground(){
+        return this.foreground.is("[active]");
+    }
+}
+
 
 /**
  * Show Modal
- * Makes a modal visible to the user, acts as an interface to the modal
- * management chunk.
- * @param {Object} modal Modal to be shown to the user
- * @param {number} importance Whether the modal should override other modals
+ * Attempts to show the modal that is given. If the importance level is
+ * lower than the currently active modal (if any), then the modal will be
+ * automatically shown in the modal queue (background).
+ * @param {Modal} modal Modal to be shown to the user
+ * @param {boolean} foreground Whether the modal should be shown in the foreground
  */
-function showModal(modal, importance){
-    print(false, "Showing modal");
-    modal.attr("data-importance", importance.toString()); // Set the modals importance
-    var modalInForeground = getModalInForeground();
-    if(modalInForeground == null){
-        setModalInForeground(modal);
-        return;
-    }else if(importance > parseInt(modalInForeground.attr("data-importance"), 10)){
-        // Despite doing the same task, these have to be seperate to avoid errors
+function showModal(modal, foreground){
+    if(foreground){
+        // Check if there is room in the foreground
+        var activeModal = getModalInForeground();
+        if(activeModal != null){
+            if(modal.importance <= activeModal.importance){
+                setModalInBackground(modal, false);
+                return;
+            }
+        }
         setModalInForeground(modal);
         return;
     }
@@ -148,41 +183,42 @@ function showModal(modal, importance){
 /**
  * Hide Modal
  * Hides a modal.
- * @param {Object} modal Modal to be shown to the user
+ * @param {Modal} modal Modal to be hidden
  */
 function hideModal(modal){
-    if(!modal.is("[active]")){
-        return;
-    }
+    if(modal.foreground.is("[active]")){
+        modal.foreground.fadeOut(300, function(){
+            modal.foreground.removeAttr("active");
+            // TODO Show next queued modal
+        });
 
-    print(false, "Hiding modal");
-    modal.removeAttr("active");
-
-    if(modal.is("[foreground]")){
-        modal.removeAttr("foreground");
-        $(".modal-wrapper").fadeOut(300, function(){
+        $("._modal-wrapper").fadeOut(300, function(){
             $(this).removeAttr("active");
-            $(this).hide();
         });
     }
 
-    if(modal.is("[background]")){
-        modal.removeAttr("background");
+    if(modal.background.is("[active]")){
+        modal.background.slideDown(300, function(){
+            modal.background.hide();
+            modal.background.removeAttr("active");
+        });
     }
+    print(false, "Hiding modal with title '" + modal.title + "'");
 }
 
 
 /**
  * Get Modal In Foreground
- * Gets whichever modal is currently in the foreground (if any).
- * @return {Object} The modal in the foreground (if any).
+ * Gets any modals which are currently in the foreground and active.
+ * @return {Modal} The modal in the foreground (if any).
  */
 function getModalInForeground(){
-    var activeModals = $(".modal-wrapper").children("[foreground]");
-    if(activeModals.length > 0){
-        return activeModals[0];
+    for(var key in modals){
+        var modal = modals[key];
+        if(modal.isForeground()){
+            return modal;
+        }
     }
-    return null;
 }
 
 
@@ -190,27 +226,32 @@ function getModalInForeground(){
  * Set Modal In Foreground
  * Queues any modal that is currently in the foreground, and pushes this
  * modal to the foreground.
- * @param {Object} modal Modal to be moved to the foreground
+ * @param {Modal} modal Modal to be moved to the foreground
  */
 function setModalInForeground(modal){
-    if(modal.is("[foreground]"))
-        return; // Modal is already in the foreground
+    if(modal.foreground.is("[active]"))
+        return;
 
-    if(!$(".modal-wrapper").is["active"]){
-        $(".modal-wrapper").fadeIn(300);
-        $(".modal-wrapper").attr("active", "");
+    var activeModal = getModalInForeground();
+    if(activeModal != null){
+        setModalInBackground(activeModal, false);
     }
 
-    var modalInForeground = getModalInForeground();
-    if(modalInForeground != null){
-        modalInForeground.removeAttr("foreground");
-        setModalInBackground(modalInForeground, false);
+    if(modal.background.is("[active]")){
+        modal.background.slideDown(300, function(){
+            modal.background.hide();
+            modal.background.removeAttr("active");
+        });
     }
 
-    modal.fadeIn(300);
-    modal.attr("foreground", "");
-    modal.attr("active", "");
-    modal.removeAttr("background");
+    if(!$("._modal-wrapper").is("[active]")){
+        $("._modal-wrapper").fadeIn(300);
+        $("._modal-wrapper").attr("active", "");
+    }
+
+    modal.foreground.fadeIn(300);
+    modal.foreground.attr("active", "");
+    print(false, "Showing modal titled '" + modal.title + "' in foreground.")
 }
 
 
@@ -218,24 +259,48 @@ function setModalInForeground(modal){
  * Set Modal In Background
  * Queues any modal that is currently in the foreground, and pushes this
  * modal to the foreground.
- * @param {Object} modal Modal to be set to the background
+ * @param {Modal} modal Modal to be set to the background
  * @param {boolean} check Whether to check if the wrapper needs to be hidden
  */
 function setModalInBackground(modal, check){
-    if(modal.is("[background]"))
-        return; // Modal is already in the background
+    if(modal.background.is("[active]"))
+        return;
 
-    var modalInForeground = getModalInForeground();
-    if(check && modalInForeground == null){
-        $(".modal-wrapper").fadeOut(300, function(){
-            $(".modal-wrapper").removeAttr("active");
+    if(modal.foreground.is("[active]")){
+        modal.foreground.fadeOut(300, function(){
+            $(this).removeAttr("active");
         });
     }
 
-    modal.fadeIn(300);
-    modal.attr("background", "");
-    modal.attr("active", "");
-    modal.removeAttr("foreground");
+    if(check && $("._modal-wrapper").is("[active]")){
+        $("._modal-wrapper").fadeOut(300, function(){
+            $(this).removeAttr("active");
+        });
+    }
+
+    modal.background.fadeIn(300);
+    modal.background.attr("active", "");
+    print(false, "Showing modal titled '" + modal.title + "' in background.");
+}
+
+
+/**
+ * Get Modal Object From Element
+ * Attempts to get find the registered modal assosciated with a particular
+ * modal element.
+ * @param {Object} element Assosciated element
+ * @return {Modal} The registered modal (if found)
+ */
+function getModalObjectFromElement(element){
+    if(!element.is("._modal[class*='modal-']"))
+        return; // Elem is not a modal
+
+    var className = element.attr("class");
+    var index = className.indexOfEnd("modal-");
+    var title = className.substring(index, className.indexOf(" ", index));
+    if(title in modals){
+        return modals[title];
+    }
 }
 
 
@@ -339,7 +404,7 @@ $(function(){
     var handleSocketConnect = function(){
         connected = true;
         clearTimeout(connectionTimer);
-        hideModal($(".modal-connecting"));
+        hideModal(getModalObjectFromElement($(".modal-connecting")));
         print(false, "Connected to socket server");
         checkQueue();
     };
@@ -366,7 +431,7 @@ $(function(){
         clearTimeout(connectionTimer);
         connectionTimer = setTimeout(function(){
             print(false, "Connection taking too long, showing modal");
-            showModal($(".modal-connecting"), ModalImportance.HIGH);
+            showModal(getModalObjectFromElement($(".modal-connecting")), true);
         }, CONNECTION_ERROR_DELAY);
     }
 
@@ -441,16 +506,36 @@ $(function(){
          * Listens for buttons with the class run-in-bg. These buttons will
          * push a modal to the queue.
          */
-        $(".run-in-bg").on("click", function(){
+        $(".bgify").on("click", function(){
             var parent = $(this).parent();
-            while(!parent.hasClass("_modal")){ // Scale the DOM tree
+            while(!parent.hasClass("_modal")) // Scale the DOM tree
                 parent = parent.parent();
-            }
-            setModalInBackground(parent);
+            setModalInBackground(getModalObjectFromElement(parent), true);
+        });
+
+        $("._modal[background]").on("click", function(){
+            var modal = $(this);
+            while(!modal.hasClass("_modal")) // Scale the DOM tree
+                modal = modal.parent();
+            setModalInForeground(getModalObjectFromElement(modal));
         });
     };
 
-    addEventListeners();
-    startSocket();
 
+    /**
+     * Register Modals
+     * Register and modals here
+     */
+    var registerModals = function(){
+        modals["connecting"] = new Modal(
+            "connecting",
+            $(".modal-connecting[foreground]"),
+            $(".modal-connecting[background]"),
+            ModalImportance.HIGH
+        );
+    };
+
+    addEventListeners();
+    registerModals();
+    startSocket();
 });

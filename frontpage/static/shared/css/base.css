@@ -24,7 +24,7 @@
 /**
  * Modals from here down.
  */
-.modal-background{
+._modal-wrapper{
     position: fixed;
     top: 0;
     right: 0;
@@ -35,13 +35,7 @@
     display: none;
 }
 
-._wrapper[active]{
-    position: fixed;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    z-index: 10000;
+._modal-wrapper[active]{
     display: -webkit-flex !important;
             display: flex !important;
     -webkit-justify-content: center;
@@ -50,16 +44,49 @@
             align-items: center;
 }
 
+._modal-queue{
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 400px;
+    display: none;
+    z-index: 9000;
+    pointer-events: none;
+    margin-right: 3px;
+    margin-bottom: 3px;
+    display: -webkit-flex !important;
+            display: flex !important;
+    -webkit-flex-direction: column-reverse;
+            flex-direction: column-reverse;
+}
+
 ._modal[active]{
     display: -webkit-flex;
             display: flex;
 }
 
-._wrapper:not([active]), ._modal:not([active]){
+._modal:not([active]){
     display: none;
 }
 
-.modal-connecting{
+._modal[background]{
+    margin: 3px;
+    background-color: #EBEBEB;
+    pointer-events: all;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    border-color: #F37021;
+    border-width: 15px;
+    border-left-style: solid;
+    border-radius: 3px;
+    overflow: hidden;
+    padding: 10px;
+    box-sizing: border-box;
+    cursor: pointer;
+    -webkit-flex-direction: column;
+            flex-direction: column;
+}
+
+.modal-connecting[foreground]{
     width: 95%;
     max-width: 500px;
     text-align: center;
@@ -69,11 +96,18 @@
     max-height: 100px;
 }
 
-.modal-connecting p{
-    text-align: center;
+.modal-connecting p, ._modal[background] p{
     font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    color: #3B3B3B;
+    margin: 0;
+}
+
+.modal-connecting[foreground] p{
+    text-align: center;
     font-size: 18px;
     color: #EBEBEB;
+    margin: 1em;
 }
 
 .modal-connecting a{
@@ -154,7 +188,7 @@ configurably enough to prevent the sheen from returning.
 /* Thanks to http://tobiasahlin.com/spinkit/ for the loader */
 .spinner {
   margin: 40px auto;
-  width: 70px;
+  width: 60px;
   text-align: center;
 }
 

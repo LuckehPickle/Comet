@@ -60,11 +60,16 @@
         {% include 'shared/nav.html' %}
 
         <!-- Modals -->
-        <div class="modal-background"></div>
-        {% if request.user.is_authenticated %}
-            {% include 'comet_socketio/modal_connecting.html' %}
-        {% endif %}
-        {% block modals %}{% endblock %}
+        <div class="_modal-wrapper">
+            {% for modal in modals %}
+                {% include modal.foreground %}
+            {% endfor %}
+        </div>
+        <div class="_modal-queue">
+            {% for modal in modals %}
+                {% include modal.background %}
+            {% endfor %}
+        </div>
 
         {% block body %}{% endblock %}
         {% block footer %}{% include 'shared/footer.html' %}{% endblock %}

@@ -16,9 +16,6 @@
 
  Looking for source code? Check it out here: https://github.com/LuckehPickle/chat
 -->
-<div class="modal-wrapper-{% block class1 %}{% endblock %} _wrapper">
-    <div class="modal-{% block class2 %}{% endblock %} _modal">
-        <div class="foreground">{% block foreground %}{% endblock %}</div>
-        <div class="background">{% block background %}{% endblock %}</div>
-    </div>
+<div class="modal-{% block class %}{% endblock %} _modal" {% block attributes %}{% endblock %}>
+    {% block body %}{% endblock %}
 </div>

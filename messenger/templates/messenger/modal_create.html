@@ -1,8 +1,7 @@
 {% extends 'shared/base_modal.html' %}
 
-{# Unfortunately, there is no better way to do this in Django #}
-{% block class1 %}create{% endblock %}
-{% block class2 %}create{% endblock %}
+{% block class %}create{% endblock %}
+{% block attributes %}foreground{% endblock %}
 
 {% block body %}
     <p class="modal-title">Create Group</p>

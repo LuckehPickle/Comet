@@ -22,7 +22,6 @@
 /* Stylesheets */
 @import url(/static/shared/css/push-messages.css);
 @import url(/static/shared/css/nav.css);
-@import url(/static/shared/css/dropdown.css);
 
 body{
     margin: 0;
@@ -854,7 +853,7 @@ p[class^="chat-message-sender"]{
 
     /* MODAL */
 
-    .modal-create{
+    .modal-create[foreground]{
         width: 360px;
         padding: 35px;
         box-sizing: border-box;
@@ -864,7 +863,7 @@ p[class^="chat-message-sender"]{
         display: none;
     }
 
-    .modal-create[active]{
+    .modal-create[foreground][active]{
         display: block;
     }
 

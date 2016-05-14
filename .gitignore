@@ -88,3 +88,6 @@ messenger/static/messenger/css/main.min.css
 frontpage/static/shared/js/socket.io.js
 frontpage/static/shared/js/base.min.js
 messenger/static/messenger/js/messenger.min.js
+comet_socketio/static/comet_socketio/js/socket.io.js
+frontpage/static/shared/js/spf.js
+frontpage/static/shared/js/spfjs-2.3.2-dist.zip

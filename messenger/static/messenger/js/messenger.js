@@ -403,11 +403,11 @@ $(function(){
         $(".modal-wrapper, ._modal").hide();
 
         $(".create-group-trigger").on("click", function(){
-            showModal($(".modal-create"), ModalImportance.MEDIUM);
+            showModal(getModalObjectFromElement($(".modal-create")), true);
         });
 
         $(".modal-create-cancel").on("click", function(){
-            hideModal($(".modal-create"));
+            hideModal(getModalObjectFromElement($(".modal-create")));
         });
 
         // Clicking anywhere on the document.
@@ -427,7 +427,20 @@ $(function(){
         print(false, "Added event listeners.");
     };
 
+    /**
+     * Register Modals
+     * Register and modals here
+     */
+    var registerModals = function(){
+        modals["create"] = new Modal(
+            "create",
+            $(".modal-create[foreground]"),
+            $(".modal-create[background]"),
+            ModalImportance.MEDIUM
+        );
+    };
 
     addEventListeners();
+    registerModals();
     scrollToBottom();
 });

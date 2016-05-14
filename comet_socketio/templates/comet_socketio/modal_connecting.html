@@ -1,21 +1,17 @@
 {% extends 'shared/base_modal.html' %}
 
-{# Unfortunately, there is no better way to do this in Django #}
-{% block class1 %}connecting{% endblock %}
-{% block class2 %}connecting{% endblock %}
+{% block class %}connecting{% endblock %}
+{% block attributes %}foreground{% endblock %}
 
 {% load staticfiles %}
-{% block foreground %}
+{% block body %}
     <img src="{% static 'shared/img/logo.svg' %}">
-    <p>Connection lost. Attempting to reconnect...{{ class }}</p>
+    <p>Connection lost. Attempting to reconnect...</p>
     <div class="spinner">
         <div class="bounce1"></div>
         <div class="bounce2"></div>
         <div class="bounce3"></div>
     </div>
-    <a class="btn-sheen noselect spf-link run-in-bg">Continue in Background</a>
-{% endblock %}
-
-{% block foreground %}
-    Background...
+    <a class="btn-sheen noselect spf-link bgify">Continue in Background</a>
+    {# TODO Add a tool tip here #}
 {% endblock %}

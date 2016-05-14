@@ -27,6 +27,7 @@ from messenger.identifier import generate
 
 # Other Imports
 import cr_config as config
+from comet import Modal
 from comet.decorators import login_required_message
 from accounts.models import User, UserGroup
 # from django_socketio import broadcast_channel
@@ -37,6 +38,7 @@ def index(request):
     Currently just renders the messenger interface from the template.
     """
     return renderMessenger(request, title="Messages")
+
 
 @login_required_message
 def private(request, identifier=None):
@@ -73,6 +75,7 @@ def private(request, identifier=None):
         channel_id=channel_id,
         chat_title=user.username,
     )
+
 
 @login_required_message
 def group(request, group_id=None):
@@ -143,8 +146,26 @@ def group(request, group_id=None):
         chat_title=group.name,
     )
 
+
 def renderMessenger(request, title, form=CreateChatForm(), is_group=False, channel_id=None, chat_title=None):
+    """
+    Renders the messenger page
+    """
     notify.check_notifications(request) # Check for new messages
+
+    modals = [
+        Modal(
+            title="connecting",
+            foreground="comet_socketio/modal_connecting.html",
+            background="comet_socketio/modal_connecting_background.html",
+        ),
+        Modal(
+            title="create",
+            foreground="messenger/modal_create.html",
+            background="messenger/modal_create_background.html",
+        )
+    ]
+
     return render(request, "messenger/index.html", {
         "title": (config.TITLE_FORMAT % title),
         "user_id": str(request.user.user_id)[:8],
@@ -153,6 +174,7 @@ def renderMessenger(request, title, form=CreateChatForm(), is_group=False, chann
         "channel_id": channel_id,
         "chat_title": chat_title,
         "latest_messages": get_latest_messages(channel_id),
+        "modals": modals,
     })
 
 def get_latest_messages(channel_id):
