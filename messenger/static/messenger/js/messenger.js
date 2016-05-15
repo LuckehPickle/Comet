@@ -66,6 +66,10 @@ function _handleQueryResponse(data){
 };
 
 
+/** @const */ var DONE_TYPING_INTERVAL = 100; // How long should typing last (milliseconds)
+var typing_timer; // Tracks the typing timeout
+
+
 /**
  * Update Search
  * Removes stale search data and adds the latest data from the server.
@@ -142,42 +146,163 @@ var removeStaleSearches = function(){
 
 
 /**
+ * Search Typing Complete
+ * Function which runs whenever the typing timer runs out. It essentially
+ * means the user has finished typing.
+ */
+function searchTypingComplete(){
+    requestQueryResponse($(".tools-input-wrapper > input").val());
+};
+
+
+/**
+ * Add Event Listeners
+ * Registers event listeners for any items which need it on startup.
+ */
+function addEventListenersMessenger(){
+    /**
+     * Add event listeners to any friend request buttons that are added through
+     * Django's messaging framework, or the template.
+     */
+    $("[class^=\"button-request-\"][data-user-id]").on("click", function(event){
+        var accept = $(this).is("[class*='-accept']");
+        answerFriendRequest(accept, $(this).attr("data-user-id"));
+    });
+
+
+    // Listens for 'keyup' events to reset the typing_timer
+    $(".tools-input-wrapper > input").on("keyup", function(){
+        clearTimeout(typing_timer);
+        typing_timer = setTimeout(searchTypingComplete, DONE_TYPING_INTERVAL);
+    });
+
+
+    // Clears the timer but doesn't restart it, as the key is still pressed.
+    $(".tools-input-wrapper > input").on("keydown", function(){
+        clearTimeout(typing_timer);
+    });
+
+    // Handles the submit function on the chat form.
+    $(".chat-form").submit(function(){
+        input = $(".chat-form-input");
+        sendSocketMessage(input.text());
+        input.text("");
+        return false; // Lets the VM now we've handled the event
+    });
+
+    // Handles tab swapping
+    $(".tab-head").on("click", function(event){
+        openTab($(this));
+    });
+
+    /**
+     * Handles 'enter' key presses on the contenteditable div.
+     * Note: If the user presses 'ctrl+enter' then the form should
+     * not be submitted, rather a new line should be inserted.
+     */
+    $(".chat-form-input").on("keydown", function(event){
+        if(event.which == 13){
+            $(".chat-form").submit();
+            return false;
+        }
+    });
+
+    // Handles the submit function on the chat form.
+    $(".chat-form").submit(function(){
+        input = $(".chat-form-input");
+        sendSocketMessage(input.text());
+        input.text("");
+        return false; // Lets the VM now we've handled the event
+    });
+
+    // Handles the 'send' button click event.
+    $(".chat-send").on("click", function(){
+        $(".chat-form").submit();
+    });
+
+    // Search Bar
+    $(".tools-input-wrapper:not([active]) > i").on("click", function(){
+        $(".tools-input-wrapper > input").focus();
+    });
+
+    $(".tools-input-wrapper:not([active]) > input").on("focus", function(){
+        $(".tools-input-dropdown").hide();
+        $(this).parent().attr("active", "");
+        $(this).select();
+        setTimeout(function(){
+            $(".tools-input-dropdown").slideDown(200);
+        }, 300);
+    });
+
+    $(".tool-container").on("click", function(event){
+        if(!$(event.target).closest(".tool-container-dropdown").length && !$(event.target).is(".tool-container-dropdown")){
+            $(this).children(".tool-container-dropdown").slideDown(200);
+        }
+    });
+
+    $(".tool-container-dropdown").on("click", function(){
+        $(this).hide();
+    });
+
+    $(".modal-wrapper, ._modal").hide();
+
+    $(".create-group-trigger").on("click", function(){
+        console.log();
+        showModal(getModalObjectFromElement($(".modal-create")), true);
+    });
+
+    $(".modal-create-cancel").on("click", function(){
+        hideModal(getModalObjectFromElement($(".modal-create")));
+    });
+
+    // Clicking anywhere on the document.
+    $("html").on("click", function(event){
+        if(!$(event.target).closest(".tools-input-wrapper").length && !$(event.target).is(".tools-input-wrapper")){
+            if($(".tools-input-wrapper").is("[active]")){
+                $(".tools-input-dropdown").slideUp(200, function(){
+                    $(".tools-input-wrapper").removeAttr("active");
+                });
+            }
+        }
+
+        if(!$(event.target).closest(".tool-container").length && !$(event.target).is(".tool-container")){
+            $(".tool-container-dropdown").hide();
+        }
+    });
+
+    $(".tab-body, .chat-body").each(function(){
+        new slimScroll(this);
+    });
+};
+
+
+/**
+ * Announce User Join
+ * Adds a message each time a user joins the current channel.
+ * @param {Object} data Data from Socket IO server
+ */
+function announceUserJoin(data){
+    $(".chat-body").append("<p class=\"user-join\">" + data.username + " has joined the group.</p>")
+    print(false, data.username + " has joined the group.");
+}
+
+
+/**
+ * Scroll To Bottom
+ * Scrolls the chat body to the bottom of the page.
+ */
+function scrollToBottom(){
+    $(".chat-body").animate({
+        scrollTop: $(".chat-body").prop("scrollHeight")
+    }, 300);
+}
+
+
+/**
  * JQuery Document Ready function. The following code is run whenever the page
  * has finished loading and is ready to work with.
  */
 $(function(){
-
-    /** @const */ var DONE_TYPING_INTERVAL = 100; // How long should typing last (milliseconds)
-    var typing_timer; // Tracks the typing timeout
-
-
-    /**
-     * Handle Socket Message
-     * Handles incoming messages from the Socket IO server, subdividing
-     * each message type into it's own function.
-     * @param {Object} data Data from Socket IO server
-     */
-    var handleSocketMessage = function(data){
-        if(!("action" in data)){
-            print(true, "A malformed message was received from the Socket IO server. (Socket Message).");
-            return;
-        }
-
-        switch(data.action){
-            case "search":
-                handleQueryResponse(data);
-                break;
-            case "pmessage":
-                handlePushMessage(data);
-                break;
-            case "message":
-                handleChatMessage(data);
-                break;
-            case "user_join":
-                announceUserJoin(data);
-                break;
-        }
-    };
 
 
     /**
@@ -250,171 +375,8 @@ $(function(){
         scrollToBottom();
     }
 
-
-    /**
-     * Announce User Join
-     * Adds a message each time a user joins the current channel.
-     * @param {Object} data Data from Socket IO server
-     */
-    var announceUserJoin = function(data){
-        $(".chat-body").append("<p class=\"user-join\">" + data.username + " has joined the group.</p>")
-        print(false, data.username + " has joined the group.");
-    }
-
-
-    /**
-     * Search Typing Complete
-     * Function which runs whenever the typing timer runs out. It essentially
-     * means the user has finished typing.
-     */
-    var searchTypingComplete = function(){
-        requestQueryResponse($(".tools-input-wrapper > input").val());
-    };
-
-
-    /**
-     * Scroll To Bottom
-     * Scrolls the chat body to the bottom of the page.
-     */
-    var scrollToBottom = function(){
-        $(".chat-body").animate({
-            scrollTop: $(".chat-body").prop("scrollHeight")
-        }, 300);
-    }
-
-
-    /**
-     * Add Event Listeners
-     * Registers event listeners for any items which need it on startup.
-     */
-    var addEventListeners = function(){
-        print(false, "Adding event listeners...");
-
-        /**
-         * Add event listeners to any friend request buttons that are added through
-         * Django's messaging framework, or the template.
-         */
-        $("[class^=\"button-request-\"][data-user-id]").on("click", function(event){
-            var accept = $(this).is("[class*='-accept']");
-            answerFriendRequest(accept, $(this).attr("data-user-id"));
-        });
-
-
-        // Listens for 'keyup' events to reset the typing_timer
-        $(".tools-input-wrapper > input").on("keyup", function(){
-            clearTimeout(typing_timer);
-            typing_timer = setTimeout(searchTypingComplete, DONE_TYPING_INTERVAL);
-        });
-
-
-        // Clears the timer but doesn't restart it, as the key is still pressed.
-        $(".tools-input-wrapper > input").on("keydown", function(){
-            clearTimeout(typing_timer);
-        });
-
-        // Handles the submit function on the chat form.
-        $(".chat-form").submit(function(){
-            input = $(".chat-form-input");
-            sendSocketMessage(input.text());
-            input.text("");
-            return false; // Lets the VM now we've handled the event
-        });
-
-        // Handles tab swapping
-        $(".tab-head").on("click", function(event){
-            openTab($(this));
-        });
-
-        /**
-         * Handles 'enter' key presses on the contenteditable div.
-         * Note: If the user presses 'ctrl+enter' then the form should
-         * not be submitted, rather a new line should be inserted.
-         */
-        $(".chat-form-input").on("keydown", function(event){
-            if(event.which == 13){
-                $(".chat-form").submit();
-                return false;
-            }
-        });
-
-        // Handles the submit function on the chat form.
-        $(".chat-form").submit(function(){
-            input = $(".chat-form-input");
-            sendSocketMessage(input.text());
-            input.text("");
-            return false; // Lets the VM now we've handled the event
-        });
-
-        // Handles the 'send' button click event.
-        $(".chat-send").on("click", function(){
-            $(".chat-form").submit();
-        });
-
-        // Search Bar
-        $(".tools-input-wrapper:not([active]) > i").on("click", function(){
-            $(".tools-input-wrapper > input").focus();
-        });
-
-        $(".tools-input-wrapper:not([active]) > input").on("focus", function(){
-            $(".tools-input-dropdown").hide();
-            $(this).parent().attr("active", "");
-            $(this).select();
-            setTimeout(function(){
-                $(".tools-input-dropdown").slideDown(200);
-            }, 300);
-        });
-
-        $(".tool-container").on("click", function(event){
-            if(!$(event.target).closest(".tool-container-dropdown").length && !$(event.target).is(".tool-container-dropdown")){
-                $(this).children(".tool-container-dropdown").slideDown(200);
-            }
-        });
-
-        $(".tool-container-dropdown").on("click", function(){
-            $(this).hide();
-        });
-
-        $(".modal-wrapper, ._modal").hide();
-
-        $(".create-group-trigger").on("click", function(){
-            showModal(getModalObjectFromElement($(".modal-create")), true);
-        });
-
-        $(".modal-create-cancel").on("click", function(){
-            hideModal(getModalObjectFromElement($(".modal-create")));
-        });
-
-        // Clicking anywhere on the document.
-        $("html").on("click", function(event){
-            if(!$(event.target).closest(".tools-input-wrapper").length && !$(event.target).is(".tools-input-wrapper")){
-                if($(".tools-input-wrapper").attr("active")){
-                    $(".tools-input-wrapper").removeAttr("active");
-                    $(".tools-input-dropdown").hide();
-                }
-            }
-
-            if(!$(event.target).closest(".tool-container").length && !$(event.target).is(".tool-container")){
-                $(".tool-container-dropdown").hide();
-            }
-        });
-
-        print(false, "Added event listeners.");
-    };
-
-    /**
-     * Register Modals
-     * Register and modals here
-     */
-    var registerModals = function(){
-        modals["create"] = new Modal(
-            "create",
-            $(".modal-create[foreground]"),
-            $(".modal-create[background]"),
-            ModalImportance.MEDIUM
-        );
-    };
-
-    addEventListeners();
-    registerModals();
-    scrollToBottom();
 });
+
+
+addEventListenersMessenger();
+scrollToBottom();

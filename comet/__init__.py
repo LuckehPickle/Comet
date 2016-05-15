@@ -32,3 +32,17 @@ class Modal():
 
     def __unicode__(self):
         return str(self.title)
+
+
+dynamic_modals = [
+    Modal(
+        title="connecting",
+        foreground="comet_socketio/modal_connecting.html",
+        background="comet_socketio/modal_connecting_background.html",
+    ),
+    Modal(
+        title="create",
+        foreground="messenger/modal_create.html",
+        background="messenger/modal_create_background.html",
+    )
+]

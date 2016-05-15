@@ -27,7 +27,7 @@ from messenger.identifier import generate
 
 # Other Imports
 import cr_config as config
-from comet import Modal
+from comet import dynamic_modals
 from comet.decorators import login_required_message
 from accounts.models import User, UserGroup
 # from django_socketio import broadcast_channel
@@ -153,18 +153,7 @@ def renderMessenger(request, title, form=CreateChatForm(), is_group=False, chann
     """
     notify.check_notifications(request) # Check for new messages
 
-    modals = [
-        Modal(
-            title="connecting",
-            foreground="comet_socketio/modal_connecting.html",
-            background="comet_socketio/modal_connecting_background.html",
-        ),
-        Modal(
-            title="create",
-            foreground="messenger/modal_create.html",
-            background="messenger/modal_create_background.html",
-        )
-    ]
+    modals = dynamic_modals
 
     return render(request, "messenger/index.html", {
         "title": (config.TITLE_FORMAT % title),

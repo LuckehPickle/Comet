@@ -18,7 +18,7 @@ from django.shortcuts import render
 from django.contrib import messages
 
 # Other Imports
-from comet import Modal
+from comet import dynamic_modals
 from comet_socketio import utils
 import cr_config
 
@@ -30,12 +30,7 @@ def index(request):
         user_id = str(request.user.user_id)[:8]
         # TODO requires Socket connection - notify.check_notifications(request)
 
-    modals = []
-    modals.append(Modal(
-        title="connecting",
-        foreground="comet_socketio/modal_connecting.html",
-        background="comet_socketio/modal_connecting_background.html",
-    ))
+    modals = dynamic_modals
 
     return render(request, "frontpage/index.html", {
         "title": cr_config.TITLE,

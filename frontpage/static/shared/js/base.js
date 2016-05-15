@@ -534,8 +534,15 @@ function addEventListeners(){
     });
 
     $(document).pjax("a[data-pjax], a[data-pjax-m]", ".pjax-body");
-    $(document).on("pjax:start", function() { NProgress.start(); });
-    $(document).on("pjax:end",   function() { NProgress.done();  });
+    $(document).on("pjax:start", function(){NProgress.start();});
+    $(document).on("pjax:end", function(){
+        NProgress.done();
+        try{
+            addEventListenersMessenger();
+        }catch(e){
+            console.log(e.message);
+        }
+    });
     NProgress.configure({ showSpinner: false });
 };
 
@@ -550,6 +557,13 @@ function registerModals(){
         $(".modal-connecting[foreground]"),
         $(".modal-connecting[background]"),
         ModalImportance.HIGH
+    );
+
+    modals["create"] = new Modal(
+        "create",
+        $(".modal-create[foreground]"),
+        $(".modal-create[background]"),
+        ModalImportance.MEDIUM
     );
 };
 
