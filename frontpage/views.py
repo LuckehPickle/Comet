@@ -30,9 +30,6 @@ def index(request):
         user_id = str(request.user.user_id)[:8]
         # TODO requires Socket connection - notify.check_notifications(request)
 
-    print(str(utils.is_connected(request.user)))
-    print(str(utils.get_socket(request.user)))
-
     modals = []
     modals.append(Modal(
         title="connecting",

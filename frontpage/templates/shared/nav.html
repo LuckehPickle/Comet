@@ -22,18 +22,18 @@
 {% load staticfiles %}
 <div class="menu">
     <div class="menu-wrapper">
-        <a href="{% url 'frontpage' %}" class="logo noselect spf-link"><img src="{% static 'shared/img/logo.svg' %}"></img></a> <!-- Logo -->
+        <a href="{% url 'frontpage' %}" class="logo noselect" data-pjax><img src="{% static 'shared/img/logo.svg' %}"></img></a> <!-- Logo -->
         <div class="mobile-nav-trigger"><div></div></div> <!-- Mobile Nav Trigger -->
         <nav role="navigation"> <!-- Nav Menu -->
             <ul class="nav-ul">
-                <li><a class="spf-link" href="/premium">Premium</a></li>
-                <li><a class="spf-link" href="/docs/news">Changelog</a></li>
-                <li><a class="spf-link" href="/docs">Docs</a></li>
-                <li><a class="spf-link" href="/features">Features</a></li>
+                <li><a href="/premium">Premium</a></li>
+                <li><a href="/docs/news">Changelog</a></li>
+                <li><a href="/docs">Docs</a></li>
+                <li><a href="/features">Features</a></li>
                 <li><a href="https://github.com/LuckehPickle/Comet" target="_blank">Source</a></li>
                 <div class="mobile-button-wrapper">
                     {% if request.user.is_authenticated %}
-                        <a href="{% url 'messages' %}" id="up">Messenger</a>
+                        <a href="{% url 'messages' %}" id="up" data-pjax>Messenger</a>
                         <a href="{% url 'logout' %}" id="in">Sign Out</a>
                     {% else %}
                         <a href="{% url 'register' %}" id="up">Sign Up</a>
@@ -53,7 +53,7 @@
             <i class="material-icons menu-icons js-transit dropdown-trigger" data-transit-id="menu">
                 more_vert
                 <ul class="dropdown" id="dropdown-profile">
-                    <li><a href="{% url 'messages' %}"><i class="material-icons">chat</i>Open messenger</a></li>
+                    <li><a href="{% url 'messages' %}" data-pjax><i class="material-icons">chat</i>Open messenger</a></li>
                     {% if not request.user.is_verified %}<li><a href="/verify"><i class="material-icons">email</i>Verify email</a></li>{% endif %}
                     <li><a href="/settings"><i class="material-icons">settings</i>Account settings</a></li>
                     <li><a href="{% url 'logout' %}"><i class="material-icons">exit_to_app</i>Logout</a></li>

@@ -79,7 +79,7 @@ class MessengerNamespace(BaseNamespace):
             fields = ("username", "is_premium", "user_url"),
         )
 
-        self.send_or_notify({
+        self.emit("message", {
             "action": "search",
             "users": json_users,
             "friends": friends_in_query,
@@ -99,7 +99,7 @@ class MessengerNamespace(BaseNamespace):
         # Check if the users are already friends.
         if self.request.user.friends.filter(user_id=user_id).count() != 0:
             # Users are already friends
-            self.send_or_notify({
+            self.emit("message", {
                 "action":"push_message",
                 "type":"error",
                 "message":"You are already friends with {0}.".format(target.username)
@@ -109,7 +109,7 @@ class MessengerNamespace(BaseNamespace):
         # Make sure there are no currently pending requests
         if FriendInvites.objects.filter(sender=self.request.user, recipient=target).count() != 0:
             # User has already sent a friend request to the target
-            self.send_or_notify({
+            self.emit("message", {
                 "action":"push_message",
                 "type":"error",
                 "message":"There is already a pending friend request between you and {0}.".format(target.username)
@@ -123,12 +123,11 @@ class MessengerNamespace(BaseNamespace):
                 sender=self.request.user,
                 recipient=target,
             )
-            self.send_or_notify({
+            self.emit("message", {
                 "action":"push_message",
                 "type":"info",
                 "message":"Friend request successfully sent to {0}.".format(target.username)
             })
-            # Notify target user
             notify.notify_user(target, messages.INFO,
                 "You have received a friend request from {0}<section><div class=\"button-request-accept\" data-user-id=\"{1}\" data-new>Accept Request<link class=\"rippleJS\"/></div><div class=\"button-request-deny\" data-user-id=\"{1}\" data-new>Deny Request<link class=\"rippleJS\"/></div></section>".format(self.request.user.username, str(self.request.user.user_id))
             )
@@ -138,13 +137,11 @@ class MessengerNamespace(BaseNamespace):
             FriendInvites.objects.get(sender=target, recipient=self.request.user).delete()
 
             # Notify
-            self.send_or_notify({
+            self.emit("message", {
                 "action":"push_message",
                 "type":"info",
                 "message":"You are now friends with {0}. You can now message them here: <div class=\"push-message-well\"><a href=\"{1}\">{1}</a></div>".format(target.username, target.get_absolute_url())
             })
-
-            # Notify target user
             notify.notify_user(target, messages.INFO, "You are now friends with {0}. You can now message them here: <div class=\"push-message-well\"><a href=\"{1}\">{1}</a></div>".format(self.request.user.username, self.request.user.get_absolute_url()))
 
         return True
@@ -165,18 +162,25 @@ class MessengerNamespace(BaseNamespace):
 
         if data["accept"]:
             self.request.user.friends.add(target)
-            send_or_notify({
+            self.emit("message", {
                 "action":"push_message",
                 "type":messages.INFO,
                 "message":"You are now friends with {0}. You can now message them here: <div class=\"push-message-well\"><a href=\"{1}\">{1}</a></div>".format(target.username, target.get_absolute_url())
             })
+
+            """
+            pkt = dict(
+                type="event",
+                name="message",
+                args=[{
+                    "action":"push_message",
+                    "type":messages.INFO,
+                    "message":"You are now friends with {0}. You can now message them here: <div class=\"push-message-well\"><a href=\"{1}\">{1}</a></div>".format(self.request.user.username, self.request.user.get_absolute_url()),
+                }],
+                endpoint="/messenger",
+            )
+            """
+
             notify.notify_user(target, messages.INFO, "You are now friends with {0}. You can now message them here: <div class=\"push-message-well\"><a href=\"{1}\">{1}</a></div>".format(self.request.user.username, self.request.user.get_absolute_url()))
 
         return True
-
-
-    def send_or_notify(self, data):
-        """
-        TODO Write some amazing docs here
-        """
-        self.emit("message", data)

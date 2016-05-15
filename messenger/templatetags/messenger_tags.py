@@ -52,4 +52,5 @@ def is_online(model):
     """
     Tests to see if a user is online
     """
-    return utils.is_connected(model)
+    return False
+    # return utils.is_connected(model)

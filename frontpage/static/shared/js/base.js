@@ -307,9 +307,143 @@ function getModalObjectFromElement(element){
 /**
  * Sockets from here down
  */
+/** @const */ var CONNECTION_ERROR_DELAY = 300;
+var connectionTimer; // Tracks the time it's taken to connect
 var socket; // A reference to the Socket IO socket.
 var connected = false;
 var queue = [];
+
+
+/**
+ * Start Socket
+ * Attempts to open a connection with the socket server, but only if the
+ * user is logged in.
+ */
+function _startSocket(){
+    if(window.user_id != null){
+        _openConnection();
+    }
+};
+
+
+/**
+ * Open Connection
+ * Attempts to open a connection with the socket server
+ */
+function _openConnection(){
+    print(false, "Connecting to socket server...");
+    socket = io.connect("/messenger");
+    socket.on("connect", _handleSocketConnect);
+    socket.on("disconnect", _handleSocketDisconnect);
+    socket.on("message", _handleSocketMessage);
+    _setConnectionTimer();
+}
+
+
+/**
+ * Handle Socket Connect
+ */
+function _handleSocketConnect(){
+    connected = true;
+    clearTimeout(connectionTimer);
+    hideModal(getModalObjectFromElement($(".modal-connecting")));
+    print(false, "Connected to socket server");
+    checkQueue();
+};
+
+
+/**
+ * Handle Socket Disconnect
+ * Occurs whenever the connnection between the client and server is
+ * severed (this will only occur if the connection is lost or there is
+ * an internal server error). When this event is fired, Comet will
+ * attempt to reconnect to the socket server.
+ */
+function _handleSocketDisconnect(){
+    connected = false;
+    _setConnectionTimer();
+    print(true, "Unexpectedly disconnected from socket server");
+};
+
+
+/**
+ * Set Connection Timer
+ */
+function _setConnectionTimer(){
+    clearTimeout(connectionTimer);
+    connectionTimer = setTimeout(function(){
+        print(false, "Connection taking too long, showing modal");
+        showModal(getModalObjectFromElement($(".modal-connecting")), true);
+    }, CONNECTION_ERROR_DELAY);
+}
+
+
+/**
+ * Handle Socket Message
+ * Handles incoming messages from the socket server, subdividing
+ * each message type into it's own function.
+ * @param {Object} data Data from socket server
+ */
+function _handleSocketMessage(data){
+    if(!("action" in data)){
+        print(true, "A malformed message was received from the socket server. (Socket Message).");
+        return;
+    }
+
+    switch(data.action){
+        case "search":
+            _handleQueryResponse(data);
+            break;
+        case "push_message":
+            _handlePushMessage(data);
+            break;
+        case "message":
+            _handleChatMessage(data);
+            break;
+        default:
+            print(false, "A message was received with an unrecognized action: '" + data.action + "'");
+    }
+};
+
+
+/**
+ * Handle Push Message
+ * Handles and displays an incoming push message in the same way that a
+ * message from Django's messaging framework would be handled.
+ * @param {Object} data Data from socket server
+ */
+function _handlePushMessage(data){
+    if(!("type" in data) || !("message" in data)){
+        print(true, "A malformed message was received from the Socket IO server. (Push Message)");
+        return;
+    }
+
+    print(false, "Received message of type '" + data.type + "'. Displaying.");
+    createPushMessage(data.type, data.message);
+
+    // Handle any buttons that could be appended to the message
+    $("[class^=\"button-request-\"][data-user-id][data-new]").on("click", function(event){
+        var accept = $(this).is("[class*=\"accept\"]");
+        answerFriendRequest(accept, $(this).attr("data-user-id"));
+        closePushMessage($(this));
+    });
+    $("[class^=\"button-request-\"][data-user-id][data-new]").removeAttr("data-new");
+
+    if(data.request_confirmation && "message_id" in data){
+        // Server has asked the client to confirm that it received this message
+        send("message_confirm", data.message_id);
+        print(false, "Message confirmation sent for message with id '" + data.message_id + "'");
+    }
+};
+
+
+/**
+ * Handle Chat Message
+ * @param {Object} data Data from the socket server
+ */
+function _handleChatMessage(data){
+
+}
 
 
 /**
@@ -326,7 +460,6 @@ function send(eventType, data){
         });
         return;
     }
-
     socket.emit(eventType, data);
 }
 
@@ -348,6 +481,17 @@ function checkQueue(){
 
 
 /**
+ * Send Friend Request
+ * Sends a friend request to a given user (requires that users UUID).
+ * @param {string} user_id UUID of the target user
+ */
+function sendFriendRequest(user_id){
+    send("friend_req", user_id);
+    print(false, "Friend request sent to user with id '" + user_id + "'");
+};
+
+
+/**
  * Answer Friend Request
  * Responds to a friend request.
  * @param {boolean} accept Should the request be accepted
@@ -363,193 +507,63 @@ function answerFriendRequest(accept, user_id){
 
 
 /**
+ * Add Event Listeners
+ */
+function addEventListeners(){
+    // Listens for click events on push message close buttons
+    $("[class^=\"push-message-close\"], [class^=\"button-request-\"]").on("click", function(){
+        closePushMessage($(this));
+    });
+
+    /**
+     * Listens for buttons with the class run-in-bg. These buttons will
+     * push a modal to the queue.
+     */
+    $(".bgify").on("click", function(){
+        var parent = $(this).parent();
+        while(!parent.hasClass("_modal")) // Scale the DOM tree
+            parent = parent.parent();
+        setModalInBackground(getModalObjectFromElement(parent), true);
+    });
+
+    $("._modal[background]").on("click", function(){
+        var modal = $(this);
+        while(!modal.hasClass("_modal")) // Scale the DOM tree
+            modal = modal.parent();
+        setModalInForeground(getModalObjectFromElement(modal));
+    });
+
+    $(document).pjax("a[data-pjax], a[data-pjax-m]", ".pjax-body");
+    $(document).on("pjax:start", function() { NProgress.start(); });
+    $(document).on("pjax:end",   function() { NProgress.done();  });
+    NProgress.configure({ showSpinner: false });
+};
+
+
+/**
+ * Register Modals
+ * Register and modals here
+ */
+function registerModals(){
+    modals["connecting"] = new Modal(
+        "connecting",
+        $(".modal-connecting[foreground]"),
+        $(".modal-connecting[background]"),
+        ModalImportance.HIGH
+    );
+};
+
+
+/**
  * JQuery Document Ready function. The following code is run whenever the page
  * has finished loading and is ready to work with.
  */
 $(function(){
-
-    /** @const */ var CONNECTION_ERROR_DELAY = 300;
-    var connectionTimer; // Tracks the time it's taken to connect
-
-
-    /**
-     * Start Socket
-     * Attempts to open a connection with the socket server, but only if the
-     * user is logged in.
-     */
-    var startSocket = function(){
-        if(window.user_id != null){
-            openConnection();
-        }
-    };
-
-
-    /**
-     * Open Connection
-     * Attempts to open a connection with the socket server
-     */
-    var openConnection = function(){
-        print(false, "Connecting to socket server...");
-        socket = io.connect("/messenger");
-        socket.on("connect", handleSocketConnect);
-        socket.on("disconnect", handleSocketDisconnect);
-        socket.on("message", handleSocketMessage);
-        setConnectionTimer();
-    }
-
-
-    /**
-     * Handle Socket Connect
-     */
-    var handleSocketConnect = function(){
-        connected = true;
-        clearTimeout(connectionTimer);
-        hideModal(getModalObjectFromElement($(".modal-connecting")));
-        print(false, "Connected to socket server");
-        checkQueue();
-    };
-
-
-    /**
-     * Handle Socket Disconnect
-     * Occurs whenever the connnection between the client and server is
-     * severed (this will only occur if the connection is lost or there is
-     * an internal server error). When this event is fired, Comet will
-     * attempt to reconnect to the socket server.
-     */
-    var handleSocketDisconnect = function(){
-        connected = false;
-        setConnectionTimer();
-        print(true, "Unexpectedly disconnected from socket server");
-    };
-
-
-    /**
-     * Set Connection Timer
-     */
-    var setConnectionTimer = function(){
-        clearTimeout(connectionTimer);
-        connectionTimer = setTimeout(function(){
-            print(false, "Connection taking too long, showing modal");
-            showModal(getModalObjectFromElement($(".modal-connecting")), true);
-        }, CONNECTION_ERROR_DELAY);
-    }
-
-
-    /**
-     * Handle Socket Message
-     * Handles incoming messages from the socket server, subdividing
-     * each message type into it's own function.
-     * @param {Object} data Data from socket server
-     */
-    var handleSocketMessage = function(data){
-        if(!("action" in data)){
-            print(true, "A malformed message was received from the socket server. (Socket Message).");
-            return;
-        }
-
-        switch(data.action){
-            case "search":
-                handleQueryResponse(data);
-                break;
-            case "push_message":
-                handlePushMessage(data);
-                break;
-            case "message":
-                handleChatMessage(data);
-                break;
-            default:
-                print(false, "A message was received with an unrecognized action: '" + data.action + "'");
-        }
-    };
-
-
-    /**
-     * Handle Push Message
-     * Handles and displays an incoming push message in the same way that a
-     * message from Django's messaging framework would be handled.
-     * @param {Object} data Data from socket server
-     */
-    var handlePushMessage = function(data){
-        if(!("type" in data) || !("message" in data)){
-            print(true, "A malformed message was received from the Socket IO server. (Push Message)");
-            return;
-        }
-
-        print(false, "Received message of type '" + data.type + "'. Displaying.");
-        createPushMessage(data.type, data.message);
-
-        // Handle any buttons that could be appended to the message
-        $("[class^=\"button-request-\"][data-user-id][data-new]").on("click", function(event){
-            var accept = $(this).is("[class*=\"accept\"]");
-            answerFriendRequest(accept, $(this).attr("data-user-id"));
-            closePushMessage($(this));
-        });
-        $("[class^=\"button-request-\"][data-user-id][data-new]").removeAttr("data-new");
-
-        if(data.request_confirmation && "message_id" in data){
-            // Server has asked the client to confirm that it received this message
-            send("message_confirm", data.message_id);
-            print(false, "Message confirmation sent for message with id '" + data.message_id + "'");
-        }
-    };
-
-
-    /**
-     * Handle Chat Message
-     * @param {Object} data Data from the socket server
-     */
-    var handleChatMessage = function(data){
-
-    }
-
-
     // Fade in any idle push messages
     $("div[class^=\"push-message-container\"]").fadeIn(300);
 
-    /**
-     * Add Event Listeners
-     */
-    var addEventListeners = function(){
-        // Listens for click events on push message close buttons
-        $("[class^=\"push-message-close\"], [class^=\"button-request-\"]").on("click", function(){
-            closePushMessage($(this));
-        });
-
-        /**
-         * Listens for buttons with the class run-in-bg. These buttons will
-         * push a modal to the queue.
-         */
-        $(".bgify").on("click", function(){
-            var parent = $(this).parent();
-            while(!parent.hasClass("_modal")) // Scale the DOM tree
-                parent = parent.parent();
-            setModalInBackground(getModalObjectFromElement(parent), true);
-        });
-
-        $("._modal[background]").on("click", function(){
-            var modal = $(this);
-            while(!modal.hasClass("_modal")) // Scale the DOM tree
-                modal = modal.parent();
-            setModalInForeground(getModalObjectFromElement(modal));
-        });
-    };
-
-
-    /**
-     * Register Modals
-     * Register and modals here
-     */
-    var registerModals = function(){
-        modals["connecting"] = new Modal(
-            "connecting",
-            $(".modal-connecting[foreground]"),
-            $(".modal-connecting[background]"),
-            ModalImportance.HIGH
-        );
-    };
 
     addEventListeners();
     registerModals();
-    startSocket();
+    _startSocket();
 });

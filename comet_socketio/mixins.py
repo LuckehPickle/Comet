@@ -1,4 +1,4 @@
-# [Comet Socketio] UTILS.PY - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
+# [Comet Socketio] MIXINS.PY - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
 # Powered by Django (https://www.djangoproject.com/) - Not endorsed by Django
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,24 +13,31 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-# Other Imports
-from accounts.models import User
+class ChannelMixin(object):
+
+    def join(self, channel_id):
+        """
+        """
+        pass
 
 
-def get_socket(user, server):
-    """
-    Returns a socket from a user object
-    """
-    if user.socket_session == None:
-        return None
-    return server.get_socket(sessid=user.socket_session)
+    def leave(self, channel_id):
+        """
+        """
+        pass
 
 
-def is_connected(user, server):
-    """
-    Determines whether a user is connected or not
-    """
-    socket = get_socket(user, server)
-    if socket == None:
-        return False
-    return socket.connected
+    def kick(self, channel_id, user_id):
+        """
+        """
+        pass
+
+
+    def ban(self, channel_id, user_id, reason):
+        """
+        """
+        pass
+
+
+    def get_channel_name(self, channel_id):
+        pass

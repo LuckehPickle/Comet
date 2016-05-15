@@ -28,8 +28,6 @@ from django.utils import six
 from django.utils.autoreload import code_changed, restart_with_reloader
 from socketio.server import SocketIOServer
 
-from comet_socketio import utils
-
 
 RELOAD = False
 DEFAULT_PORT = 8000
@@ -82,7 +80,6 @@ class Command(BaseCommand):
             handler = self.get_handler(*args, **options)
             server = SocketIOServer(
                 bind, handler, resource='socket.io', policy_server=True)
-            utils.set_server(server)
             server.serve_forever()
         except KeyboardInterrupt:
             for key, sock in six.iteritems(server.sockets):

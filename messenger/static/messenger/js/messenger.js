@@ -32,10 +32,6 @@ function openTab(tab){
     print(false, "Opened tab with id '" + tab.attr("data-tab") + "'")
 }
 
-/*
- * Sockets from here down
- */
-
 /**
  * Request Query Response
  * Request a response to the search query via Socket IO.
@@ -57,7 +53,7 @@ var requestQueryResponse = function(query){
  * Handles incoming query responses from the Socket IO server.
  * @param {Object} data Data from Socket IO server
  */
-function handleQueryResponse(data){
+function _handleQueryResponse(data){
     if(!("users" in data) || !("friends" in data)){
         print(true, "A malformed message was received from the socket server. (Query Response)");
         return;
@@ -142,17 +138,6 @@ var removeStaleSearches = function(){
     $children.each(function(){
         $(this).remove();
     });
-};
-
-
-/**
- * Send Friend Request
- * Sends a friend request to a given user (requires that users UUID).
- * @param {string} user_id UUID of the target user
- */
-var sendFriendRequest = function(user_id){
-    send("friend_req", user_id);
-    print(false, "Friend request sent to user with id '" + user_id + "'");
 };
 
 
@@ -402,7 +387,7 @@ $(function(){
         // Clicking anywhere on the document.
         $("html").on("click", function(event){
             if(!$(event.target).closest(".tools-input-wrapper").length && !$(event.target).is(".tools-input-wrapper")){
-                if($(".tools-input-wrapper")[0].hasAttribute("active")){
+                if($(".tools-input-wrapper").attr("active")){
                     $(".tools-input-wrapper").removeAttr("active");
                     $(".tools-input-dropdown").hide();
                 }

@@ -45,7 +45,7 @@ body{
 }
 
 .menu{
-    position: absolute;
+    box-shadow: none;
 }
 
 .toolbar{

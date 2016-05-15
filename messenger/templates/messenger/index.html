@@ -1,4 +1,4 @@
-{% extends 'shared/base.html' %}
+{% extends 'shared/base.html'|pjax:request %}
 
 {% load staticfiles %}
 {% block title %}{{ title }}{% endblock %}
@@ -16,7 +16,7 @@
 {% block modals %}{% include 'messenger/modal_create.html' %}{% endblock %}
 
 {% load messenger_tags %}
-{% block body %}
+{% block content %}
 <div class="toolbar">
     <!-- MOBILE TOOLS -->
     <div class="mobile-tools">
@@ -111,7 +111,7 @@
             <!-- FRIENDS LIST -->
             <div class="tab-body" data-tab="tab-friends" {% if not is_group %}active{% endif %}>
                 {% for friend in request.user.friends.all %}
-                    <a class="friend-container spf-link" href="{{ friend.get_absolute_url }}" {% if not is_group and friend.user_url in channel_id %}active{% endif %}>
+                    <a class="friend-container" href="{{ friend.get_absolute_url }}" data-pjax-m {% if not is_group and friend.user_url in channel_id %}active{% endif %}>
                         <div class="friend-image"></div>
                         <div>
                             <p class="friend-username">{{ friend.username }}</p>
@@ -130,7 +130,7 @@
             <!-- GROUPS LIST -->
             <div class="tab-body" data-tab="tab-groups" {% if is_group %}active{% endif %}>
                 {% for group in request.user.groups.all|sort_by:"-last_message" %}
-                    <a class="group-container spf-link" href="{{ group.get_absolute_url }}" {% if is_group and channel_id == group.group_id %}active{% endif %}>
+                    <a class="group-container" href="{{ group.get_absolute_url }}" data-pjax-m {% if is_group and channel_id == group.group_id %}active{% endif %}>
                         <div class="group-image"></div>
                         <section>
                             <p class="group-name">{{ group.name }}</p>
@@ -184,9 +184,7 @@
         </div>
     </div>
 </div>
-{% endblock %}
 
-{% block footer %}
 <!-- Compressed Footer -->
 <div class="compact-footer">
     <div>Copyright © 2016 - Sean Bailey - All Rights Reserved</div>
