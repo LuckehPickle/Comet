@@ -13,15 +13,10 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-
-   TODO Mobile Support
 */
 
 @import url(https://fonts.googleapis.com/css?family=Roboto:400,300,700);
 
-@import url(/static/shared/css/dropdown.css);
-
-/* Common Styles */
 .menu{
     background-color: #3B3B3B;
     z-index: 100;
@@ -40,7 +35,7 @@
             align-items: center;
 }
 
-.logo{
+.logo-wrapper{
     width: 200px;
     display: -webkit-flex;
             display: flex;
@@ -51,12 +46,12 @@
     padding: 8px 0;
 }
 
-.logo img{
+.logo-wrapper img{
     width: 100%;
     max-height: 30px;
 }
 
-.js-transit{
+.no-select{
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none;   /* Chrome/Safari/Opera */
     -khtml-user-select: none;    /* Konqueror */
@@ -69,31 +64,14 @@
     position: relative;
 }
 
-/*.js-tooltip{
-    position: relative;
-}
-
-.js-tooltip::after{
-    content: attr(data-tooltip);
-    font-family: 'Roboto', sans-serif;
-    font-size: 16px;
-    background-color: #3B3B3B;
-    padding: 8px 15px;
-    position: absolute;
-    top: 50px;
-    left: -50%;
-    z-index: 100;
-    visibility: hidden;
-    cursor: default;
-    border-radius: 3px;
-}
-
-.js-tooltip:hover .js-tooltip::after{
-    visibility: visible;
-}*/
-
-/* For mobile phones and other small devices */
+/**
+ * Mobile Phones (and other Small Devices)
+ */
 @media screen and (max-width: 40.5em){
+    .sign-in, .user-info-container, .user-menu, .dropdown-trigger{
+        display: none !important;
+    }
+
     .menu{
         width: 100%;
         height: 50px;
@@ -107,48 +85,7 @@
         text-align: center;
     }
 
-    .nav-ul{
-        position: absolute;
-        top: 50px;
-        left: 0;
-        right: 0;
-        list-style: none;
-        padding-left: 0; /* We need to counteract the left padding on the menu */
-        margin: 0;
-        text-align: left;
-        overflow-y: hidden;
-        height: 0;
-        transition: height 0.3s;
-        z-index: 1200;
-    }
-
-    .active{
-        height: auto;
-    }
-
-    .nav-ul li{
-        width: 100%;
-        margin: 0;
-    }
-
-    .nav-ul li a{
-        font-family: 'Source Sans Pro', sans-serif;
-        font-weight: bold;
-        color: #EBEBEB;
-        text-decoration: none;
-        text-transform: uppercase;
-        background-color: #3B3B3B;
-        width: 100%;
-        display: inline-block;
-        padding: 10px;
-        box-sizing: border-box;
-        border-top-color: #4B4B4B;
-        border-top-width: thin;
-        border-top-style: solid;
-        margin: 0;
-    }
-
-    .logo{
+    .logo-wrapper{
         -webkit-flex-grow: 1;
                 flex-grow: 1;
     }
@@ -183,8 +120,45 @@
         bottom: 8px;
     }
 
-    .sign-in, .user-info-container, .user-menu, .menu-icons{
-        display: none !important;
+    .navigation-menu{
+        position: absolute;
+        top: 50px;
+        left: 0;
+        right: 0;
+        list-style: none;
+        padding-left: 0; /* We need to counteract the left padding on the menu */
+        margin: 0;
+        text-align: left;
+        overflow-y: hidden;
+        height: 0;
+        transition: height 0.3s;
+        z-index: 1200;
+    }
+
+    .navigation-menu[active]{
+        height: auto;
+    }
+
+    .navigation-menu li{
+        width: 100%;
+        margin: 0;
+    }
+
+    .navigation-menu li a{
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: bold;
+        color: #EBEBEB;
+        text-decoration: none;
+        text-transform: uppercase;
+        background-color: #3B3B3B;
+        width: 100%;
+        display: inline-block;
+        padding: 10px;
+        box-sizing: border-box;
+        border-top-color: #4B4B4B;
+        border-top-width: thin;
+        border-top-style: solid;
+        margin: 0;
     }
 
     .mobile-button-wrapper{
@@ -212,54 +186,44 @@
         text-align: center;
         padding: 8px 0px;
         border-radius: 3px;
-    }
-
-    .mobile-button-wrapper #up{
         background-color: #F37021;
         color: #EBEBEB;
     }
 
-    .mobile-button-wrapper #in{
+    .mobile-button-wrapper a:last-child{
         background-color: #EBEBEB;
         color: #3B3B3B;
     }
 }
 
-/* For Desktops and some tablets only */
+/**
+ * Desktops (and above)
+ */
 @media screen and (min-width: 40.5em){
-    /* Menu bar */
+    .mobile-button-wrapper, .mobile-nav-trigger{
+        display: none;
+    }
+
     .menu{
         height: 70px;
         color: #EBEBEB;
         padding: 0 12px;
-        /*box-shadow: 0px 8px 0px rgba(0, 0, 0, 0.15);*/
     }
 
-    /* Wraps Menu */
     .menu-wrapper{
         max-width: 1200px;
     }
 
-    /* Nav elements */
-    .nav-ul{
+    .navigation-menu{
         margin: 0;
-        /*margin-left: 12px; /* Seperate nav elements from the logo */
         padding: 0;
         display: -webkit-flex;
                 display: flex;
         list-style: none;
     }
 
-    .mobile-nav, .mobile-button-wrapper{
-        display: none;
-    }
-
-    .mobile-nav-trigger{
-        display: none;
-    }
-
-    .nav-ul li a{
-        position: relative; /* Allows coming soon drop down. */
+    .navigation-menu li a{
+        position: relative;
         padding: 5px;
         font-family: 'Source Sans Pro', sans-serif;
         font-weight: bold;
@@ -271,8 +235,38 @@
         transition: color 0.3s;
     }
 
-    .nav-ul li a:hover{
+    .navigation-menu li a:hover{
         color: #F1F1F1;
+    }
+
+    .user-info-container{
+        text-align: right;
+    }
+
+    .user-info-container p{
+        margin: 0;
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: bold;
+        font-size: 16px;
+        color: #EBEBEB;
+    }
+
+    .user-image{
+        width: 38px;
+        min-width: 38px;
+        height: 38px;
+        border-radius: 5px;
+        background-color: #EBEBEB;
+        margin-left: 14px;
+    }
+
+    .menu-wrapper .dropdown-trigger{
+        font-size: 28px !important;
+        cursor: pointer;
+        padding: 6px;
+        margin-left: 8px;
+        position: relative;
+        z-index: 100;
     }
 
     .sign-in{
@@ -288,44 +282,5 @@
 
     .sign-in, .user-info-container{
         margin-left: auto; /* Essentially float:right; for flexboxes */
-    }
-
-    .user-image{
-        width: 38px;
-        min-width: 38px;
-        height: 38px;
-        border-radius: 5px;
-        background-color: #EBEBEB;
-        margin-left: 14px;
-    }
-
-    .user-info-container{
-        text-align: right;
-    }
-
-    .user-info-container p{
-        margin: 0;
-        font-family: 'Source Sans Pro', sans-serif;
-        font-weight: bold;
-        font-size: 16px;
-        color: #EBEBEB;
-    }
-
-    .user-info-container #id{
-        text-transform: uppercase;
-        font-size: 15px;
-    }
-
-    .menu-icons{
-        font-size: 28px !important;
-        cursor: pointer;
-        padding: 6px;
-        margin-left: 8px;
-        position: relative;
-        z-index: 100;
-    }
-
-    #dropdown-profile{
-        top: 56px;
     }
 }

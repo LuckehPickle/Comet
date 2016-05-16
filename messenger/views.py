@@ -151,6 +151,10 @@ def renderMessenger(request, title, form=CreateChatForm(), is_group=False, chann
     """
     Renders the messenger page
     """
+    chunk = None
+    if "_pjax" in request.GET:
+        chunk = request.GET.get("_pjax")
+
     notify.check_notifications(request) # Check for new messages
 
     modals = dynamic_modals
@@ -164,6 +168,7 @@ def renderMessenger(request, title, form=CreateChatForm(), is_group=False, chann
         "chat_title": chat_title,
         "latest_messages": get_latest_messages(channel_id),
         "modals": modals,
+        "chunk": chunk,
     })
 
 def get_latest_messages(channel_id):

@@ -33,22 +33,6 @@ String.prototype.indexOfEnd = function(string) {
 
 
 /**
- * Message Types
- * Enum for push message types. This essentially allows the creation of
- * push messages that are compatible with Django's messaging framework.
- * https://git.io/vwgcG
- * @enum {number}
- */
-var MessageTypes = {
-    DEBUG: 10,
-    INFO: 20,
-    SUCCESS: 25,
-    WARNING: 30,
-    ERROR: 40,
-}
-
-
-/**
  * Print
  * Formats and outputs a string to the console.
  * @param {boolean} error Show as an error
@@ -66,52 +50,111 @@ function print(error, out){
 
 
 /**
- * Create Push Message
- * Creates, displays and initialises a new push message.
- * @param {number} type Type of push message. Refer to MessageType enum.
- * @param {string} message Message to display on the push message.
+ * Send
+ * Sends data back to the socket server.
+ * @param {String} eventType Event to fire
+ * @param {Object} data Data to send to server
  */
-function createPushMessage(type, message){
-    $(".push-messages").append(
-        "<div class=\"push-message-container-" + type + "\" data-new>" +
-            "<svg class=\"push-message-close-" + type + "\" viewBox=\"0 0 20 20\">" +
-                "<path d=\"M0 3 L3 0 L10 7 L17 0 L20 3 L13 10 L20 17 L17 20 L10 13 L3 20 L0 17 L7 10 z\">" +
-            "</svg>" +
-            "<p class=\"push-message-content-" + type + "\">" + message + "</p>" +
-        "</div>"
-    );
+function send(eventType, data){
+    if(!connected){
+        queue.push({
+            eventType: eventType,
+            value: data,
+        });
+        return;
+    }
+    socket.emit(eventType, data);
+}
 
-    var $container = $("[class^=\"push-message-container\"][data-new]");
-    $container.fadeIn(300);
-    $container.removeAttr("data-new");
 
-    $("[class^=\"push-message-close\"]").on("click", function(){
-        closePushMessage($(this));
-    });
+/**
+ * Check Queue
+ * Checks to see if any data is sitting in the Queue, and sends it to
+ * the socket server.
+ */
+function checkQueue(){
+    if(queue.length > 0 && connected){
+        for(var i = 0; i < queue.length; i++){
+            var item = queue[i];
+            socket.emit(item["eventType"], item["value"]);
+        }
+        print(false, "Emptied socket queue.");
+    }
+}
+
+
+/**
+ * Message Types
+ * Enum for push message types. This essentially allows the creation of
+ * push messages that are compatible with Django's messaging framework.
+ * https://git.io/vwgcG
+ * @enum {number}
+ */
+var MessageType = {
+    DEBUG: 10,
+    INFO: 20,
+    SUCCESS: 25,
+    WARNING: 30,
+    ERROR: 40,
+}
+
+
+/**
+ * Push Message
+ */
+class PushMessage{
+
+    /**
+     * @constructor
+     * @param {number} type Type of push message. Refer to MessageType enum
+     * @param {string} message Message to display inside the push message
+     */
+    constructor(type, message){
+        this.type = type;
+        this.message = message;
+        this.display();
+    }
+
+    /**
+     * Displays and initialises the push message
+     */
+    display(){
+        $(".push-messages").append(
+            "<div class=\"push-message-container-" + this.type + "\" data-new>" +
+                "<svg class=\"push-message-close-" + this.type + "\" viewBox=\"0 0 20 20\">" +
+                    "<path d=\"M0 3 L3 0 L10 7 L17 0 L20 3 L13 10 L20 17 L17 20 L10 13 L3 20 L0 17 L7 10 z\">" +
+                "</svg>" +
+                "<p class=\"push-message-content-" + this.type + "\">" + this.message + "</p>" +
+            "</div>"
+        );
+
+        var container = $("[class^='push-message-container'][data-new]");
+        container.fadeIn(300);
+        container.removeAttr("data-new");
+
+        $("[class^='push-message-close']").on("click", function(){
+            closePushMessage($(this));
+        });
+
+        print(false, "Push message of type '" + this.type + "' created.");
+    }
 }
 
 
 /**
  * Close Push Message
- * Closes a puch message and sends a confirmation response to the server
+ * Closes a push message and sends a confirmation response to the server
  * if necessary.
  * @param {Element} source Element which fired the event.
  */
 function closePushMessage(source){
-    // Move up the DOM until you reach the container
-    while(!source.is("[class*=\"push-message-container\"]")){
-        source = source.parent();
+    while(!source.is("[class*='push-message-container']")){
+        source = source.parent(); // Scale the DOM tree
     }
 
     source.slideUp(300, function(){
         source.remove();
         print(false, "Push message closed.");
-        /**
-         * TODO send confirmation here, so that messages will last across
-         * multiple page loads (until the user performs an action which
-         * causes the message to close).
-         * This will require Sockets to be handled in this script first.
-         */
     });
 }
 
@@ -137,6 +180,14 @@ var modals = {};
  * other metadata (including importance).
  */
 class Modal{
+
+    /**
+     * @constructor
+     * @param {String} title Modal identifier/title
+     * @param {Object} foreground Foreground JQuery element of the modal
+     * @param {Object} background Background JQuery element of the modal
+     * @param {number} importance Modal importance level (refer to Modal Importance enum)
+     */
     constructor(title, foreground, background, importance){
         this.title = title;
         this.foreground = $(foreground);
@@ -286,8 +337,8 @@ function setModalInBackground(modal, check){
 
 /**
  * Get Modal Object From Element
- * Attempts to get find the registered modal assosciated with a particular
- * modal element.
+ * Attempts to find the registered modal assosciated with a particular
+ * JQuery element.
  * @param {Object} element Assosciated element
  * @return {Modal} The registered modal (if found)
  */
@@ -295,7 +346,7 @@ function getModalObjectFromElement(element){
     if(!element.is("._modal[class*='modal-']"))
         return; // Elem is not a modal
 
-    var className = element.attr("class");
+    var className = element.attr("class"); // String version of the elems class
     var index = className.indexOfEnd("modal-");
     var title = className.substring(index, className.indexOf(" ", index));
     if(title in modals){
@@ -305,8 +356,9 @@ function getModalObjectFromElement(element){
 
 
 /**
- * Sockets from here down
+ * BEGIN SOCKETS
  */
+
 /** @const */ var CONNECTION_ERROR_DELAY = 300;
 var connectionTimer; // Tracks the time it's taken to connect
 var socket; // A reference to the Socket IO socket.
@@ -419,15 +471,16 @@ function _handlePushMessage(data){
     }
 
     print(false, "Received message of type '" + data.type + "'. Displaying.");
-    createPushMessage(data.type, data.message);
+    new PushMessage(data.type, data.message);
 
     // Handle any buttons that could be appended to the message
-    $("[class^=\"button-request-\"][data-user-id][data-new]").on("click", function(event){
-        var accept = $(this).is("[class*=\"accept\"]");
+    var buttons = $("[class^='button-request-'][data-user-id][data-new]");
+    buttons.on("click", function(event){
+        var accept = $(this).is("[class*='accept']");
         answerFriendRequest(accept, $(this).attr("data-user-id"));
         closePushMessage($(this));
     });
-    $("[class^=\"button-request-\"][data-user-id][data-new]").removeAttr("data-new");
+    buttons.removeAttr("data-new");
 
     if(data.request_confirmation && "message_id" in data){
         // Server has asked the client to confirm that it received this message
@@ -443,40 +496,6 @@ function _handlePushMessage(data){
  */
 function _handleChatMessage(data){
 
-}
-
-
-/**
- * Send
- * Sends data back to the socket server.
- * @param {String} eventType Event to fire
- * @param {Object} data Data to send to server
- */
-function send(eventType, data){
-    if(!connected){
-        queue.push({
-            eventType: eventType,
-            value: data,
-        });
-        return;
-    }
-    socket.emit(eventType, data);
-}
-
-
-/**
- * Check Queue
- * Checks to see if any data is sitting in the Queue, and sends it to
- * the socket server.
- */
-function checkQueue(){
-    if(queue.length > 0 && connected){
-        for(var i = 0; i < queue.length; i++){
-            var item = queue[i];
-            socket.emit(item["eventType"], item["value"]);
-        }
-        print(false, "Emptied socket queue.");
-    }
 }
 
 
@@ -508,22 +527,21 @@ function answerFriendRequest(accept, user_id){
 
 /**
  * Add Event Listeners
+ * To be run at each page load, initialises any event listeners.
  */
 function addEventListeners(){
-    // Listens for click events on push message close buttons
-    $("[class^=\"push-message-close\"], [class^=\"button-request-\"]").on("click", function(){
+    /* BEGIN PUSH MESSAGES */
+    $("[class^='push-message-close'], [class^='button-request-']").on("click", function(){
         closePushMessage($(this));
     });
+    /* END PUSH MESSAGES */
 
-    /**
-     * Listens for buttons with the class run-in-bg. These buttons will
-     * push a modal to the queue.
-     */
+    /* BEGIN MODALS */
     $(".bgify").on("click", function(){
-        var parent = $(this).parent();
-        while(!parent.hasClass("_modal")) // Scale the DOM tree
-            parent = parent.parent();
-        setModalInBackground(getModalObjectFromElement(parent), true);
+        var source = $(this).parent();
+        while(!source.hasClass("_modal")) // Scale the DOM tree
+            source = source.parent();
+        setModalInBackground(getModalObjectFromElement(source), true);
     });
 
     $("._modal[background]").on("click", function(){
@@ -532,19 +550,74 @@ function addEventListeners(){
             modal = modal.parent();
         setModalInForeground(getModalObjectFromElement(modal));
     });
+    /* END MODALS */
 
-    $(document).pjax("a[data-pjax], a[data-pjax-m]", ".pjax-body");
-    $(document).on("pjax:start", function(){NProgress.start();});
-    $(document).on("pjax:end", function(){
-        NProgress.done();
-        try{
-            addEventListenersMessenger();
-        }catch(e){
-            console.log(e.message);
+    /* BEGIN PJAX */
+    $(document).pjax("a[data-pjax]", ".pjax-body");
+    $(document).on("pjax:start", function(){ NProgress.start(); });
+    $(document).on("pjax:end",   function(){ NProgress.done();});
+    NProgress.configure({ showSpinner: false });
+    /* END PJAX */
+
+    /* BEGIN DROPDOWN */
+    $(".dropdown-trigger[data-dropdown-id]").on("click", function(){
+        var dropdown = $(".dropdown[data-dropdown-id='" + $(this).attr("data-dropdown-id") + "']");
+        if(dropdown.is("[active]")){
+            dropdown.slideUp(150, function(){
+                dropdown.hide();
+                dropdown.removeAttr("active");
+            });
+        }else{
+            dropdown.slideDown(200);
+            dropdown.attr("active", "");
         }
     });
-    NProgress.configure({ showSpinner: false });
+
+    $(".mobile-nav-trigger").on("click", function(){
+        var navigation = $(".navigation-menu");
+        if(navigation.is("[active]")){
+            navigation.removeAttr("active");
+        }else{
+            navigation.attr("active", "");
+        }
+    });
+    /* END DROPDOWN */
+
+    $("html").on("click", handleDocumentEvent);
 };
+
+
+/**
+ * Handle Document Event
+ * Event handler for whenever the document is clicked. This is externalised
+ * so that other scripts can override it with their event handlers. Just be
+ * sure to call this one as well. Example:
+ * $("html").on("click", function(event){
+ *     handleDocumentEvent(event);
+ *     ...
+ * });
+ * @param {Object} event Event data
+ */
+function handleDocumentEvent(event){
+    var target = $(event.target);
+
+    // Mobile nav menu
+    if($(".navigation-menu").is("[active]")){
+        if(!target.closest(".mobile-nav-trigger").length && !target.is(".mobile-nav-trigger")){
+            $(".navigation-menu").removeAttr("active");
+        }
+    }
+
+    // Dropdown
+    if($(".dropdown").is("[active]")){
+        if(!target.closest(".dropdown-trigger").length && !target.is(".dropdown-trigger")){
+            $(".dropdown").slideUp(200, function(){
+                $(".dropdown").hide();
+                $(".dropdown").removeAttr("active");
+            });
+        }
+    }
+}
 
 
 /**
@@ -574,7 +647,7 @@ function registerModals(){
  */
 $(function(){
     // Fade in any idle push messages
-    $("div[class^=\"push-message-container\"]").fadeIn(300);
+    $("div[class^='push-message-container']").fadeIn(300);
 
 
     addEventListeners();

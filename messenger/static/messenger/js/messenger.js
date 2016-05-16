@@ -255,8 +255,9 @@ function addEventListenersMessenger(){
         hideModal(getModalObjectFromElement($(".modal-create")));
     });
 
-    // Clicking anywhere on the document.
     $("html").on("click", function(event){
+        handleDocumentEvent(event);
+
         if(!$(event.target).closest(".tools-input-wrapper").length && !$(event.target).is(".tools-input-wrapper")){
             if($(".tools-input-wrapper").is("[active]")){
                 $(".tools-input-dropdown").slideUp(200, function(){
@@ -270,9 +271,7 @@ function addEventListenersMessenger(){
         }
     });
 
-    $(".tab-body, .chat-body").each(function(){
-        new slimScroll(this);
-    });
+    $(document).pjax("a[data-pjax-m]", ".chat-body");
 };
 
 
@@ -378,5 +377,9 @@ $(function(){
 });
 
 
-addEventListenersMessenger();
-scrollToBottom();
+function pageLoaded(){
+    addEventListenersMessenger();
+    scrollToBottom();
+}
+
+pageLoaded();
