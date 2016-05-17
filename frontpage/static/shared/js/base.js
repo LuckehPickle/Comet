@@ -243,6 +243,7 @@ function hideModal(modal){
             // TODO Show next queued modal
         });
 
+        $("body").removeClass("modal-open");
         $("._modal-wrapper").fadeOut(300, function(){
             $(this).removeAttr("active");
         });
@@ -298,6 +299,7 @@ function setModalInForeground(modal){
     if(!$("._modal-wrapper").is("[active]")){
         $("._modal-wrapper").fadeIn(300);
         $("._modal-wrapper").attr("active", "");
+        $("body").addClass("modal-open");
     }
 
     modal.foreground.fadeIn(300);
@@ -324,6 +326,7 @@ function setModalInBackground(modal, check){
     }
 
     if(check && $("._modal-wrapper").is("[active]")){
+        $("body").removeClass("modal-open");
         $("._modal-wrapper").fadeOut(300, function(){
             $(this).removeAttr("active");
         });
