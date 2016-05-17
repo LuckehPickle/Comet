@@ -57,15 +57,19 @@
                 {% endcomment %}
             </div>
 
-            <!-- DESKTOP TOOLS -->
+            {# Desktop Tools #}
             <div class="desktop-tools">
-                <div class="tool-container" style="margin-right:10px;">
+
+                {# Create Group Button #}
+                <div class="tool-container dropdown-trigger" data-dropdown-id="create-dropdown">
                     <span style="padding-right:5px;">
                         Create Group
                         <i class="material-icons">keyboard_arrow_down</i>
                     </span>
                     <link class="rippleJS"/>
-                    <ul class="tool-container-dropdown">
+
+                    {# Create Group Dropdown #}
+                    <ul class="dropdown" data-dropdown-id="create-dropdown">
                         <li class="create-group-trigger">Private Group</li>
                         <li class="create-group-trigger">Public Group</li>
                     </ul>

@@ -156,126 +156,6 @@ function searchTypingComplete(){
 
 
 /**
- * Add Event Listeners
- * Registers event listeners for any items which need it on startup.
- */
-function addEventListenersMessenger(){
-    /**
-     * Add event listeners to any friend request buttons that are added through
-     * Django's messaging framework, or the template.
-     */
-    $("[class^=\"button-request-\"][data-user-id]").on("click", function(event){
-        var accept = $(this).is("[class*='-accept']");
-        answerFriendRequest(accept, $(this).attr("data-user-id"));
-    });
-
-
-    // Listens for 'keyup' events to reset the typing_timer
-    $(".tools-input-wrapper > input").on("keyup", function(){
-        clearTimeout(typing_timer);
-        typing_timer = setTimeout(searchTypingComplete, DONE_TYPING_INTERVAL);
-    });
-
-
-    // Clears the timer but doesn't restart it, as the key is still pressed.
-    $(".tools-input-wrapper > input").on("keydown", function(){
-        clearTimeout(typing_timer);
-    });
-
-    // Handles the submit function on the chat form.
-    $(".chat-form").submit(function(){
-        input = $(".chat-form-input");
-        sendSocketMessage(input.text());
-        input.text("");
-        return false; // Lets the VM now we've handled the event
-    });
-
-    // Handles tab swapping
-    $(".tab-head").on("click", function(event){
-        openTab($(this));
-    });
-
-    /**
-     * Handles 'enter' key presses on the contenteditable div.
-     * Note: If the user presses 'ctrl+enter' then the form should
-     * not be submitted, rather a new line should be inserted.
-     */
-    $(".chat-form-input").on("keydown", function(event){
-        if(event.which == 13){
-            $(".chat-form").submit();
-            return false;
-        }
-    });
-
-    // Handles the submit function on the chat form.
-    $(".chat-form").submit(function(){
-        input = $(".chat-form-input");
-        sendSocketMessage(input.text());
-        input.text("");
-        return false; // Lets the VM now we've handled the event
-    });
-
-    // Handles the 'send' button click event.
-    $(".chat-send").on("click", function(){
-        $(".chat-form").submit();
-    });
-
-    // Search Bar
-    $(".tools-input-wrapper:not([active]) > i").on("click", function(){
-        $(".tools-input-wrapper > input").focus();
-    });
-
-    $(".tools-input-wrapper:not([active]) > input").on("focus", function(){
-        $(".tools-input-dropdown").hide();
-        $(this).parent().attr("active", "");
-        $(this).select();
-        setTimeout(function(){
-            $(".tools-input-dropdown").slideDown(200);
-        }, 300);
-    });
-
-    $(".tool-container").on("click", function(event){
-        if(!$(event.target).closest(".tool-container-dropdown").length && !$(event.target).is(".tool-container-dropdown")){
-            $(this).children(".tool-container-dropdown").slideDown(200);
-        }
-    });
-
-    $(".tool-container-dropdown").on("click", function(){
-        $(this).hide();
-    });
-
-    $(".modal-wrapper, ._modal").hide();
-
-    $(".create-group-trigger").on("click", function(){
-        console.log();
-        showModal(getModalObjectFromElement($(".modal-create")), true);
-    });
-
-    $(".modal-create-cancel").on("click", function(){
-        hideModal(getModalObjectFromElement($(".modal-create")));
-    });
-
-    $("html").on("click", function(event){
-        handleDocumentEvent(event);
-
-        if(!$(event.target).closest(".tools-input-wrapper").length && !$(event.target).is(".tools-input-wrapper")){
-            if($(".tools-input-wrapper").is("[active]")){
-                $(".tools-input-dropdown").slideUp(200, function(){
-                    $(".tools-input-wrapper").removeAttr("active");
-                });
-            }
-        }
-
-        if(!$(event.target).closest(".tool-container").length && !$(event.target).is(".tool-container")){
-            $(".tool-container-dropdown").hide();
-        }
-    });
-
-    $(document).pjax("a[data-pjax-m]", ".chat-body");
-};
-
-
-/**
  * Announce User Join
  * Adds a message each time a user joins the current channel.
  * @param {Object} data Data from Socket IO server
@@ -298,88 +178,176 @@ function scrollToBottom(){
 
 
 /**
- * JQuery Document Ready function. The following code is run whenever the page
- * has finished loading and is ready to work with.
+ * Send Socket Message
+ * Sends a chat message to the Socket IO server.
+ * @param {string} message Chat message to be sent to Socket IO server
  */
-$(function(){
+var sendSocketMessage = function(message){
+    if(message == null || message == "")
+        return;
 
-
-    /**
-     * Send Socket Message
-     * Sends a chat message to the Socket IO server.
-     * @param {string} message Chat message to be sent to Socket IO server
-     */
-    var sendSocketMessage = function(message){
-        if(message == null || message == "")
-            return;
-
-        if(window.channel_id == null){
-            print(true, "Attempted to send a message but not currently connected to a channel.");
-            return;
-        }
-
-        send("message", {
-            message: message,
-            channel_id: window.channel_id,
-        });
-        print(false, "Chat message successfully sent to Socket IO server.");
-    };
-
-
-    /**
-     * Handle Chat Message
-     * Displays a chat message in the chat body.
-     * @param {Object} data Data from Socket IO server
-     */
-    var handleChatMessage = function(data){
-        if(!("sender_id" in data) || !("time_sent" in data) || !("message" in data)){
-            print(true, "A malformed message was received from the Socket IO server. (Chat Message)");
-            return;
-        }
-
-        $(".no-messages").remove();
-        var mostRecent = $(".chat-body").children().last();
-        var classTag = (data.sender_id == window.user_id) ? "" : "-other";
-        var time = new Date(data.time_sent).toLocaleTimeString(navigator.language, {
-            hour: "numeric",
-            minute: "numeric",
-            hour12: false,
-        });
-
-        if(mostRecent.attr("data-user-id") == data.sender_id){
-            // A new message from the same user. We can safely tag.
-            mostRecent.children(".chat-message-sender" + classTag).remove();
-            mostRecent.append("<p class=\"chat-message-sender" + classTag + "\">" + data.sender + " (" + time + ")</p>");
-            mostRecent.children("section").append("<div class=\"chat-message-content" + classTag + "-tag\" data-new></div>");
-        }else{
-            // From a new user, append.
-            $(".chat-body").append(
-                "<div class=\"chat-message-container" + classTag + "\" data-user-id=\"" + data.sender_id + "\">" +
-                    "<div class=\"chat-message-image" + classTag + "\"></div>" +
-                    "<span class=\"triangle-top-" + (classTag ? "right" : "left") + "\"></span>" +
-                    "<section>" +
-                        "<div class=\"chat-message-content" + classTag + "\" data-new></div>" +
-                    "</section>" +
-                    "<p class=\"chat-message-sender" + classTag + "\">" + data.sender + " (" + time + ")</p>" +
-                "</div>"
-            );
-        }
-
-        // Add the message afterwards via .text() to escape HTML
-        $messageContent = $("[class^=\"chat-message-content\"][data-new]");
-        $messageContent.text(data.message);
-        $messageContent.removeAttr("data-new");
-
-        // Make sure that the body is scrolled to the bottom
-        scrollToBottom();
+    if(window.channel_id == null){
+        print(true, "Attempted to send a message but not currently connected to a channel.");
+        return;
     }
 
-});
+    send("message", {
+        message: message,
+        channel_id: window.channel_id,
+    });
+    print(false, "Chat message successfully sent to Socket IO server.");
+};
 
 
-function pageLoaded(){
-    addEventListenersMessenger();
+/**
+ * Handle Chat Message
+ * Displays a chat message in the chat body.
+ * @param {Object} data Data from Socket IO server
+ */
+var handleChatMessage = function(data){
+    if(!("sender_id" in data) || !("time_sent" in data) || !("message" in data)){
+        print(true, "A malformed message was received from the Socket IO server. (Chat Message)");
+        return;
+    }
+
+    $(".no-messages").remove();
+    var mostRecent = $(".chat-body").children().last();
+    var classTag = (data.sender_id == window.user_id) ? "" : "-other";
+    var time = new Date(data.time_sent).toLocaleTimeString(navigator.language, {
+        hour: "numeric",
+        minute: "numeric",
+        hour12: false,
+    });
+
+    if(mostRecent.attr("data-user-id") == data.sender_id){
+        // A new message from the same user. We can safely tag.
+        mostRecent.children(".chat-message-sender" + classTag).remove();
+        mostRecent.append("<p class=\"chat-message-sender" + classTag + "\">" + data.sender + " (" + time + ")</p>");
+        mostRecent.children("section").append("<div class=\"chat-message-content" + classTag + "-tag\" data-new></div>");
+    }else{
+        // From a new user, append.
+        $(".chat-body").append(
+            "<div class=\"chat-message-container" + classTag + "\" data-user-id=\"" + data.sender_id + "\">" +
+                "<div class=\"chat-message-image" + classTag + "\"></div>" +
+                "<span class=\"triangle-top-" + (classTag ? "right" : "left") + "\"></span>" +
+                "<section>" +
+                    "<div class=\"chat-message-content" + classTag + "\" data-new></div>" +
+                "</section>" +
+                "<p class=\"chat-message-sender" + classTag + "\">" + data.sender + " (" + time + ")</p>" +
+            "</div>"
+        );
+    }
+
+    // Add the message afterwards via .text() to escape HTML
+    $messageContent = $("[class^=\"chat-message-content\"][data-new]");
+    $messageContent.text(data.message);
+    $messageContent.removeAttr("data-new");
+
+    // Make sure that the body is scrolled to the bottom
     scrollToBottom();
 }
 
-pageLoaded();
+
+/**
+ * JQuery Document Ready function. The following code is run whenever the page
+ * has finished loading and is ready to work with.
+ */
+$(document).on("ready pjax:success", function(){
+
+    /**
+     * Add Event Listeners
+     * Registers event listeners for any items which need it on startup.
+     */
+    function addEventListenersMessenger(){
+        /* BEGIN PUSH MESSAGES */
+        $("[class^=\"button-request-\"][data-user-id]").on("click", function(event){
+            var accept = $(this).is("[class*='-accept']");
+            answerFriendRequest(accept, $(this).attr("data-user-id"));
+        });
+        /* END PUSH MESSAGES */
+
+        /* BEGIN SEARCH */
+        $(".tools-input-wrapper > input").on("keyup", function(){
+            clearTimeout(typing_timer);
+            typing_timer = setTimeout(searchTypingComplete, DONE_TYPING_INTERVAL);
+        });
+
+        $(".tools-input-wrapper > input").on("keydown", function(){
+            clearTimeout(typing_timer);
+        });
+
+        $(".tools-input-wrapper:not([active]) > i").on("click", function(){
+            $(".tools-input-wrapper > input").focus();
+        });
+
+        $(".tools-input-wrapper:not([active]) > input").on("focus", function(){
+            $(".tools-input-dropdown").hide();
+            $(this).parent().attr("active", "");
+            $(this).select();
+            setTimeout(function(){
+                $(".tools-input-dropdown").slideDown(200);
+            }, 300);
+        });
+        /* END SEARCH */
+
+        /* BEGIN TABS */
+        $(".tab-head").on("click", function(event){
+            openTab($(this));
+        });
+
+        $(".friend-container, .group-container").on("click", function(){
+            $(".friend-container, .group-container").removeAttr("active");
+            if(!$(this).is("[active]")){
+                $(this).attr("active", "");
+            }
+        });
+        /* END TABS */
+
+        /* BEGIN CHAT */
+        $(".chat-form").submit(function(){
+            sendSocketMessage($(".chat-form-input").text());
+            $(".chat-form-input").text("");
+            return false; // Prevents the form from submitting
+        });
+
+        $(".chat-form-input").on("keydown", function(event){
+            if(event.which == 13){ // Enter key press
+                $(".chat-form").submit();
+                return false;
+            }
+        });
+
+        $(".chat-send").on("click", function(){
+            $(".chat-form").submit();
+        });
+        /* END CHAT */
+
+        /* BEGIN MODALS */
+        $(".create-group-trigger").on("click", function(){
+            showModal(getModalObjectFromElement($(".modal-create")), true);
+        });
+
+        $(".modal-create-cancel").on("click", function(){
+            hideModal(getModalObjectFromElement($(".modal-create")));
+        });
+        /* END MODALS */
+
+        $("html").on("click", function(event){
+            /* BEGIN SEARCH */
+            if(!$(event.target).closest(".tools-input-wrapper").length && !$(event.target).is(".tools-input-wrapper")){
+                if($(".tools-input-wrapper").is("[active]")){
+                    $(".tools-input-dropdown").slideUp(200, function(){
+                        $(".tools-input-wrapper").removeAttr("active");
+                    });
+                }
+            }
+            /* END SEARCH */
+        });
+
+        $(document).pjax("a[data-pjax-m]", ".chat-body");
+    };
+
+    addEventListenersMessenger();
+    scrollToBottom();
+    print(false, "Debug");
+});

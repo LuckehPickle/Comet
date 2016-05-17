@@ -7,7 +7,7 @@ Comet has a huge focus on user privacy and security. Unlike many other instant m
 **Things TODO (In order to *reach* beta)**  
  - User settings
  - Email verification
- - Redo user dropdown
+ - ~~Redo user dropdown~~
  - Group settings
  - Nicknames
  - ~~Redo push messages~~
@@ -20,7 +20,7 @@ Comet has a huge focus on user privacy and security. Unlike many other instant m
  - ~~Migrate announceUserJoin to the new messenger.js~~
  - Mobile and tablet support
  - Fix footer + add version number
- - <https://github.com/youtube/spfjs>
+ - ~~<https://github.com/youtube/spfjs>~~ Now using [pjax](https://github.com/defunkt/jquery-pjax) instead.
  - Animate changing tabs
  - Prevent message tagging if the message is over x mins old.
  - User is typing...

@@ -402,6 +402,10 @@ p[class^="chat-message-sender"]{
         cursor: pointer;
     }
 
+    .tool-container:first-child{
+        margin-right: 10px;
+    }
+
     .tool-container span{
         display: -webkit-flex;
                 display: flex;

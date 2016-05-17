@@ -568,6 +568,8 @@ function addEventListeners(){
                 dropdown.removeAttr("active");
             });
         }else{
+            $(".dropdown").hide();
+            $(".dropdown").removeAttr("active");
             dropdown.slideDown(200);
             dropdown.attr("active", "");
         }
@@ -601,22 +603,22 @@ function addEventListeners(){
 function handleDocumentEvent(event){
     var target = $(event.target);
 
-    // Mobile nav menu
+    /* BEGIN NAVIGATION */
     if($(".navigation-menu").is("[active]")){
         if(!target.closest(".mobile-nav-trigger").length && !target.is(".mobile-nav-trigger")){
             $(".navigation-menu").removeAttr("active");
         }
     }
+    /* END NAVIGATION */
 
-    // Dropdown
+    /* BEGIN DROPDOWN */
     if($(".dropdown").is("[active]")){
         if(!target.closest(".dropdown-trigger").length && !target.is(".dropdown-trigger")){
-            $(".dropdown").slideUp(200, function(){
-                $(".dropdown").hide();
-                $(".dropdown").removeAttr("active");
-            });
+            $(".dropdown").hide();
+            $(".dropdown").removeAttr("active");
         }
     }
+    /* END DROPDOWN */
 }
 
 
