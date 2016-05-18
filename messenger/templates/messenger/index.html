@@ -4,8 +4,6 @@
 {% block title %}{{ title }}{% endblock %}
 {% block extra_css %}<link href="{% static 'messenger/css/main.css' %}" type="text/css" rel="stylesheet">{% endblock %}
 
-{% block extra_js %}<script src="{% static 'messenger/js/messenger.js' %}"></script>{% endblock %}
-
 {% block extra_inline_js %}
     {% if channel_id != None %}
         window.channel_id = "{{ channel_id }}";
