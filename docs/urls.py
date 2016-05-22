@@ -1,4 +1,4 @@
-# [Messenger] URLS.PY - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
+# [Docs] URLS.PY - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
 # Powered by Django (https://www.djangoproject.com/) - Not endorsed by Django
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,8 +20,6 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    url(r'^$', views.index, name="messages"),
-    url(r'^create', views.create, name="create"),
-    url(r'^user/(?P<identifier>[a-zA-Z0-9]+)$', views.private),
-    url(r'^(?P<group_id>[a-zA-Z0-9]+)$', views.group),
+    url(r'^$', views.index, name="docs"),
+    url(r'^(?P<slug>[a-zA-Z0-9]+)$', views.index),
 ]

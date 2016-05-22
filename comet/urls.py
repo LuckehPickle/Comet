@@ -33,6 +33,7 @@ urlpatterns = [
     url(r'^login', accounts.login, name="login"),
     url(r'^logout', accounts.logout, name="logout"),
     url(r'^messages/', include("messenger.urls")),
+    url(r'^docs/', include("docs.urls")),
     url(r'^socket\.io', include(socketio.sdjango.urls)),
 
     # url(r'^400', comet.bad_request, name="400"),
