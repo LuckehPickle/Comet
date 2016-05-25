@@ -231,12 +231,11 @@
         display: inline-block;
         text-decoration: none;
         text-transform: uppercase;
-        color: #EBEBEB;
-        transition: color 0.3s;
+        color: #E3E3E3;
     }
 
     .navigation-menu li a:hover{
-        color: #F1F1F1;
+        color: white;
     }
 
     .user-info-container{

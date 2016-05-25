@@ -229,7 +229,7 @@ body.modal-open{
 }
 /* END TOOLTIP */
 
-/* Main Button */
+/* BEGIN BUTTON SHEEN */
 .btn-sheen, .modal-connecting section{
     font-family: 'Source Sans Pro', sans-serif;
     font-size: 20px;
@@ -296,6 +296,7 @@ configurably enough to prevent the sheen from returning.
     from{left: -65px;}
     to{left: calc(100% + 10px);}
 }
+/* END BUTTON SHEEN */
 
 /* Thanks to http://tobiasahlin.com/spinkit/ for the loader */
 .spinner {

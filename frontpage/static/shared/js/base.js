@@ -770,25 +770,33 @@ function searchTypingComplete(){
  */
 function addEventListeners(){
     /* BEGIN PUSH MESSAGES */
-    $("[class^='push-message-close'], [class^='button-request-']").on("click", function(){
+    var pushMessages = $("[class^='push-message-close'], [class^='button-request-']");
+    pushMessages.off(".base");
+    pushMessages.on("click.base", function(){
         closePushMessage($(this));
     });
 
-    $("[class^=\"button-request-\"][data-user-id]").on("click", function(event){
+    var pushMessageButton = $("[class^=\"button-request-\"][data-user-id]");
+    pushMessageButton.off(".base");
+    pushMessageButton.on("click.base", function(event){
         var accept = $(this).is("[class*='-accept']");
         answerFriendRequest(accept, $(this).attr("data-user-id"));
     });
     /* END PUSH MESSAGES */
 
     /* BEGIN MODALS */
-    $(".bgify").on("click", function(){
+    var bgify = $(".bgify");
+    bgify.off(".base");
+    bgify.on("click.base", function(){
         var source = $(this).parent();
         while(!source.hasClass("_modal")) // Scale the DOM tree
             source = source.parent();
         setModalInBackground(getModalObjectFromElement(source), true);
     });
 
-    $("._modal[background]").on("click", function(){
+    var modalBackground = $("._modal[background]");
+    modalBackground.off(".base");
+    modalBackground.on("click.base", function(){
         var modal = $(this);
         while(!modal.hasClass("_modal")) // Scale the DOM tree
             modal = modal.parent();
@@ -797,40 +805,51 @@ function addEventListeners(){
     /* END MODALS */
 
     /* BEGIN CREATE MODAL */
-    $(".create-group-trigger").on("click", function(){
+    var createTrigger = $(".create-group-trigger");
+    createTrigger.off(".base");
+    createTrigger.on("click.base", function(){
         showModal(getModalObjectFromElement($(".modal-create")), true);
     });
 
-    $(".modal-create-cancel").on("click", function(){
+    var createCancel = $(".modal-create-cancel");
+    createCancel.off(".base");
+    createCancel.on("click.base", function(){
         hideModal(getModalObjectFromElement($(".modal-create")));
     });
     /* END CREATE MODAL */
 
     /* BEGIN PJAX */
+    $(document).off(".base");
     $(document).pjax("a[data-pjax]", ".pjax-body");
     $(document).pjax("a[data-pjax-m]", ".chat-body");
-    $(document).on("pjax:start", function(){ NProgress.start(); });
-    $(document).on("pjax:end",   function(){ NProgress.done();});
+    $(document).on("pjax:start.base", function(){ NProgress.start();});
+    $(document).on("pjax:end.base",   function(){ NProgress.done();});
     NProgress.configure({ showSpinner: false });
     /* END PJAX */
 
     /* BEGIN DROPDOWN */
-    $(".dropdown-trigger[data-dropdown-id]").on("click", function(){
+    var dropdownTrigger = $(".dropdown-trigger[data-dropdown-id]");
+    dropdownTrigger.off(".base");
+    dropdownTrigger.on("click.base", function(){
         var dropdown = $(".dropdown[data-dropdown-id='" + $(this).attr("data-dropdown-id") + "']");
+
         if(dropdown.is("[active]")){
             dropdown.slideUp(150, function(){
                 dropdown.hide();
                 dropdown.removeAttr("active");
             });
-        }else{
-            $(".dropdown").hide();
-            $(".dropdown").removeAttr("active");
-            dropdown.slideDown(200);
-            dropdown.attr("active", "");
+            return;
         }
+
+        $(".dropdown").hide();
+        $(".dropdown").removeAttr("active");
+        dropdown.slideDown(200);
+        dropdown.attr("active", "");
     });
 
-    $(".mobile-nav-trigger").on("click", function(){
+    var navTrigger = $(".mobile-nav-trigger");
+    navTrigger.off(".base");
+    navTrigger.on("click.base", function(){
         var navigation = $(".navigation-menu");
         if(navigation.is("[active]")){
             navigation.removeAttr("active");
@@ -841,30 +860,40 @@ function addEventListeners(){
     /* END DROPDOWN */
 
     /* BEGIN CHAT */
-    $(".chat-form").submit(function(){
+    var chatForm = $(".chat-form");
+    chatForm.off("submit");
+    chatForm.submit(function(){
         sendSocketMessage($(".chat-form-input").text());
         $(".chat-form-input").text("");
         return false; // Prevents the form from submitting
     });
 
-    $(".chat-form-input").on("keydown", function(event){
+    var chatFormInput = $(".chat-form-input");
+    chatFormInput.off(".base");
+    chatFormInput.on("keydown.base", function(event){
         if(event.which == 13){ // Enter key press
-            $(".chat-form").submit();
+            chatForm.submit();
             return false;
         }
     });
 
-    $(".chat-send").on("click", function(){
-        $(".chat-form").submit();
+    var chatSend = $(".chat-send");
+    chatSend.off(".base");
+    chatSend.on("click.base", function(){
+        chatForm.submit();
     });
     /* END CHAT */
 
     /* BEGIN TABS */
-    $(".tab-head").on("click", function(event){
+    var tabHeads = $(".tab-head");
+    tabHeads.off(".base");
+    tabHeads.on("click.base", function(event){
         openTab($(this));
     });
 
-    $(".friend-container, .group-container").on("click", function(){
+    var tabContainers = $(".friend-container, .group-container");
+    tabContainers.off(".base");
+    tabContainers.on("click.base", function(){
         $(".friend-container, .group-container").removeAttr("active");
         if(!$(this).is("[active]")){
             $(this).attr("active", "");
@@ -873,20 +902,24 @@ function addEventListeners(){
     /* END TABS */
 
     /* BEGIN SEARCH */
-    $(".tools-input-wrapper > input").on("keyup", function(){
+    var searchInput = $(".tools-input-wrapper > input");
+    searchInput.off(".base");
+    searchInput.on("keyup.base", function(){
         clearTimeout(typing_timer);
         typing_timer = setTimeout(searchTypingComplete, DONE_TYPING_INTERVAL);
     });
-
-    $(".tools-input-wrapper > input").on("keydown", function(){
+    searchInput.on("keydown.base", function(){
         clearTimeout(typing_timer);
     });
 
-    $(".tools-input-wrapper:not([active]) > i").on("click", function(){
-        $(".tools-input-wrapper > input").focus();
+    var searchIcon = $(".tools-input-wrapper:not([active]) > i");
+    searchIcon.off(".base");
+    searchIcon.on("click.base", function(){
+        searchInput.focus();
     });
 
-    $(".tools-input-wrapper:not([active]) > input").on("focus", function(){
+    // No need to remove events here, it was done above
+    $(".tools-input-wrapper:not([active]) > input").on("focus.base", function(){
         $(".tools-input-dropdown").hide();
         $(this).parent().attr("active", "");
         $(this).select();
@@ -896,7 +929,8 @@ function addEventListeners(){
     });
     /* END SEARCH */
 
-    $("html").on("click", handleDocumentEvent);
+    $("html").off(".base");
+    $("html").on("click.base", handleDocumentEvent);
 };
 
 
