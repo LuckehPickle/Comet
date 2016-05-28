@@ -688,7 +688,7 @@ function updateSearch(users, friends){
     removeStaleSearches();
 
     if(users.length == 0){ // No data returned (i.e. Empty result)
-        $(".dropdown-users").append("<p class=\"dropdown-no-results\">No results found.</p>");
+        $(".search-dropdown-users").append("<p class=\"search-dropdown-no-results\">No results found.</p>");
         return;
     }
 
@@ -719,12 +719,12 @@ function updateSearch(users, friends){
             }
         }
 
-        $(".dropdown-users").append(
+        $(".search-dropdown-users").append(
         "<div class=\"dropdown-results-container\">" +
             "<div class=\"dropdown-result-image\"></div>" +
             "<section>" +
                 "<p class=\"dropdown-result-username\">" + this.fields.username + " (" + this.pk.substring(0, 8).toUpperCase() + ")</p>" +
-                "<p class=\"dropdown-result-tags\">Beta Tester</p>" +
+                "<p class=\"dropdown-result-tags\">Regular User</p>" +
             "</section>" +
             "<div class=\"dropdown-result-button-" + queryClass + "\" data-user-id=" + this.pk + " data-user-url=" + this.fields.user_url + ">" + innerHTML + "<link class=\"rippleJS\"/></div>" +
             //"<link class=\"rippleJS\"/>" +
@@ -736,7 +736,7 @@ function updateSearch(users, friends){
     queryItems.on("click", function(){
         sendFriendRequest($(this).attr("data-user-id"));
         // Update the old data by requesting a new query
-        requestQueryResponse($(".tools-input-wrapper input").val());
+        requestQueryResponse($(".search input").val());
     });
 };
 
@@ -746,7 +746,7 @@ function updateSearch(users, friends){
  * Clears the search list of any stale data.
  */
 var removeStaleSearches = function(){
-    var $children = $(".dropdown-users").children(":not(.dropdown-title)");
+    var $children = $(".search-dropdown-users").children(":not(.search-dropdown-title)");
     $children.each(function(){
         $(this).remove();
     });
@@ -759,7 +759,7 @@ var removeStaleSearches = function(){
  * means the user has finished typing.
  */
 function searchTypingComplete(){
-    requestQueryResponse($(".tools-input-wrapper > input").val());
+    requestQueryResponse($(".search input").val());
 };
 /* END SEARCH */
 
@@ -821,7 +821,7 @@ function addEventListeners(){
     /* BEGIN PJAX */
     $(document).off(".base");
     $(document).pjax("a[data-pjax]", ".pjax-body");
-    $(document).pjax("a[data-pjax-m]", ".chat-body");
+    $(document).pjax("a[data-pjax-m]", ".chat-right");
     $(document).on("pjax:start.base", function(){ NProgress.start();});
     $(document).on("pjax:end.base",   function(){ NProgress.done();});
     NProgress.configure({ showSpinner: false });
@@ -894,7 +894,7 @@ function addEventListeners(){
     var tabContainers = $(".friend-container, .group-container");
     tabContainers.off(".base");
     tabContainers.on("click.base", function(){
-        $(".friend-container, .group-container").removeAttr("active");
+        tabContainers.removeAttr("active");
         if(!$(this).is("[active]")){
             $(this).attr("active", "");
         }
@@ -902,7 +902,7 @@ function addEventListeners(){
     /* END TABS */
 
     /* BEGIN SEARCH */
-    var searchInput = $(".tools-input-wrapper > input");
+    var searchInput = $(".search input");
     searchInput.off(".base");
     searchInput.on("keyup.base", function(){
         clearTimeout(typing_timer);
@@ -912,19 +912,19 @@ function addEventListeners(){
         clearTimeout(typing_timer);
     });
 
-    var searchIcon = $(".tools-input-wrapper:not([active]) > i");
+    var searchIcon = $(".search:not([active]) i");
     searchIcon.off(".base");
     searchIcon.on("click.base", function(){
         searchInput.focus();
     });
 
     // No need to remove events here, it was done above
-    $(".tools-input-wrapper:not([active]) > input").on("focus.base", function(){
-        $(".tools-input-dropdown").hide();
+    $(".search:not([active]) input").on("focus.base", function(){
+        $(".search-dropdown").hide();
         $(this).parent().attr("active", "");
         $(this).select();
         setTimeout(function(){
-            $(".tools-input-dropdown").slideDown(200);
+            $(".search-dropdown").slideDown(200);
         }, 300);
     });
     /* END SEARCH */
@@ -966,10 +966,10 @@ function handleDocumentEvent(event){
     /* END DROPDOWN */
 
     /* BEGIN SEARCH */
-    if(!$(event.target).closest(".tools-input-wrapper").length && !$(event.target).is(".tools-input-wrapper")){
-        if($(".tools-input-wrapper").is("[active]")){
-            $(".tools-input-dropdown").slideUp(200, function(){
-                $(".tools-input-wrapper").removeAttr("active");
+    if(!$(event.target).closest(".search").length && !$(event.target).is(".search")){
+        if($(".search").is("[active]")){
+            $(".search-dropdown").slideUp(200, function(){
+                $(".search").removeAttr("active");
             });
         }
     }

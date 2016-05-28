@@ -68,7 +68,7 @@
  * Mobile Phones (and other Small Devices)
  */
 @media screen and (max-width: 40.5em){
-    .sign-in, .user-info-container, .user-menu, .dropdown-trigger{
+    .sign-in, .user-info-container, .user-menu, #more, .nav-dropdown{
         display: none !important;
     }
 
@@ -259,13 +259,24 @@
         margin-left: 14px;
     }
 
-    .menu-wrapper .dropdown-trigger{
+    #more{
         font-size: 28px !important;
-        cursor: pointer;
         padding: 6px;
-        margin-left: 8px;
         position: relative;
         z-index: 100;
+        pointer-events: none;
+    }
+
+    .nav-dropdown{
+        cursor: pointer;
+        width: 40px;
+        height: 40px;
+        margin-left: 8px;
+        position: relative;
+    }
+
+    .nav-dropdown .dropdown{
+        top: 55px;
     }
 
     .sign-in{
