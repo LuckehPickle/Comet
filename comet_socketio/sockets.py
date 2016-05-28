@@ -25,7 +25,9 @@ from socketio.sdjango import namespace
 
 # Other Imports
 from comet_socketio import notify
+from comet_socketio.mixins import ChannelMixin
 from accounts.models import User, FriendInvites
+from messenger.models import ChatGroup, ChatMessage
 
 
 @namespace('/messenger')
@@ -45,12 +47,63 @@ class MessengerNamespace(BaseNamespace):
         return True
 
 
-    def on_message(self):
+    def on_message(self, data):
         """
         Handles channel messages. After the message has been processed it will be
         sent back to each socket connected to the channel.
+        TODO Check message length, and whether user is in group
         """
+        if not "channel_id" in data and not "message" in data:
+            return
+
+        channel_id = data["channel_id"]
+        message = data["message"]
+
+        # Check if a messsage has been sent in this channel before.
+        most_recent = ChatMessage.objects.filter(channel_id=channel_id).order_by("-time_sent")
+
+        if most_recent.count() != 0:
+            # A message has been sent, retrieve the most recent
+            most_recent = most_recent[0]
+
+            if most_recent.sender == request.user:
+                # This user sent the most recent message, tag it instead of creating a new one.
+                most_recent.contents += "\n" + escape(message)
+                most_recent.time_sent = timezone.now()
+                most_recent.save()
+            else:
+                most_recent = None
+        else:
+            most_recent = None
+
+        if most_recent == None:
+            most_recent = create_message(request.user, escape(message), channel_id, is_group)
+
+        self.emit("message", {
+            "action": "message_sent",
+        })
+
+        self.emit_to_channel(channel_id, "message", {
+            "action": "message",
+            "message": message,
+            "sender": self.request.user.username,
+            "sender_id": str(self.request.user.user_id),
+            "time_sent": most_recent.time_sent.isoformat(),
+        })
+
         return True
+
+
+    def create_message(sender, contents, channel_id, is_group):
+        """
+        Creates a new chat message instance.
+        """
+        return ChatMessage.objects.create(
+            sender=sender,
+            contents=contents,
+            channel_id=channel_id,
+            is_group=is_group,
+        )
 
 
     def on_search(self, query):

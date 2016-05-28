@@ -4,17 +4,19 @@
 {% block title %}{{ title }}{% endblock %}
 {% block extra_css %}<link href="{% static 'messenger/css/main.css' %}" type="text/css" rel="stylesheet">{% endblock %}
 
-{% block extra_inline_js %}
-    {% if channel_id != None %}
-        window.channel_id = "{{ channel_id }}";
-        window.is_group = {{ is_group|yesno:"true,false" }};
-    {% endif %}
-{% endblock %}
-
 {% block modals %}{% include 'messenger/modal_create.html' %}{% endblock %}
 
 {% load messenger_tags %}
 {% block content %}
+    <script>
+        {% if channel_id != None %}
+            window.channel_id = "{{ channel_id }}";
+            window.is_group = {{ is_group|yesno:"true,false" }};
+        {% else %}
+            window.channel_id = null;
+        {% endif %}
+    </script>
+    
     {% if chunk == ".chat-right" %}
         {# Toolbar #}
         <div class="toolbar">

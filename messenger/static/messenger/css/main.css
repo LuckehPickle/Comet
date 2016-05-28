@@ -19,10 +19,6 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:400,300,700);
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,600,700);
 
-/* Stylesheets */
-@import url(/static/shared/css/push-messages.css);
-@import url(/static/shared/css/nav.css);
-
 body{
     margin: 0;
     background-color: #D5D5D5;

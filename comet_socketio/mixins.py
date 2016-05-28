@@ -15,29 +15,16 @@
 
 class ChannelMixin(object):
 
-    def join(self, channel_id):
+    def emit_to_channel(self, channel_id, event, *args):
         """
+        Emits to every socket in the channel
         """
-        pass
-
-
-    def leave(self, channel_id):
-        """
-        """
-        pass
-
-
-    def kick(self, channel_id, user_id):
-        """
-        """
-        pass
-
-
-    def ban(self, channel_id, user_id, reason):
-        """
-        """
-        pass
-
-
-    def get_channel_name(self, channel_id):
-        pass
+        pkt = dict(type="event",
+                   name=event,
+                   args=args,
+                   endpoint=self.ns_name)
+        for sessid, socket in six.iteritems(self.socket.server.sockets):
+            if 'rooms' not in socket.session:
+                continue
+            if room_name in socket.session['rooms'] and self.socket != socket:
+                socket.send_packet(pkt)

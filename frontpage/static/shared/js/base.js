@@ -617,8 +617,8 @@ var sendSocketMessage = function(message){
     }
 
     send("message", {
-        message: message,
         channel_id: window.channel_id,
+        message: message,
     });
     print(false, "Chat message successfully sent to Socket IO server.");
 };
