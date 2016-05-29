@@ -24,7 +24,7 @@ from django.contrib import messages
 # Other Imports
 from django_socketio import events
 from comet_socketio import notify
-from messenger.models import ChatGroup, ChatMessage
+from messenger.models import Channel, ChatMessage
 from accounts.models import User, FriendInvites
 
 

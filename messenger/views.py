@@ -22,14 +22,14 @@ from django.utils.html import escape
 # Messenger Imports
 from comet_socketio import notify
 from messenger.forms import CreateChatForm
-from messenger.models import ChatGroup, ChatPermissions, ChatInvite, ChatMessage
+from messenger.models import Channel, ChannelPermissions, ChatInvite, ChatMessage
 from messenger.identifier import generate
 
 # Other Imports
 import cr_config as config
 from comet import dynamic_modals
 from comet.decorators import login_required_message
-from accounts.models import User, UserGroup
+from accounts.models import User
 # from django_socketio import broadcast_channel
 
 @login_required_message
@@ -54,6 +54,8 @@ def private(request, identifier=None):
     user = get_object_or_404(User, user_url=identifier)
     channel_id = None
 
+    """
+    TODO Redo this
     if UserGroup.objects.filter(user_one=user, user_two=request.user).count() != 0:
         # UserGroup exists in the opposite direction, join it instead.
         channel_id = UserGroup.objects.get(user_one=user, user_two=request.user).channel_id
@@ -68,6 +70,7 @@ def private(request, identifier=None):
             channel_id=request.user.user_url + "-" + user.user_url
         )
         channel_id = group.channel_id
+    """
 
     return renderMessenger(
         request,
@@ -86,7 +89,7 @@ def group(request, group_id=None):
     TODO Show an error modal if someone tries to join a group and is denied.
     """
     # Get the group that the user is attempting to connect to
-    group = get_object_or_404(ChatGroup, group_id=group_id)
+    group = get_object_or_404(Channel, group_id=group_id)
     # Get the user's membership status
     is_member = group.users.filter(user_id=request.user.user_id).count() >= 1
 
@@ -113,7 +116,7 @@ def group(request, group_id=None):
             is_member = True
 
     # Get the permission set
-    perms, created = ChatPermissions.objects.get_or_create(
+    perms, created = ChannelPermissions.objects.get_or_create(
         chat_group=group,
         user=request.user,
     )
@@ -190,20 +193,20 @@ def create(request):
         if form.is_valid():
             # Generate a new identifier
             group_id = generate()
-            while ChatGroup.objects.filter(group_id=group_id).count() != 0:
+            while Channel.objects.filter(group_id=group_id).count() != 0:
                 group_id = generate()
 
             data = form.cleaned_data
 
             # Create a new group
-            group = ChatGroup.objects.create(
+            group = Channel.objects.create(
                 name=data["name"],
                 is_public=data["is_public"],
                 group_id=group_id,
             )
 
             # Add user permissions
-            user_perms = ChatPermissions.objects.create(
+            user_perms = ChannelPermissions.objects.create(
                 chat_group=group,
                 user=request.user,
                 is_creator=True,

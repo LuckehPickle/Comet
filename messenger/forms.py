@@ -17,7 +17,7 @@
 from django import forms
 
 # Other Imports
-from .models import ChatGroup
+from .models import Channel
 
 # Create Chat Form Class
 # Contains information for the chat room creation form.
@@ -50,5 +50,5 @@ class CreateChatForm(forms.ModelForm):
     )
 
     class Meta:
-        model = ChatGroup
+        model = Channel
         fields = ["name", "is_public"]

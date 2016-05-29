@@ -64,6 +64,11 @@ function send(eventType, data){
         });
         return;
     }
+
+    if(data == null){
+        socket.emit(eventType);
+        return;
+    }
     socket.emit(eventType, data);
 }
 
@@ -77,6 +82,10 @@ function checkQueue(){
     if(queue.length > 0 && connected){
         for(var i = 0; i < queue.length; i++){
             var item = queue[i];
+            if(item["value"] == null){
+                socket.emit(item["eventType"]);
+                continue;
+            }
             socket.emit(item["eventType"], item["value"]);
         }
         print(false, "Emptied socket queue.");
@@ -433,6 +442,7 @@ function _handleSocketConnect(){
     hideModal(getModalObjectFromElement($(".modal-connecting")));
     print(false, "Connected to socket server");
     checkQueue();
+    send("connect");
 };
 
 

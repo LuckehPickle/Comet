@@ -23,12 +23,11 @@ from django.contrib.auth import get_user_model
 import uuid
 from . import identifier as ident
 
-class ChatGroup(models.Model):
+
+class Channel(models.Model):
     """
-    A ChatGroup is any group, public or private, which has an associated
-    Socket IO Channel.
-    TODO Find a better way to link the database model and the Socket IO
-    channnel.
+    Takes the features from the old UserGroup and ChatGroup models, and combines
+    them into one, more applicable model.
     """
 
     # The name can be changed at anytime by the rooms moderators.
@@ -41,7 +40,7 @@ class ChatGroup(models.Model):
     # of base64 characters by premium moderators in public chats. The
     # identifier is also used as the absolute url of any chat when
     # sluggified. For example: https://cometchat.cc/custom-identifier
-    group_id = models.CharField(
+    channel_id = models.CharField(
         unique=True,
         primary_key=True,
         max_length=20,
@@ -50,34 +49,31 @@ class ChatGroup(models.Model):
 
     # Self explanatory
     date_created = models.DateTimeField(default=timezone.now)
-
-    # Should the chat room be accesssible to the public? If true, then
-    # anyone with the absolute url can join the chat room.
+    last_message = models.DateTimeField(default=timezone.now)
     is_public = models.BooleanField(default=False)
+    is_group = models.BooleanField(default=False)
 
+    # Many to Many of all Users involved in the channel
     users = models.ManyToManyField(
         "accounts.User",
-        through="ChatPermissions",
-        through_fields=("chat_group", "user"),
+        through="ChannelPermissions",
+        through_fields=("channel", "user"),
         related_name="+",
     )
 
-    last_message = models.DateTimeField(default=timezone.now)
-
-    def __unicode__(self):
-        return str(self.name)
-
-    #@models.permalink
     def get_absolute_url(self):
-        return reverse("messenger.views.group", args=[str(self.group_id)])
+        if self.is_group:
+            return reverse("messenger.views.group", args=[str(self.channel_id)])
+        return reverse("messenger.views.private", args=[str(self.channel_id)])
 
     def get_latest_message(self):
-        query_set = ChatMessage.objects.filter(is_group=True, channel_id=self.group_id).order_by("-time_sent")
+        query_set = ChatMessage.objects.filter(is_group=self.is_group, channel_id=self.channel_id).order_by("-time_sent")
         if query_set.count() != 0:
             query_set = query_set[0]
         else:
             return None
         return str(query_set.sender) + ": " + str(query_set.contents)
+
 
 def get_sentinel_user():
     """
@@ -92,6 +88,7 @@ def get_sentinel_user():
         is_active=False,
         is_super_user=True
     )[0]
+
 
 class ChatMessage(models.Model):
     """
@@ -116,16 +113,17 @@ class ChatMessage(models.Model):
 
     def get_parent_model(self):
         if self.is_group:
-            return ChatGroup.objects.get(group_id=self.channel_id)
+            return Channel.objects.get(group_id=self.channel_id)
         return get_user_model().objects.get(user_url=self.channel_id)
 
-class ChatPermissions(models.Model):
+
+class ChannelPermissions(models.Model):
     """
     Stores user specific permissions for each group.
     """
     # The group that these permissions apply to
-    chat_group = models.ForeignKey(
-        ChatGroup,
+    channel = models.ForeignKey(
+        Channel,
         on_delete=models.CASCADE,
     )
 
@@ -154,6 +152,7 @@ class ChatPermissions(models.Model):
         max_length=120,
     )
 
+
 class ChatInvite(models.Model):
     # The user that received the invite
     recipient = models.ForeignKey(
@@ -170,7 +169,7 @@ class ChatInvite(models.Model):
     )
 
     # The group that the recipient was invited to
-    group = models.ForeignKey(
-        "ChatGroup",
+    channel = models.ForeignKey(
+        Channel,
         on_delete=models.CASCADE,
     )

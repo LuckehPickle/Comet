@@ -27,7 +27,7 @@ from socketio.sdjango import namespace
 from comet_socketio import notify
 from comet_socketio.mixins import ChannelMixin
 from accounts.models import User, FriendInvites
-from messenger.models import ChatGroup, ChatMessage
+from messenger.models import Channel, ChatMessage
 
 
 @namespace('/messenger')
@@ -36,13 +36,14 @@ class MessengerNamespace(BaseNamespace):
     Namespace for messenger related tasks.
     """
 
-    def on_connected(self):
+    def on_connect(self):
         """
         Occurs whenever a user connects to the socket server.
         """
         user = self.request.user
         if user.is_authenticated:
             user.socket_session = self.socket.sessid
+            user.is_online = True
             user.save()
         return True
 
@@ -53,6 +54,9 @@ class MessengerNamespace(BaseNamespace):
         sent back to each socket connected to the channel.
         TODO Check message length, and whether user is in group
         """
+        if True:
+            print(self.socket.server.sockets)
+            return
         if not "channel_id" in data and not "message" in data:
             return
 

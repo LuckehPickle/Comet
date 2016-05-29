@@ -105,9 +105,9 @@ class User(AbstractBaseUser):
     # A reference to every group this is in. Group based permissions
     # can also be accessed here.
     groups = models.ManyToManyField(
-        "messenger.ChatGroup",
-        through="messenger.ChatPermissions",
-        through_fields=("user", "chat_group"),
+        "messenger.Channel",
+        through="messenger.ChannelPermissions",
+        through_fields=("user", "channel"),
         related_name="+",
     )
 
@@ -123,6 +123,7 @@ class User(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_super_user = models.BooleanField(default=False)
     is_premium = models.BooleanField(default=False)
+    is_online = models.BooleanField(default=False)
     socket_session = models.CharField(max_length=20, blank=True)
 
     objects = UserManager() # Reference to the UserManager class above.
@@ -135,29 +136,9 @@ class User(AbstractBaseUser):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username", "password"]
 
-    def __unicode__(self):
-        return str(self.username)
-
     def get_absolute_url(self):
         return reverse("messenger.views.private", args=[str(self.user_url)])
 
-class UserGroup(models.Model):
-    """
-    A private group between two users.
-    """
-    user_one = models.ForeignKey(
-        "User",
-        on_delete=models.CASCADE,
-        related_name="user_group_one",
-    )
-
-    user_two = models.ForeignKey(
-        "User",
-        on_delete=models.CASCADE,
-        related_name="user_group_two",
-    )
-
-    channel_id = models.CharField(max_length=40)
 
 class FriendInvites(models.Model):
     recipient = models.ForeignKey(

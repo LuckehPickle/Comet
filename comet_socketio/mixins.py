@@ -13,6 +13,8 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
+from accounts.models import User
+
 class ChannelMixin(object):
 
     def emit_to_channel(self, channel_id, event, *args):
@@ -24,6 +26,9 @@ class ChannelMixin(object):
                    args=args,
                    endpoint=self.ns_name)
         for sessid, socket in six.iteritems(self.socket.server.sockets):
+            user = User.objects.get(socket_session=sessid)
+            channel
+
             if 'rooms' not in socket.session:
                 continue
             if room_name in socket.session['rooms'] and self.socket != socket:
