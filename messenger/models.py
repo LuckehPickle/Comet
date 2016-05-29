@@ -61,6 +61,9 @@ class Channel(models.Model):
         related_name="+",
     )
 
+    def __unicode__(self):
+        return str(self.name)
+
     def get_absolute_url(self):
         if self.is_group:
             return reverse("messenger.views.group", args=[str(self.channel_id)])

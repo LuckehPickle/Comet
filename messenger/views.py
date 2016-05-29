@@ -18,6 +18,7 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.utils.html import escape
+from django.db.models import Q
 
 # Messenger Imports
 from comet_socketio import notify
@@ -89,7 +90,7 @@ def group(request, group_id=None):
     TODO Show an error modal if someone tries to join a group and is denied.
     """
     # Get the group that the user is attempting to connect to
-    group = get_object_or_404(Channel, group_id=group_id)
+    group = get_object_or_404(Channel, channel_id=group_id)
     # Get the user's membership status
     is_member = group.users.filter(user_id=request.user.user_id).count() >= 1
 
@@ -117,7 +118,7 @@ def group(request, group_id=None):
 
     # Get the permission set
     perms, created = ChannelPermissions.objects.get_or_create(
-        chat_group=group,
+        channel=group,
         user=request.user,
     )
 
@@ -162,10 +163,18 @@ def renderMessenger(request, title, form=CreateChatForm(), is_group=False, chann
 
     modals = dynamic_modals
 
+    #groups = request.user.channels
+
+    groups = Channel.objects.filter(
+        Q(users__in=[request.user]),
+        is_group=True,
+    ).order_by("-last_message")
+
     return render(request, "messenger/index.html", {
         "title": (config.TITLE_FORMAT % title),
         "user_id": str(request.user.user_id)[:8],
         "create_chat_form": form,
+        "groups": groups,
         "is_group": is_group,
         "channel_id": channel_id,
         "chat_title": chat_title,
@@ -192,9 +201,9 @@ def create(request):
         form = CreateChatForm(request.POST)
         if form.is_valid():
             # Generate a new identifier
-            group_id = generate()
-            while Channel.objects.filter(group_id=group_id).count() != 0:
-                group_id = generate()
+            channel_id = generate()
+            while Channel.objects.filter(channel_id=channel_id).count() != 0:
+                channel_id = generate()
 
             data = form.cleaned_data
 
@@ -202,12 +211,13 @@ def create(request):
             group = Channel.objects.create(
                 name=data["name"],
                 is_public=data["is_public"],
-                group_id=group_id,
+                channel_id=channel_id,
+                is_group=True,
             )
 
             # Add user permissions
             user_perms = ChannelPermissions.objects.create(
-                chat_group=group,
+                channel=group,
                 user=request.user,
                 is_creator=True,
             )

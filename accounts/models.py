@@ -102,15 +102,6 @@ class User(AbstractBaseUser):
         "self",
     )
 
-    # A reference to every group this is in. Group based permissions
-    # can also be accessed here.
-    groups = models.ManyToManyField(
-        "messenger.Channel",
-        through="messenger.ChannelPermissions",
-        through_fields=("user", "channel"),
-        related_name="+",
-    )
-
     # A URL which points to the user. Can be customized by premiums
     user_url = models.CharField(
         unique=True,
@@ -135,6 +126,9 @@ class User(AbstractBaseUser):
     # their email address, and even add secondary addresses.
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username", "password"]
+
+    def __unicode__(self):
+        return str(self.username)
 
     def get_absolute_url(self):
         return reverse("messenger.views.private", args=[str(self.user_url)])

@@ -16,7 +16,7 @@
             window.channel_id = null;
         {% endif %}
     </script>
-    
+
     {% if chunk == ".chat-right" %}
         {# Toolbar #}
         <div class="toolbar">
@@ -174,8 +174,8 @@
 
                 {# Groups List Tab Body #}
                 <div class="tab-body" data-tab="tab-groups" {% if is_group %}active{% endif %}>
-                    {% for group in request.user.groups.all|sort_by:"-last_message" %}
-                        <a class="group-container" href="{{ group.get_absolute_url }}" data-pjax-m {% if is_group and channel_id == group.group_id %}active{% endif %}>
+                    {% for group in groups %}
+                        <a class="group-container" href="{{ group.get_absolute_url }}" data-pjax-m {% if is_group and channel_id == group.channel_id %}active{% endif %}>
                             <div class="group-image"></div>
                             <section>
                                 <p class="group-name">{{ group.name }}</p>
