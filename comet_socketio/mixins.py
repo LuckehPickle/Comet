@@ -13,23 +13,34 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
+# Other Imports
+import six
 from accounts.models import User
+from messenger.models import Channel
 
 class ChannelMixin(object):
+    """
+    Mixin for channel related functions.
+    """
 
     def emit_to_channel(self, channel_id, event, *args):
         """
-        Emits to every socket in the channel
+        Emits to every socket in the channel.
         """
-        pkt = dict(type="event",
-                   name=event,
-                   args=args,
-                   endpoint=self.ns_name)
-        for sessid, socket in six.iteritems(self.socket.server.sockets):
-            user = User.objects.get(socket_session=sessid)
-            channel
+        channel = Channel.objects.filter(channel_id=channel_id)
+        if not channel.exists():
+            return
 
-            if 'rooms' not in socket.session:
-                continue
-            if room_name in socket.session['rooms'] and self.socket != socket:
-                socket.send_packet(pkt)
+        channel_users = channel[0].users.all()
+
+        pkt = dict(
+            type="event",
+            name=event,
+            args=args,
+            endpoint=self.ns_name
+        )
+
+        for sessid, socket in six.iteritems(self.socket.server.sockets):
+            for user in channel_users:
+                if str(user.socket_session) == str(sessid) and user != self.request.user:
+                    socket.send_packet(pkt)

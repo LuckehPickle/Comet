@@ -14,18 +14,18 @@
 #   limitations under the License.
 
 # Django Imports
+from django.contrib import messages
 from django.core import serializers
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.utils.html import escape
-from django.db.models import Q
-from django.contrib import messages
 
 # Other Imports
-from django_socketio import events
-from comet_socketio import notify
-from messenger.models import Channel, ChatMessage
 from accounts.models import User, FriendInvites
+from comet_socketio import notify
+from django_socketio import events
+from messenger.models import Channel, ChatMessage
 
 
 @events.on_message(channel=".")

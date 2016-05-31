@@ -47,6 +47,7 @@
             ga('send', 'pageview');
 
             {% if request.user.is_authenticated %}
+                window.username = "{{ request.user.username }}";
                 window.user_id = "{{ request.user.user_id }}";
             {% endif %}
 

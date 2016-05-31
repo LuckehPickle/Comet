@@ -533,15 +533,6 @@ function _handlePushMessage(data){
 
 
 /**
- * Handle Chat Message
- * @param {Object} data Data from the socket server
- */
-function _handleChatMessage(data){
-
-}
-
-
-/**
  * Send Friend Request
  * Sends a friend request to a given user (requires that users UUID).
  * @param {string} user_id UUID of the target user
@@ -626,12 +617,53 @@ var sendSocketMessage = function(message){
         return;
     }
 
-    send("message", {
-        channel_id: window.channel_id,
-        message: message,
-    });
+    send("message", {channel_id: window.channel_id, message: message});
+    appendMessage(message, window.username, window.user_id, Date.now());
     print(false, "Chat message successfully sent to Socket IO server.");
 };
+
+
+/**
+ * Append Message
+ * Adds a new message to the chat body.
+ */
+function appendMessage(message, sender, sender_id, time_sent){
+    $(".no-messages").remove();
+    var mostRecent = $(".chat-body").children().last();
+    var classTag = (sender_id == window.user_id) ? "" : "-other";
+    var time = new Date(time_sent).toLocaleTimeString(navigator.language, {
+        hour: "numeric",
+        minute: "numeric",
+        hour12: false,
+    });
+
+    if(mostRecent.attr("data-user-id") == sender_id){
+        // A new message from the same user. We can safely tag.
+        mostRecent.children(".chat-message-sender" + classTag).remove();
+        mostRecent.append("<p class=\"chat-message-sender" + classTag + "\">" + sender + " (" + time + ")</p>");
+        mostRecent.children("section").append("<div class=\"chat-message-content" + classTag + "-tag\" data-new></div>");
+    }else{
+        // From a new user, append.
+        $(".chat-body").append(
+            "<div class=\"chat-message-container" + classTag + "\" data-user-id=\"" + sender_id + "\">" +
+                "<div class=\"chat-message-image" + classTag + "\"></div>" +
+                "<span class=\"triangle-top-" + (classTag ? "right" : "left") + "\"></span>" +
+                "<section>" +
+                    "<div class=\"chat-message-content" + classTag + "\" data-new></div>" +
+                "</section>" +
+                "<p class=\"chat-message-sender" + classTag + "\">" + sender + " (" + time + ")</p>" +
+            "</div>"
+        );
+    }
+
+    // Add the message afterwards via .text() to escape HTML
+    messageContent = $("[class^=\"chat-message-content\"][data-new]");
+    messageContent.text(message);
+    messageContent.removeAttr("data-new");
+
+    // Make sure that the body is scrolled to the bottom
+    scrollToBottom($(".chat-body"));
+}
 
 
 /**
@@ -639,47 +671,18 @@ var sendSocketMessage = function(message){
  * Displays a chat message in the chat body.
  * @param {Object} data Data from Socket IO server
  */
-var handleChatMessage = function(data){
-    if(!("sender_id" in data) || !("time_sent" in data) || !("message" in data)){
+var _handleChatMessage = function(data){
+    if(!("sender_id" in data) || !("time_sent" in data) || !("message" in data) || !("channel_id" in data)){
         print(true, "A malformed message was received from the Socket IO server. (Chat Message)");
         return;
     }
 
-    $(".no-messages").remove();
-    var mostRecent = $(".chat-body").children().last();
-    var classTag = (data.sender_id == window.user_id) ? "" : "-other";
-    var time = new Date(data.time_sent).toLocaleTimeString(navigator.language, {
-        hour: "numeric",
-        minute: "numeric",
-        hour12: false,
-    });
-
-    if(mostRecent.attr("data-user-id") == data.sender_id){
-        // A new message from the same user. We can safely tag.
-        mostRecent.children(".chat-message-sender" + classTag).remove();
-        mostRecent.append("<p class=\"chat-message-sender" + classTag + "\">" + data.sender + " (" + time + ")</p>");
-        mostRecent.children("section").append("<div class=\"chat-message-content" + classTag + "-tag\" data-new></div>");
+    if(data.channel_id == window.channel_id){
+        appendMessage(data.message, data.sender, data.sender_id, data.time_sent);
     }else{
-        // From a new user, append.
-        $(".chat-body").append(
-            "<div class=\"chat-message-container" + classTag + "\" data-user-id=\"" + data.sender_id + "\">" +
-                "<div class=\"chat-message-image" + classTag + "\"></div>" +
-                "<span class=\"triangle-top-" + (classTag ? "right" : "left") + "\"></span>" +
-                "<section>" +
-                    "<div class=\"chat-message-content" + classTag + "\" data-new></div>" +
-                "</section>" +
-                "<p class=\"chat-message-sender" + classTag + "\">" + data.sender + " (" + time + ")</p>" +
-            "</div>"
-        );
+        new PushMessage(MessageType.INFO, "You have received a new message from '" + data.sender + "'. Check it out here: <div class='push-message-well'><a href=''>" + "put a bloody url here mate." + "</a></div>");
     }
 
-    // Add the message afterwards via .text() to escape HTML
-    $messageContent = $("[class^=\"chat-message-content\"][data-new]");
-    $messageContent.text(data.message);
-    $messageContent.removeAttr("data-new");
-
-    // Make sure that the body is scrolled to the bottom
-    scrollToBottom($(".chat-body"));
 }
 /* END SOCKETS */
 

@@ -14,24 +14,23 @@
 #   limitations under the License.
 
 # Django Imports
+from django.contrib import messages
+from django.db.models import Q
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
 from django.utils.html import escape
-from django.db.models import Q
 
 # Messenger Imports
 from comet_socketio import notify
 from messenger.forms import CreateChatForm
-from messenger.models import Channel, ChannelPermissions, ChatInvite, ChatMessage
 from messenger.identifier import generate
+from messenger.models import Channel, ChannelPermissions, ChatInvite, ChatMessage
 
 # Other Imports
 import cr_config as config
+from accounts.models import User
 from comet import dynamic_modals
 from comet.decorators import login_required_message
-from accounts.models import User
-# from django_socketio import broadcast_channel
 
 @login_required_message
 def index(request):
@@ -45,39 +44,60 @@ def index(request):
 def private(request, identifier=None):
     """
     Renders a page that allows you to interact with a specific user.
-    Note: Will provide an error if you are not on the users contacts list
-    and the user has "only_from_contacts" setting set to TRUE.
-    IDEA: Allow users to set unique alliases for their URL.
-    TODO Add user blocking
-    TODO Add settings such as only_from_contacts
+    Private channels are registered under a channel_id which complies
+    to the following format:
+        userA.user_url + "-" + userB.user_url
+    There is no way of knowing which user is userA and which user is
+    userB (should probably redesign this), so both directions must be
+    checked for an existing channel before creating a new one.
     """
-    # Get the user that the user is attempting to message
-    user = get_object_or_404(User, user_url=identifier)
-    channel_id = None
 
-    """
-    TODO Redo this
-    if UserGroup.objects.filter(user_one=user, user_two=request.user).count() != 0:
-        # UserGroup exists in the opposite direction, join it instead.
-        channel_id = UserGroup.objects.get(user_one=user, user_two=request.user).channel_id
-    elif UserGroup.objects.filter(user_one=request.user, user_two=user).count() != 0:
-        # UserGroup exists in this direction, join it.
-        channel_id = UserGroup.objects.get(user_one=request.user, user_two=user).channel_id
-    else:
-        # No UserGroup exists, create one in this direction and join it.
-        group = UserGroup.objects.create(
-            user_one=request.user,
-            user_two=user,
-            channel_id=request.user.user_url + "-" + user.user_url
+    # User whos page this user has visited
+    target_user = get_object_or_404(User, user_url=identifier)
+
+    channel_id = None
+    channel_urls = [ # All possible channel_ids
+        request.user.user_url + "-" + identifier,
+        identifier + "-" + request.user.user_url,
+    ]
+
+    for possible_url in channel_urls:
+        channel = Channel.objects.filter(
+            is_group=False,
+            channel_id=possible_url
         )
-        channel_id = group.channel_id
-    """
+
+        if channel.exists():
+            channel_id = possible_url
+            break;
+
+    if channel_id == None:
+        # No such channel exists, create one.
+        channel_id = request.user.user_url + "-" + identifier
+        channel = Channel.objects.create(
+            name=channel_id,
+            channel_id=channel_id,
+            is_public=False,
+            is_group=False,
+        )
+
+        # Add permissions for both users
+        ChannelPermissions.objects.create(
+            channel=channel,
+            user=request.user,
+            is_creator=True,
+        )
+
+        ChannelPermissions.objects.create(
+            channel=channel,
+            user=target_user,
+        )
 
     return renderMessenger(
         request,
-        title=user,
+        title=target_user.username,
         channel_id=channel_id,
-        chat_title=user.username,
+        chat_title=target_user.username,
     )
 
 
@@ -131,17 +151,6 @@ def group(request, group_id=None):
         messages.add_message(request, messages.ERROR, "You have been banned from this group for the following reason: <div class=\"pmessage-well\">%s</div> <p class=\"pmessage\">Normally a ban appeal message would go here, but ban appealing hasn't been implemented yet.</p>" % ban_reason)
         return renderMessenger(request, title="Banned", is_group=True, chat_title="Banned")
 
-    # If the request makes it this far, they are free to join the group.
-    # TODO If connection is denied disable the text input
-
-    if created:
-        # Announce to the channel that a user has joined.
-        # Perhaps this should occur in private messages?
-        broadcast_channel(message = {
-            "action": "user_join",
-            "username": request.user.username,
-        }, channel="group-" + group_id)
-
     return renderMessenger(
         request,
         title=group,
@@ -155,15 +164,11 @@ def renderMessenger(request, title, form=CreateChatForm(), is_group=False, chann
     """
     Renders the messenger page
     """
-    chunk = None
-    if "_pjax" in request.GET:
-        chunk = request.GET.get("_pjax")
+    chunk = None if not "_pjax" in request.GET else request.GET.get("_pjax")
 
     notify.check_notifications(request) # Check for new messages
 
     modals = dynamic_modals
-
-    #groups = request.user.channels
 
     groups = Channel.objects.filter(
         Q(users__in=[request.user]),
@@ -183,54 +188,57 @@ def renderMessenger(request, title, form=CreateChatForm(), is_group=False, chann
         "chunk": chunk,
     })
 
-def get_latest_messages(channel_id):
+
+def get_latest_messages(channel_id, n=15):
     """
-    Gathers the fifteen (15) most recent messages sent in any group.
+    Gets and returns the latest messages sent in any channel.
+    The number of messages can be configured by adjusting n.
     """
     if channel_id == None:
         return None
     return ChatMessage.objects.filter(
         channel_id=channel_id,
-    ).order_by("-time_sent")[:15]
+    ).order_by("-time_sent")[:n]
 
-# CREATE
-# Handles the form submissions from the chat creation modal.
+
 @login_required_message
 def create(request):
-    if request.POST:
-        form = CreateChatForm(request.POST)
-        if form.is_valid():
-            # Generate a new identifier
-            channel_id = generate()
-            while Channel.objects.filter(channel_id=channel_id).count() != 0:
-                channel_id = generate()
-
-            data = form.cleaned_data
-
-            # Create a new group
-            group = Channel.objects.create(
-                name=data["name"],
-                is_public=data["is_public"],
-                channel_id=channel_id,
-                is_group=True,
-            )
-
-            # Add user permissions
-            user_perms = ChannelPermissions.objects.create(
-                channel=group,
-                user=request.user,
-                is_creator=True,
-            )
-
-            if data["is_public"]:
-                messages.add_message(request, messages.INFO, "Group '%s' successfully created. Add people to this group by giving them the URL or by clicking 'add users'." % data["name"])
-            else:
-                messages.add_message(request, messages.INFO, "Group '%s' successfully created. Add people to this group by clicking 'add users'." % data["name"])
-            return redirect(group)
-
-        # TODO handle this better
-        messages.add_message(request, messages.ERROR, "The data you entered was invalid.")
-        return redirect("messages")
-    else:
+    """
+    Creates a new public or private group channel.
+    """
+    if not request.POST:
         messages.add_message(request, messages.ERROR, "A group could not be created because no data was posted.")
         return redirect("messages")
+
+    form = CreateChatForm(request.POST)
+    if not form.is_valid():
+        messages.add_message(request, messages.ERROR, "The data you entered was invalid.")
+        return redirect("messages")
+
+    # Generate a new identifier
+    channel_id = generate()
+    while Channel.objects.filter(channel_id=channel_id).count() != 0:
+        channel_id = generate()
+
+    data = form.cleaned_data
+
+    # Create a new group
+    group = Channel.objects.create(
+        name=data["name"],
+        is_public=data["is_public"],
+        channel_id=channel_id,
+        is_group=True,
+    )
+
+    # Add user permissions
+    user_perms = ChannelPermissions.objects.create(
+        channel=group,
+        user=request.user,
+        is_creator=True,
+    )
+
+    if data["is_public"]:
+        messages.add_message(request, messages.INFO, "Group '%s' successfully created. Add people to this group by giving them the URL or by clicking 'add users'." % data["name"])
+    else:
+        messages.add_message(request, messages.INFO, "Group '%s' successfully created. Add people to this group by clicking 'add users'." % data["name"])
+    return redirect(group)

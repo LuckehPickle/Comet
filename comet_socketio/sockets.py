@@ -14,24 +14,37 @@
 #   limitations under the License.
 
 # Django Imports
-from django.core import serializers
-from django.shortcuts import get_object_or_404
-from django.db.models import Q
 from django.contrib import messages
+from django.core import serializers
+from django.db.models import Q
+from django.shortcuts import get_object_or_404
+from django.utils import timezone
+from django.utils.html import escape
 
 # Socketio Imports
 from socketio.namespace import BaseNamespace
 from socketio.sdjango import namespace
 
 # Other Imports
+from accounts.models import User, FriendInvites
 from comet_socketio import notify
 from comet_socketio.mixins import ChannelMixin
-from accounts.models import User, FriendInvites
 from messenger.models import Channel, ChatMessage
 
 
+def create_message(sender, contents, channel_id):
+    """
+    Creates a new chat message instance.
+    """
+    return ChatMessage.objects.create(
+        sender=sender,
+        contents=contents,
+        channel_id=channel_id,
+    )
+
+
 @namespace('/messenger')
-class MessengerNamespace(BaseNamespace):
+class MessengerNamespace(BaseNamespace, ChannelMixin):
     """
     Namespace for messenger related tasks.
     """
@@ -54,9 +67,6 @@ class MessengerNamespace(BaseNamespace):
         sent back to each socket connected to the channel.
         TODO Check message length, and whether user is in group
         """
-        if True:
-            print(self.socket.server.sockets)
-            return
         if not "channel_id" in data and not "message" in data:
             return
 
@@ -70,7 +80,7 @@ class MessengerNamespace(BaseNamespace):
             # A message has been sent, retrieve the most recent
             most_recent = most_recent[0]
 
-            if most_recent.sender == request.user:
+            if most_recent.sender == self.request.user:
                 # This user sent the most recent message, tag it instead of creating a new one.
                 most_recent.contents += "\n" + escape(message)
                 most_recent.time_sent = timezone.now()
@@ -81,7 +91,11 @@ class MessengerNamespace(BaseNamespace):
             most_recent = None
 
         if most_recent == None:
-            most_recent = create_message(request.user, escape(message), channel_id, is_group)
+            most_recent = create_message(
+                sender=self.request.user,
+                contents=escape(message),
+                channel_id=channel_id
+            )
 
         self.emit("message", {
             "action": "message_sent",
@@ -90,24 +104,13 @@ class MessengerNamespace(BaseNamespace):
         self.emit_to_channel(channel_id, "message", {
             "action": "message",
             "message": message,
+            "channel_id": channel_id,
             "sender": self.request.user.username,
             "sender_id": str(self.request.user.user_id),
             "time_sent": most_recent.time_sent.isoformat(),
         })
 
         return True
-
-
-    def create_message(sender, contents, channel_id, is_group):
-        """
-        Creates a new chat message instance.
-        """
-        return ChatMessage.objects.create(
-            sender=sender,
-            contents=contents,
-            channel_id=channel_id,
-            is_group=is_group,
-        )
 
 
     def on_search(self, query):
