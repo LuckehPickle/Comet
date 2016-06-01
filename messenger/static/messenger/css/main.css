@@ -398,7 +398,7 @@ p[class^="chat-message-sender"]{
         padding: 0 12px;
         box-shadow: 0px 10px 0px rgba(0, 0, 0, 0.15);
         background-color: #454545;
-        z-index: 0;
+        z-index: 1;
     }
 
     section.section-area{
@@ -432,6 +432,7 @@ p[class^="chat-message-sender"]{
         cursor: pointer;
         position: relative;
         margin-right: 10px;
+        z-index: 1;
     }
 
     .create-group-dropdown span{
@@ -647,12 +648,22 @@ p[class^="chat-message-sender"]{
             color: #F0F0F0;
         }
 
+        /**
+         * We have to subtract 50px here to account for the
+         * toolbar. 100% Gives the parent height, rather than the
+         * remaining height.
+         */
+        .tab-area{
+            height: calc(100% - 50px);
+        }
+
         .tab-body{
             width: 100%;
+            height: calc(100% - 40px);
             -webkit-flex-grow: 1;
                     flex-grow: 1;
             overflow-x: hidden;
-            overflow-y: hidden; /* TODO remove scrollbars */
+            overflow-y: scroll;
             position: relative;
         }
 
