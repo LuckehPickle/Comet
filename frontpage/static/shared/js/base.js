@@ -972,8 +972,11 @@ function handleDocumentEvent(event){
     /* BEGIN DROPDOWN */
     if($(".dropdown").is("[active]")){
         if(!target.closest(".dropdown-trigger").length && !target.is(".dropdown-trigger")){
-            $(".dropdown").hide();
-            $(".dropdown").removeAttr("active");
+            var dropdown = $(".dropdown");
+            dropdown.slideUp(150, function(){
+                dropdown.hide();
+                dropdown.removeAttr("active");
+            });
         }
     }
     /* END DROPDOWN */

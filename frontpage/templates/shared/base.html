@@ -50,8 +50,6 @@
                 window.username = "{{ request.user.username }}";
                 window.user_id = "{{ request.user.user_id }}";
             {% endif %}
-
-            {% block extra_inline_js %}{% endblock %}
         </script>
         <script src="{% static 'comet_socketio/js/socket.io.js' %}"></script>
     </head>
@@ -73,11 +71,14 @@
 
         <div class="pjax-body">{% block content %}{% endblock %}</div>
 
+        {% block extra_inline_js %}{% endblock %}
+
         <script src="{% static 'shared/js/jquery-2.2.2.min.js' %}"></script>
         <script src="{% static 'shared/js/jquery.pjax.js' %}"></script>
         <script src="{% static 'shared/js/nprogress.js' %}"></script>
         <script src="{% static 'shared/js/slimscroll.js' %}"></script>
         <script src="{% static 'shared/js/base.js' %}"></script>
+        <script src="{% static 'shared/js/particles.min.js' %}"></script>
         <script src="https://cdn.rawgit.com/samthor/rippleJS/v1.0.2/ripple.min.js"></script>
         {% block extra_js %}{% endblock %}
     </body>

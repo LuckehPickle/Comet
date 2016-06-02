@@ -2,3 +2,22 @@
 
 {% load staticfiles %}
 {% block title %}{{ title }}{% endblock %}
+{% block extra_css %}<link rel="stylesheet" type="text/css" href="{% static 'docs/css/docs.css' %}">{% endblock %}
+{% block extra_js %}
+        <script>
+            particlesJS.load('particles-js', '/static/docs/particles.json', function() {
+                print(false, 'particles.js config loaded');
+            });
+        </script>
+{% endblock %}
+
+{% block content %}
+<div class="spacer"></div>
+
+<div class="docs-header">
+    <div id="particles-js"></div>
+    <p class="docs-title">Comet Documentation</p>
+</div>
+
+{% include 'shared/footer.html' %}
+{% endblock %}

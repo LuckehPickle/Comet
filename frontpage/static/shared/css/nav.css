@@ -267,6 +267,14 @@
         pointer-events: none;
     }
 
+    .nav-dropdown li{
+        padding: 0;
+    }
+
+    .nav-dropdown a{
+        white-space: nowrap;
+    }
+
     .nav-dropdown{
         cursor: pointer;
         width: 40px;
@@ -277,6 +285,7 @@
 
     .nav-dropdown .dropdown{
         top: 55px;
+        left: auto;
     }
 
     .sign-in{
