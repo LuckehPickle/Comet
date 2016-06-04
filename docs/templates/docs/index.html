@@ -3,21 +3,66 @@
 {% load staticfiles %}
 {% block title %}{{ title }}{% endblock %}
 {% block extra_css %}<link rel="stylesheet" type="text/css" href="{% static 'docs/css/docs.css' %}">{% endblock %}
-{% block extra_js %}
-        <script>
-            particlesJS.load('particles-js', '/static/docs/particles.json', function() {
-                print(false, 'particles.js config loaded');
-            });
-        </script>
-{% endblock %}
 
 {% block content %}
-<div class="spacer"></div>
+    <div class="spacer"></div>
 
-<div class="docs-header">
-    <div id="particles-js"></div>
-    <p class="docs-title">Comet Documentation</p>
-</div>
+    {# Jumbo #}
+    <section class="docs-jumbo">
+        <p class="docs-title">Comet Documentation</p>
+        <p class="docs-subtitle">Learn and Develop with Comet</p>
 
-{% include 'shared/footer.html' %}
+        {# Search #}
+        <div class="docs-search">
+            <i class="material-icons noselect">search</i>
+            <input type="text" spellcheck="false" placeholder="Search Articles...">
+
+            {# Search Dropdown #}
+            <div class="docs-search-dropdown">
+                <section class="search-dropdown-pages">
+                    <p class="search-dropdown-title">Docs</p>
+                    <p class="search-dropdown-no-results">No results found.</p>
+                </section>
+                <section>
+                    <a class="search-dropdown-silent">
+                        See all results
+                        <link class="rippleJS">
+                    </a>
+                </section>
+            </div>
+        </div>
+    </section>
+
+    {# Categories #}
+    <section class="categories">
+        <header class="categories-title">Article Categories</header>
+        <div class="cat-wrapper">
+            <a href="{% url 'docs' %}news/" data-pjax>
+                <div class="cat-img"></div>
+                <header>Site News</header>
+            </a>
+
+            <a href="{% url 'docs' %}support/" data-pjax>
+                <div class="cat-img"></div>
+                <header>Support</header>
+            </a>
+
+            <a href="{% url 'docs' %}tutorials/" data-pjax>
+                <div class="cat-img"></div>
+                <header>Tutorials</header>
+            </a>
+
+            <a href="{% url 'docs' %}developer/" data-pjax>
+                <div class="cat-img"></div>
+                <header>Developer Documentation</header>
+            </a>
+
+            <a href="{% url 'docs' %}community/" data-pjax>
+                <div class="cat-img"></div>
+                <header>Community Submissions</header>
+            </a>
+        </div>
+    </section>
+
+    {% include 'shared/footer.html' %}
 {% endblock %}

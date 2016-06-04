@@ -915,7 +915,7 @@ function addEventListeners(){
     /* END TABS */
 
     /* BEGIN SEARCH */
-    var searchInput = $(".search input");
+    var searchInput = $(".search input, .docs-search input");
     searchInput.off(".base");
     searchInput.on("keyup.base", function(){
         clearTimeout(typing_timer);
@@ -925,22 +925,40 @@ function addEventListeners(){
         clearTimeout(typing_timer);
     });
 
-    var searchIcon = $(".search:not([active]) i");
+    var searchIcon = $(".search:not([active]) i, .docs-search:not([active]) i");
     searchIcon.off(".base");
     searchIcon.on("click.base", function(){
         searchInput.focus();
     });
 
     // No need to remove events here, it was done above
-    $(".search:not([active]) input").on("focus.base", function(){
-        $(".search-dropdown").hide();
+    $(".search:not([active]) input, .docs-search:not([active]) input").on("focus.base", function(){
+        $(".search-dropdown, .docs-search-dropdown").hide();
         $(this).parent().attr("active", "");
         $(this).select();
-        setTimeout(function(){
-            $(".search-dropdown").slideDown(200);
-        }, 300);
+        if(!$(this).parent().is("[class*='docs']")){
+            setTimeout(function(){
+                $(".search-dropdown").slideDown(200);
+            }, 300);
+        }else{
+            $(".docs-search-dropdown").slideDown(200);
+        }
     });
     /* END SEARCH */
+
+    /* BEGIN FOOTER */
+    var footerTitles = $(".footer-wrapper section p");
+    footerTitles.off(".base");
+    footerTitles.on("click.base", function(){
+        if($(this).is("[active]")){
+            $(this).removeAttr("active");
+            $(this).next().removeAttr("active");
+        }else{
+            $(this).attr("active", "");
+            $(this).next().attr("active", "");
+        }
+    });
+    /* END FOOTER */
 
     $("html").off(".base");
     $("html").on("click.base", handleDocumentEvent);
@@ -982,10 +1000,10 @@ function handleDocumentEvent(event){
     /* END DROPDOWN */
 
     /* BEGIN SEARCH */
-    if(!$(event.target).closest(".search").length && !$(event.target).is(".search")){
-        if($(".search").is("[active]")){
-            $(".search-dropdown").slideUp(200, function(){
-                $(".search").removeAttr("active");
+    if(!$(event.target).closest(".search, .docs-search").length && !$(event.target).is(".search, .docs-search")){
+        if($(".search, .docs-search").is("[active]")){
+            $(".search-dropdown, .docs-search-dropdown").slideUp(200, function(){
+                $(".search, .docs-search").removeAttr("active");
             });
         }
     }

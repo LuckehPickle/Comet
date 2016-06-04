@@ -510,7 +510,6 @@ p[class^="chat-message-sender"]{
 
         .search-dropdown-title,
         .search-dropdown-no-results{
-            margin: 0;
             color: #656565;
             font-family: 'Roboto', sans-serif;
             font-size: 13px;

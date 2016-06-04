@@ -21,5 +21,6 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index, name="docs"),
-    url(r'^(?P<slug>[a-zA-Z0-9]+)$', views.index),
+    url(r'^(?P<category>[a-zA-Z0-9]+)/$', views.category),
+    url(r'^(?P<category>[a-zA-Z0-9]+)/(?P<slug>[a-zA-Z0-9-]+)$', views.category),
 ]

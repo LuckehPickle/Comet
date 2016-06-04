@@ -13,11 +13,70 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-
- TODO Get this menu footer for respondive design
 -->
 
-<div class="footer-top"></div>
+{% load static %}
+
+<div class="footer-top">
+    <div class="footer-wrapper">
+        <section>
+            <p>Comet Info</p>
+            <ul>
+                <li><a href="">About Comet</a></li>
+                <li><a href="">Privacy Policy</a></li>
+                <li><a href="">Terms of Use</a></li>
+                <li><a href="">Staff Members</a></li>
+                <li><a href="">Projects that Power Comet</a></li>
+                <li><a href="https://github.com/LuckehPickle/Comet">Source Code</a></li>
+            </ul>
+        </section>
+
+        <section>
+            <p>Support</p>
+            <ul>
+                <li><a href="">Making a Secure password</a></li>
+                <li><a href="">Frequently Asked Questions (FAQ)</a></li>
+                <li><a href="{% url 'docs' %}support/" data-pjax>All Support Articles</a></li>
+                <li><a href="mailto:support@cometchat.cc">Email: support@cometchat.cc</a></li>
+            </ul>
+        </section>
+
+        <section>
+            <p>Other</p>
+            <ul>
+                <li><a href="https://github.com/LuckehPickle/Comet/issues">Issue/Bug Tracker</a></li>
+                <li><a href="">Feature Request</a></li>
+                <li><a href="">Statistics</a></li>
+                <li><a href="">Status</a></li>
+                <li><a href="https://github.com/LuckehPickle/Comet/wiki">Community Wiki</a></li>
+            </ul>
+        </section>
+
+        <section>
+            <p>Account</p>
+            {% if request.user.is_authenticated %}
+            <ul>
+                <li><a href="{% url 'messages' %}" data-pjax>Messenger</a></li>
+                <li><a href="">Search Users</a></li>
+                <li><a href="">Account Settings</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+            </ul>
+            {% else %}
+            <ul>
+                <li><a href="{% url 'login' %}">Sign In</a></li>
+                <li><a href="{% url 'register' %}">Register</a></li>
+            </ul>
+            {% endif %}
+        </section>
+    </div>
+</div>
+
 <div class="footer-bottom">
-    <div class="wrapper"></div>
+    <div class="footer-wrapper">
+        <a href="{% url 'frontpage' %}" class="logo noselect" data-pjax>
+            <img src="{% static 'shared/img/logo.svg' %}"></img>
+        </a>
+        <p>© 2015-2016 Sean Bailey and Contributors. All Rights Reserved.</p>
+        <a href="{% url 'frontpage' %}" class="privacy" data-pjax>Privacy</a>
+    </div>
 </div>

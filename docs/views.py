@@ -14,6 +14,8 @@
 #   limitations under the License.
 
 # Django Imports
+from django.contrib import messages
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
 # Other Imports
@@ -21,13 +23,17 @@ import cr_config as config
 from comet import dynamic_modals
 
 
-def index(request, slug=None):
+def index(request):
     """
     """
     user_id = None if not request.user.is_authenticated else str(request.user.user_id)[:8]
     modals = dynamic_modals
+    messages.add_message(request, messages.WARNING, "This page is still under construction.")
     return render(request, "docs/index.html", {
         "title": (config.TITLE_FORMAT % "Documentation"),
         "user_id": user_id,
         "modals": modals,
     })
+
+def category(request, category, slug=None):
+    return HttpResponse("Category: {0}, Slug: {1}".format(category, slug))

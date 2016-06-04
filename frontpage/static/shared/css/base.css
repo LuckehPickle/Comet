@@ -15,6 +15,11 @@
 #   limitations under the License.
 */
 
+/* Fonts */
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,300,700);
+@import url(https://fonts.googleapis.com/css?family=Roboto+Slab:400,300,700);
+@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,600,700);
+
 /**
  * Text selection rules
  */
@@ -26,11 +31,10 @@
  * on webkit browsers (e.g. Chrome, Safari). For non webkit browsers
  * such as Firefox, a JScrollPane fallback will be applied.
  */
-div::-webkit-scrollbar{width: 7px;}
+div::-webkit-scrollbar{width: 8px;}
 div::-webkit-scrollbar-track{-webkit-box-shadow: none;}
 div::-webkit-scrollbar-thumb{
     background-color: rgba(0, 0, 0, 0.05);
-    border-radius: 5px;
     transition: background-color 0.3s;
     -webkit-transition: background-color 0.3s;
 }
@@ -372,10 +376,6 @@ body.modal-open{
     border-color: transparent transparent rgba(0, 0, 0, 0.8) transparent;
 }
 
-.tooltip-trigger:hover .tooltip-container{
-    display: block;
-}
-
 .tooltip-container[data-fill-type="fill"]{
     top: 40px;
     left: 0;
@@ -385,6 +385,13 @@ body.modal-open{
 .tooltip-container[data-fill-type="width"]{
     top: 40px;
     max-width: 300px;
+}
+
+@media screen and (min-width: 40.5em){
+    /* Only enable on large screens */
+    .tooltip-trigger:hover .tooltip-container{
+        display: block;
+    }
 }
 /* END TOOLTIP */
 
@@ -457,19 +464,169 @@ configurably enough to prevent the sheen from returning.
 }
 /* END BUTTON SHEEN */
 
-/* BEGIN FOOTER */
+/* BEGIN FOOTER TOP */
 .footer-top{
+    padding: 10px 0;
+    box-sizing: border-box;
     width: 100%;
-    min-height: 350px;
     background-color: #3B3B3B;
 }
 
+.footer-top .footer-wrapper{
+    width: 100%;
+}
+
+.footer-wrapper section{
+    flex-grow: 1;
+    padding: 5px 0;
+    box-sizing: border-box;
+}
+
+.footer-top ul{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+.footer-top ul[active]{
+    height: auto;
+}
+
+.footer-top p{
+    color: #EBEBEB;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 16px;
+    margin: 0;
+    padding: 5px 20px;
+    cursor: pointer;
+    display: -webkit-flex;
+            display: flex;
+    -webkit-align-items: center;
+            align-items: center;
+}
+
+.footer-top p::after{
+    content: "";
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 6.9px 4px 0 4px;
+    border-color: #EBEBEB transparent transparent transparent;
+    margin-left: 5px;
+}
+
+.footer-top p[active]::after{
+    content: "";
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 4px 6.9px 4px;
+    border-color: transparent transparent #EBEBEB transparent;
+}
+
+.footer-wrapper a:not(.logo){
+    padding: 5px 20px;
+    display: block;
+    color: #CBCBCB;
+    font-family: 'Source Sans Pro', sans-serif;
+    text-decoration: none;
+}
+
+.footer-wrapper a:not(.logo):hover{
+    color: #DBDBDB;
+}
+/* END FOOTER TOP */
+
+/* BEGIN FOOTER BOTTOM */
 .footer-bottom{
     width: 100%;
-    min-height: 50px;
+    height: 50px;
     background-color: #353535;
+    overflow: hidden;
 }
-/* END FOOTER */
+
+.footer-bottom .footer-wrapper{
+    width: 100%;
+    height: 100%;
+    display: -webkit-flex;
+            display: flex;
+    -webkit-align-items: center;
+            align-items: center;
+}
+
+.footer-wrapper a.logo{
+    height: 100%;
+}
+
+.footer-wrapper img{
+    height: 100%;
+    padding: 12px;
+    box-sizing: border-box;
+    flex-grow: 1;
+}
+
+.footer-bottom p{
+    color: #9A9A9A;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 14px;
+    margin: 0 5px;
+    min-width: 200px;
+}
+
+.footer-wrapper a.privacy{
+    display: none;
+}
+/* END FOOTER BOTTOM */
+
+@media screen and (min-width: 900px){
+    /* BEGIN FOOTER TOP */
+    .footer-top .footer-wrapper{
+        max-width: 1200px;
+        margin: 0 auto;
+        display: -webkit-flex;
+                display: flex;
+    }
+
+    .footer-top ul{
+        height: auto;
+    }
+
+    .footer-wrapper section{
+        padding: 15px 8px;
+    }
+
+    .footer-wrapper a:not(.logo), .footer-top p{
+        padding: 5px;
+    }
+
+    .footer-top p{
+        cursor: default;
+        display: block;
+    }
+
+    .footer-top p::after, .footer-top p[active]::after{
+        content: none;
+    }
+    /* END FOOTER TOP */
+
+    /* BEGIN FOOTER BOTTOM */
+    .footer-bottom .footer-wrapper{
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .footer-bottom p{
+        font-size: 16px;
+    }
+
+    .footer-wrapper a.privacy{
+        color: #EBEBEB;
+        margin-left: auto;
+    }
+    /* END FOOTER BOTTOM */
+}
 
 /* Thanks to http://tobiasahlin.com/spinkit/ for the loader */
 .spinner {

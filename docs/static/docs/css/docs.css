@@ -1,30 +1,225 @@
+/*
+ [Docs] DOCS.CSS - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
+ Powered by Django (https://www.djangoproject.com/)
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
 .menu{
     position: fixed;
+    box-shadow: 0px 10px 0px rgba(0, 0, 0, 0.15);
 }
 
 .spacer{
-    height: 70px;
+    height: 50px;
 }
 
-.docs-header{
+.docs-jumbo{
     height: auto;
-    background-color: #454545;
-    margin-bottom: 1000px;
+    background-color: #E9573F;
     position: relative;
-    text-align: center;
-}
-
-#particles-js{
-    position: absolute;
-    width: 100%;
-    height: 100%;
+    padding: 40px 15px;
+    padding-top: 20px;
 }
 
 .docs-title{
     font-family: bebas-neue, sans-serif;
-    font-size: 70px;
+    font-size: 60px;
     color: #FEFEFE;
     text-transform: uppercase;
-    padding: 20px 0;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}
+
+.docs-subtitle{
+    font-family: 'Roboto Slab', serif;
+    font-size: 20px;
+    color: #FEFEFE;
     margin: 0 auto;
+    padding: 30px 0;
+    padding-top: 0px;
+    text-align: center;
+}
+
+/* BEGIN CATEGORIES */
+.categories{
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 0;
+}
+
+.categories-title{
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    font-size: 25px;
+    color: #757575;
+    -webkit-font-smoothing: antialiased;
+}
+
+.cat-wrapper{
+    width: 100%;
+    margin: 40px 0;
+    margin-bottom: 20px;
+    display: -webkit-flex;
+            display: flex;
+    overflow-x: scroll;
+}
+
+.cat-wrapper a{
+    text-align: center;
+    width: 190px;
+    cursor: pointer;
+    text-decoration: none;
+    min-width: 140px;
+}
+
+.cat-wrapper a header{
+    font-family: 'Roboto', sans-serif;
+    font-size: 18px;
+    color: #757575;
+    -webkit-font-smoothing: antialiased;
+}
+
+.cat-wrapper a:hover header{
+    color: #F1592B;
+}
+
+.cat-img{
+    width: 100px;
+    height: 100px;
+    background-color: #454545;
+    border-radius: 4px;
+    margin: 0 auto;
+    margin-bottom: 10px;
+}
+
+@media screen and (min-width: 750px){
+    .categories{
+        padding: 60px 0;
+    }
+
+    .cat-wrapper{
+        margin: 40px 0;
+        overflow: hidden;
+        -webkit-justify-content: space-between;
+                justify-content: space-between;
+    }
+}
+/* END CATEGORIES */
+
+/* BEGIN SEARCH */
+.docs-search{
+    position: relative;
+    border-radius: 2px;
+    display: -webkit-flex;
+            display: flex;
+    -webkit-align-items: center;
+            align-items: center;
+    background-color: #FEFEFE;
+    z-index: 3;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.docs-search input{
+    width: 100%;
+    padding: 8px 5px;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    text-overflow: ellipsis;
+    color: #454545;
+    transition: all 0.3s ease;
+}
+
+.docs-search i{
+    padding: 0px;
+    padding-left: 5px;
+    color: #454545;
+}
+
+.docs-search-dropdown{
+    position: absolute;
+    top: 45px;
+    left: 0;
+    right: 0;
+    border-radius: 2px;
+    z-index: 1;
+    display: none;
+    background-color: #FEFEFE;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+}
+
+.search:not([active]) .search-dropdown{
+    display: none !important;
+}
+
+.search-dropdown-title,
+.search-dropdown-no-results{
+    color: #656565;
+    font-family: 'Roboto', sans-serif;
+    font-size: 13px;
+    margin: 10px;
+    margin-bottom: 2px;
+}
+
+.search-dropdown-no-results{
+    text-align: center;
+    white-space: nowrap;
+}
+
+.search-dropdown-silent{
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    border-radius: 2px;
+    padding: 8px 10px;
+    box-sizing: border-box;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    color: #454545;
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    white-space: nowrap;
+    margin: 10px;
+}
+
+.search-dropdown-silent:hover{
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+    /* BEGIN SEARCH RESULTS */
+
+    /* END SEARCH RESULTS */
+
+/* END SEARCH */
+
+@media screen and (min-width: 40.5em){
+    .spacer{
+        height: 70px;
+    }
+
+    .docs-title{
+        font-size: 70px;
+    }
+
+    .docs-jumbo{
+        padding: 80px 0px;
+        padding-top: 60px;
+    }
 }
