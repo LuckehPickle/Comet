@@ -3,12 +3,22 @@
 {% load staticfiles %}
 {% block title %}{{ title }}{% endblock %}
 {% block extra_css %}<link rel="stylesheet" type="text/css" href="{% static 'docs/css/docs.css' %}">{% endblock %}
+{% block extra_js %}
+<script>
+    setTimeout(function(){
+        particlesJS.load('particles-js', '/static/docs/particles.json', function() {
+            print(false, 'particles.js config loaded');
+        });
+    }, 100);
+</script>
+{% endblock %}
 
 {% block content %}
     <div class="spacer"></div>
 
     {# Jumbo #}
     <section class="docs-jumbo">
+
         <p class="docs-title">Comet Documentation</p>
         <p class="docs-subtitle">Learn and Develop with Comet</p>
 
@@ -31,6 +41,7 @@
                 </section>
             </div>
         </div>
+        <div id="particles-js"></div>
     </section>
 
     {# Categories #}

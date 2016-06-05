@@ -26,10 +26,18 @@
 
 .docs-jumbo{
     height: auto;
-    background-color: #E9573F;
+    background-color: #3B3B3B;
     position: relative;
     padding: 40px 15px;
     padding-top: 20px;
+}
+
+.docs-jumbo #particles-js{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
 }
 
 .docs-title{

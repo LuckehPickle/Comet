@@ -7,34 +7,24 @@ Comet has a huge focus on user privacy and security. Unlike many other instant m
 **Things TODO (In order to *reach* beta)**  
  - User settings
  - Email verification
- - ~~Redo user dropdown~~
  - Group settings
  - Nicknames
- - ~~Redo push messages~~
- - ~~Add base template~~
  - Redo modal for creating a new chat
  - Add modal for adding users to group
  - Notification sounds
- - Find a way to alert user of new messages in other channels
- - Fix toolbar appearance, especially title and buttons.
- - ~~Migrate announceUserJoin to the new messenger.js~~
  - Mobile and tablet support
  - Fix footer + add version number
- - ~~<https://github.com/youtube/spfjs>~~ Now using [pjax](https://github.com/defunkt/jquery-pjax) instead.
  - Animate changing tabs
  - Prevent message tagging if the message is over x mins old.
  - User is typing...
  - Message sending... sent etc
  - Username changing
- - Make groups/friends load with an 'a' rather than a div with event listener to allow opening in a new tab or window.
  - Wait for socket connection before enabling the input
  - Update friends list with online statuses
  - User profiles on hover.
  - Add custom scrollbars
- - ~~Open socket connections on all pages to catch friend requests etc.~~
  - Hover over name to show profile information
  - Load video and images on hover
- - ~~Automatic reconnect to Socket server with a modal to notify the user. A button which says run in background will cause it to hide whilst a connection is re-established.~~
 
 **Things TODO (In order to *leave* beta)**
  - End-to-end encryption of all packets.
@@ -43,5 +33,4 @@ Comet has a huge focus on user privacy and security. Unlike many other instant m
  - Two Factor Authentication (Google Authenticator?)
  - Desktop App (Electron?)
  - Profile pictures
- - ~~Migrate from django_socketio to gevent-socketio.~~
  - Add 'toggle-able' maintenance periods, in which developers are whitelisted.
