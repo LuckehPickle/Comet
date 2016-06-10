@@ -65,7 +65,7 @@
 /**
  * Mobile Phones (and other Small Devices)
  */
-@media screen and (max-width: 40.5em){
+@media screen and (max-width: 899px){
     .sign-in, .user-info-container, .user-menu, #more, .nav-dropdown{
         display: none !important;
     }
@@ -197,7 +197,7 @@
 /**
  * Desktops (and above)
  */
-@media screen and (min-width: 40.5em){
+@media screen and (min-width: 900px){
     .mobile-button-wrapper, .mobile-nav-trigger{
         display: none;
     }
@@ -257,22 +257,7 @@
         margin-left: 14px;
     }
 
-    #more{
-        font-size: 28px !important;
-        padding: 6px;
-        position: relative;
-        z-index: 100;
-        pointer-events: none;
-    }
-
-    .nav-dropdown li{
-        padding: 0;
-    }
-
-    .nav-dropdown a{
-        white-space: nowrap;
-    }
-
+    /* BEGIN NAV DROPDOWN */
     .nav-dropdown{
         cursor: pointer;
         width: 40px;
@@ -281,10 +266,74 @@
         position: relative;
     }
 
-    .nav-dropdown .dropdown{
-        top: 55px;
-        left: auto;
+    .nav-dropdown > i{
+        font-size: 28px !important;
+        padding: 6px;
+        position: relative;
+        z-index: 100;
+        pointer-events: none;
     }
+
+    .nav-dropdown > ul{
+        position: absolute;
+        top: 55px;
+        right: 0;
+        min-width: 200px;
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        border-bottom-color: #EBEBEB;
+        border-bottom-style: solid;
+        border-bottom-width: 3px;
+        border-radius: 0 0 3px 3px;
+        display: none;
+    }
+
+    .nav-dropdown[active] > ul{
+        display: block;
+    }
+
+    .nav-dropdown > ul::before{
+        content: "";
+        position: absolute;
+        top: 3px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+        z-index: -1;
+    }
+
+    .nav-dropdown li{
+        padding: 0;
+        width: 100%;
+    }
+
+    .nav-dropdown a{
+        padding: 8px 10px;
+        white-space: nowrap;
+        height: 100%;
+        color: #EBEBEB;
+        background-color: #3B3B3B;
+        font-family: 'Source Sans Pro', sans-serif;
+        font-size: 16px;
+        text-decoration: none;
+        text-transform: capitalize;
+        display: -webkit-flex;
+                display: flex;
+        -webkit-align-items: center;
+                align-items: center;
+    }
+
+    .nav-dropdown a:hover{
+        background-color: #333333;
+    }
+
+    .nav-dropdown a > i{
+        margin-right: auto;
+        font-size: 20px;
+    }
+    /* END NAV DROPDOWN */
 
     .sign-in{
         padding: 5px;

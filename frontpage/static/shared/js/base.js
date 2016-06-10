@@ -872,6 +872,18 @@ function addEventListeners(){
     });
     /* END DROPDOWN */
 
+    /* BEGIN NAV DROPDOWN */
+    var navDropdown = $(".nav-dropdown");
+    navDropdown.off(".base");
+    navDropdown.on("click.base", function(){
+        if(navDropdown.is("[active]")){
+            navDropdown.removeAttr("active");
+        }else{
+            navDropdown.attr("active", "");
+        }
+    });
+    /* END NAV DROPDOWN */
+
     /* BEGIN CHAT */
     var chatForm = $(".chat-form");
     chatForm.off("submit");
@@ -998,6 +1010,14 @@ function handleDocumentEvent(event){
         }
     }
     /* END DROPDOWN */
+
+    /* BEGIN NAV DROPDOWN */
+    if($(".nav-dropdown").is("[active]")){
+        if(!target.closest(".nav-dropdown").length && !target.is(".nav-dropdown")){
+            $(".nav-dropdown").removeAttr("active");
+        }
+    }
+    /* END NAV DROPDOWN */
 
     /* BEGIN SEARCH */
     if(!$(event.target).closest(".search, .docs-search").length && !$(event.target).is(".search, .docs-search")){

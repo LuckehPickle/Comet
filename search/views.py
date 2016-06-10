@@ -1,4 +1,4 @@
-# [Docs] VIEWS.PY - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
+# [Search] VIEWS.PY - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
 # Powered by Django (https://www.djangoproject.com/) - Not endorsed by Django
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,6 +13,7 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
+
 # Django Imports
 from django.contrib import messages
 from django.http import HttpResponse
@@ -21,18 +22,18 @@ from django.shortcuts import render, redirect, get_object_or_404
 # Other Imports
 import cr_config as config
 from comet import dynamic_modals
+from comet.decorators import login_required_message
 
 
+@login_required_message
 def index(request):
     """
+    Renders a default search page.
     """
     user_id = None if not request.user.is_authenticated else str(request.user.user_id)[:8]
     modals = dynamic_modals
-    return render(request, "docs/index.html", {
-        "title": (config.TITLE_FORMAT % "Documentation"),
+    return render(request, "search/index.html", {
+        "title": (config.TITLE_FORMAT % "Search"),
         "user_id": user_id,
         "modals": modals,
     })
-
-def category(request, category, slug=None):
-    return HttpResponse("Category: {0}, Slug: {1}".format(category, slug))

@@ -47,6 +47,26 @@ body{
     overflow-x: hidden;
 }
 
+.spacer{
+    height: 50px;
+}
+
+@media screen and (min-width: 900px){
+    .spacer{
+        height: 70px;
+    }
+}
+
+.noselect{
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none;   /* Chrome/Safari/Opera */
+    -khtml-user-select: none;    /* Konqueror */
+    -moz-user-select: none;      /* Firefox */
+    -ms-user-select: none;       /* IE/Edge */
+    user-select: none;           /* non-prefixed version, currently
+                                    not supported by any browser */
+}
+
 /* BEGIN PUSH MESSAGES */
 /* A container for message containers. Yo dawg. */
 .push-messages{

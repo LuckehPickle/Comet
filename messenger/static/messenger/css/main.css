@@ -42,6 +42,20 @@ body{
 
 .menu{
     box-shadow: none;
+    background-color: #3B3B3B;
+}
+
+.navigation-menu li a{
+    color: #E3E3E3;
+}
+
+.nav-dropdown a{
+    color: #EBEBEB;
+    background-color: #3B3B3B;
+}
+
+.nav-dropdown a:hover{
+    background-color: #333333;
 }
 
 .toolbar{

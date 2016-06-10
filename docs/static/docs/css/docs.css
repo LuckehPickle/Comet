@@ -18,15 +18,25 @@
 .menu{
     position: fixed;
     box-shadow: 0px 10px 0px rgba(0, 0, 0, 0.15);
+    background-color: #34495E;
 }
 
-.spacer{
-    height: 50px;
+.navigation-menu li a{
+    color: white;
+}
+
+.nav-dropdown a{
+    color: white;
+    background-color: #34495E;
+}
+
+.nav-dropdown a:hover{
+    background-color: #2D4257;
 }
 
 .docs-jumbo{
     height: auto;
-    background-color: #3B3B3B;
+    background-color: #2E4053;
     position: relative;
     padding: 40px 15px;
     padding-top: 20px;
@@ -102,7 +112,7 @@
 }
 
 .cat-wrapper a:hover header{
-    color: #F1592B;
+    color: #2874A6;
 }
 
 .cat-img{
@@ -218,10 +228,6 @@
 /* END SEARCH */
 
 @media screen and (min-width: 40.5em){
-    .spacer{
-        height: 70px;
-    }
-
     .docs-title{
         font-size: 70px;
     }

@@ -60,16 +60,34 @@
             </div>
             <div class="user-image"></div>
 
-            {# Navigation Dropdown Menu #}
-            <div class="nav-dropdown dropdown-trigger" data-dropdown-id="nav-dropdown">
-                <i id="more" class="material-icons">more_vert</i>
-                <ul class="dropdown" data-dropdown-id="nav-dropdown">
-                    <li><a href="{% url 'messages' %}" data-pjax>Open messenger</a></li>
-                    {% if not request.user.is_verified %}
-                    <li><a href="/verify">Verify email</a></li>
-                    {% endif %}
-                    <li><a href="/settings">Account settings</a></li>
-                    <li><a href="{% url 'logout' %}">Logout</a></li>
+            {# Navigation Dropdown Menu Redux #}
+            <div class="nav-dropdown">
+                <i class="material-icons noselect">more_vert</i>
+                <ul>
+                    <li>
+                        <a href="{% url 'messages' %}" data-pjax>
+                            <i class="material-icons">question_answer</i>
+                            Messenger
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'search' %}" data-pjax>
+                            <i class="material-icons">search</i>
+                            Search Users
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/settings">
+                            <i class="material-icons">settings</i>
+                            Account Settings
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'logout' %}">
+                            <i class="material-icons">exit_to_app</i>
+                            Logout
+                        </a>
+                    </li>
                 </ul>
             </div>
         {% else %}
