@@ -1,0 +1,27 @@
+{% extends 'shared/base.html'|pjax:request %}
+
+{% load staticfiles %}
+{% block title %}{{ title }}{% endblock %}
+{% block extra_css %}<link rel="stylesheet" type="text/css" href="{% static 'pages/css/search.css' %}">{% endblock %}
+
+{% block content %}
+    <div class="spacer"></div>
+
+    {# Search Jumbo #}
+    <section class="search-jumbo">
+
+        {# Search Bar #}
+        <div class="search-input">
+            <i class="material-icons noselect">search</i>
+            <input type="text" spellcheck="false" placeholder="Search...">
+        </div>
+
+        {# Checkboxes #}
+        <div class="checkboxes"></div>
+    </section>
+
+    {# Search Results #}
+    <section class="search-results"></section>
+
+    {% include 'shared/footer.html' %}
+{% endblock %}

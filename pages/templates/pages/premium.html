@@ -1,0 +1,30 @@
+{% extends 'shared/base.html'|pjax:request %}
+
+{% load staticfiles %}
+{% block title %}{{ title }}{% endblock %}
+{% block extra_css %}<link rel="stylesheet" type="text/css" href="{% static 'pages/css/premium.css' %}">{% endblock %}
+
+{% block content %}
+    <div class="spacer"></div>
+
+    <section class="premium-jumbo">
+        <section class="premium-jumbo-left">
+            <div class="wrapper">
+                <img src="{% static 'pages/img/premium.png' %}"></img>
+                <a class="btn-sheen">Only $10 USD per month!</a>
+            </div>
+        </section>
+        <section class="premium-jumbo-right">
+            <div class="wrapper">
+                <p>Unlike many other services, we don't sell your private information to pay for our servers.</p>
+                <p>Consider supporting us today!</p>
+            </div>
+        </section>
+    </section>
+
+    <section class="premium-info">
+        <header class="premium-title">Frequently Asked Questions (FAQ)</header>
+    </section>
+
+    {% include 'shared/footer.html' %}
+{% endblock %}

@@ -26,7 +26,10 @@ from comet import dynamic_modals
 def index(request):
     """
     """
-    user_id = None if not request.user.is_authenticated else str(request.user.user_id)[:8]
+    user_id = None
+    if request.user.is_authenticated():
+        user_id = str(request.user.user_id)[:8]
+
     modals = dynamic_modals
     return render(request, "docs/index.html", {
         "title": (config.TITLE_FORMAT % "Documentation"),

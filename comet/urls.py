@@ -24,7 +24,7 @@ socketio.sdjango.autodiscover()
 from accounts import views as accounts
 from comet import views as comet
 from frontpage import views as front
-from search import views as search
+from pages import views as pages
 
 
 # URL Patterns
@@ -35,6 +35,7 @@ urlpatterns = [
     url(r'^logout', accounts.logout, name="logout"),
     url(r'^messages/', include("messenger.urls")),
     url(r'^docs/', include("docs.urls")),
-    url(r'^search', search.index, name="search"),
+    url(r'^search', pages.search, name="search"),
+    url(r'^premium', pages.premium, name="premium"),
     url(r'^socket\.io', include(socketio.sdjango.urls)),
 ]

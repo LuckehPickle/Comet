@@ -1,0 +1,143 @@
+/*
+ [Pages] PREMIUM.CSS - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
+ Powered by Django (https://www.djangoproject.com/)
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
+.menu{
+    position: fixed;
+    box-shadow: 0px 10px 0px rgba(0, 0, 0, 0.15);
+    background-color: #3B3B3B;
+}
+
+.navigation-menu li a{
+    color: #E3E3E3;
+}
+
+.nav-dropdown a{
+    color: #EBEBEB;
+    background-color: #3B3B3B;
+}
+
+.nav-dropdown a:hover{
+    background-color: #333333;
+}
+
+
+/* BEGIN PREMIUM JUMBO */
+section.premium-jumbo{
+    width: 100%;
+    background-color: #333333;
+    display: flex;
+}
+
+section[class^="premium-jumbo-"]{
+    margin: 0;
+    display: inline-block;
+}
+
+section[class^="premium-jumbo-"] .wrapper{
+    padding: 80px 0;
+    width: 100%;
+    max-width: 600px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+    /* BEGIN JUMBO LEFT */
+    .premium-jumbo-left{
+        width: calc(50% - 40px);
+    }
+
+    .premium-jumbo-left .wrapper{
+        margin-left: auto !important;
+    }
+
+    .premium-jumbo-left .wrapper > img{
+        height: 130px;
+        margin-bottom: 25px;
+        position: relative;
+        left: 2px;
+    }
+
+    .premium-jumbo-left .wrapper > p{
+        font-family: bebas-neue, sans-serif;
+        font-size: 70px;
+        color: #EBEBEB;
+        text-transform: uppercase;
+        padding: 0;
+        margin: 12px 0;
+    }
+
+    .premium-jumbo-left .btn-sheen{
+        cursor: pointer;
+        background-color: #f1592b;
+    }
+    /* END JUMBO LEFT */
+
+    /* BEGIN JUMBO RIGHT */
+    .premium-jumbo-right{
+        background-color: #2C2C2C;
+        -webkit-clip-path: polygon(60px 0%, 100% 0, 100% 100%, 0% 100%);
+        clip-path: polygon(60px 0%, 100% 0, 100% 100%, 0% 100%);
+        width: calc(50% + 40px);
+    }
+
+    .premium-jumbo-right .wrapper{
+        margin-right: auto !important;
+        height: 100%;
+        box-sizing: border-box;
+        padding-left: 40px !important;
+    }
+
+    .premium-jumbo-right p{
+        color: #EBEBEB;
+        font-family: 'Roboto', sans-serif;
+        font-weight: 300;
+        font-size: 25px;
+        text-align: center;
+        margin: 8px 0;
+        padding: 0 30px;
+    }
+
+    .premium-jumbo-right ul{
+        margin: 0;
+        padding: 0;
+    }
+
+    .premium-jumbo-right li{
+        color: #EBEBEB;
+        font-family: 'Roboto', sans-serif;
+        font-weight: 300;
+        font-size: 25px;
+    }
+    /* END JUMBO RIGHT */
+
+/* END PREMIUM JUMBO */
+
+.premium-info{
+    padding: 80px 0;
+}
+
+.premium-title{
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    font-size: 25px;
+    color: #757575;
+    -webkit-font-smoothing: antialiased;
+}
