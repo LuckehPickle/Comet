@@ -128,7 +128,7 @@ class FriendInvites(models.Model):
     Friend request/invite model.
     TODO Rename to FriendRequest
     """
-    
+
     recipient = models.ForeignKey(
         "User",
         on_delete=models.CASCADE,
