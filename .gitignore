@@ -65,3 +65,5 @@ pages/static/shared/js/slimscroll.js
 pages/templates/shared/footer.min.html
 pages/templates/shared/nav.min.html
 pages/templates/shared/push-messages.min.html
+pages/static/shared/js/push.min.js
+pages/static/shared/js/ripple.min.js

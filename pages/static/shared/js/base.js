@@ -4,8 +4,7 @@
  */
 
 /**
- * [Shared] BASE.JS - Copyright (c) 2016 - Sean Bailey - All Rights Reserved
- * Powered by Django (https://www.djangoproject.com/) - Not endorsed by Django
+ * Copyright (c) 2016 - Sean Bailey - All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -125,59 +124,61 @@ var MessageType = {
 
 /**
  * Push Message
+ * @param {number} type Type of push message. Refer to MessageType enum
+ * @param {string} message Message to display inside the push message
+ * @param {Boolean} display Should the message be displayed automatically (optional)
  */
-class PushMessage{
-
-    /**
-     * @constructor
-     * @param {number} type Type of push message. Refer to MessageType enum
-     * @param {string} message Message to display inside the push message
-     */
-    constructor(type, message){
-        this.type = type;
-        this.message = message;
+var PushMessage = function(type, message, display){
+    this.type = type;
+    this.message = message;
+    if(display != false){
         this.display();
     }
-
-    /**
-     * Displays and initialises the push message
-     */
-    display(){
-        $(".push-messages").append(
-            "<div class=\"push-message-container-" + this.type + "\" data-new>" +
-                "<svg class=\"push-message-close-" + this.type + "\" viewBox=\"0 0 20 20\">" +
-                    "<path d=\"M0 3 L3 0 L10 7 L17 0 L20 3 L13 10 L20 17 L17 20 L10 13 L3 20 L0 17 L7 10 z\">" +
-                "</svg>" +
-                "<p class=\"push-message-content-" + this.type + "\">" + this.message + "</p>" +
-            "</div>"
-        );
-
-        var container = $("[class^='push-message-container'][data-new]");
-        container.fadeIn(300);
-        container.removeAttr("data-new");
-
-        $("[class^='push-message-close']").on("click", function(){
-            closePushMessage($(this));
-        });
-
-        print(false, "Push message of type '" + this.type + "' created.");
-    }
-}
+};
 
 
 /**
- * Close Push Message
- * Closes a push message and sends a confirmation response to the server
- * if necessary.
- * @param {Element} source Element which fired the event.
+ * Display
+ * Displays and initialises the push message in the DOM.
  */
-function closePushMessage(source){
-    while(!source.is("[class*='push-message-container']")){
-        source = source.parent(); // Scale the DOM tree
+PushMessage.prototype.display = function(){
+    var instance = this;
+    if(instance.element != null){
+        return;
     }
 
-    source.slideUp(300, function(){
-        source.remove();
+    $(".push-messages").append(
+        "<div class=\"push-message-container-" + this.type + "\" data-new>" +
+            "<svg class=\"push-message-close-" + this.type + "\" viewBox=\"0 0 20 20\">" +
+                "<path d=\"M0 3 L3 0 L10 7 L17 0 L20 3 L13 10 L20 17 L17 20 L10 13 L3 20 L0 17 L7 10 z\">" +
+            "</svg>" +
+            "<p class=\"push-message-content-" + this.type + "\">" + this.message + "</p>" +
+        "</div>"
+    );
+
+    var container = $("[class^='push-message-container'][data-new]");
+    container.fadeIn(300);
+    container.removeAttr("data-new");
+    this.element = container;
+
+    $("[class^='push-message-close']").off(".push");
+    $("[class^='push-message-close']").on("click.push", function(){
+        instance.remove();
+    });
+
+    print(false, "Push message of type '" + this.type + "' created.");
+};
+
+
+/**
+ * Remove
+ * Removes/deletes this Push Message.
+ */
+PushMessage.prototype.remove = function(){
+    var instance = this;
+    instance.element.slideUp(200, function(){
+        instance.element.remove();
+        instance.element = null;
         print(false, "Push message closed.");
     });
 }
@@ -513,14 +514,14 @@ function _handlePushMessage(data){
     }
 
     print(false, "Received message of type '" + data.type + "'. Displaying.");
-    new PushMessage(data.type, data.message);
+    var instance = new PushMessage(data.type, data.message);
 
     // Handle any buttons that could be appended to the message
     var buttons = $("[class^='button-request-'][data-user-id][data-new]");
     buttons.on("click", function(event){
         var accept = $(this).is("[class*='accept']");
         answerFriendRequest(accept, $(this).attr("data-user-id"));
-        closePushMessage($(this));
+        instance.remove();
     });
     buttons.removeAttr("data-new");
 
@@ -780,22 +781,26 @@ function searchTypingComplete(){
 /**
  * Add Event Listeners
  * To be run at each page load, initialises any event listeners.
+ * @param {Boolean} page Is this a page load?
  */
-function addEventListeners(){
-    /* BEGIN PUSH MESSAGES */
-    var pushMessages = $("[class^='push-message-close'], [class^='button-request-']");
-    pushMessages.off(".base");
-    pushMessages.on("click.base", function(){
-        closePushMessage($(this));
-    });
+function addEventListeners(page){
+    if(page){
+        /* BEGIN PUSH MESSAGES */
+        var pushMessages = $("[class^='push-message-close'], [class^='button-request-']");
+        pushMessages.off(".base");
+        pushMessages.on("click.base", function(){
+            // TODO Handle messages from Django
+            print(true, "failure");
+        });
 
-    var pushMessageButton = $("[class^=\"button-request-\"][data-user-id]");
-    pushMessageButton.off(".base");
-    pushMessageButton.on("click.base", function(event){
-        var accept = $(this).is("[class*='-accept']");
-        answerFriendRequest(accept, $(this).attr("data-user-id"));
-    });
-    /* END PUSH MESSAGES */
+        var pushMessageButton = $("[class^=\"button-request-\"][data-user-id]");
+        pushMessageButton.off(".base");
+        pushMessageButton.on("click.base", function(event){
+            var accept = $(this).is("[class*='-accept']");
+            answerFriendRequest(accept, $(this).attr("data-user-id"));
+        });
+        /* END PUSH MESSAGES */
+    }
 
     /* BEGIN MODALS */
     var bgify = $(".bgify");
@@ -1056,10 +1061,10 @@ function registerModals(){
  * Init Page
  * Handles page initialisation. Event handlers etc.
  */
-function initPage(){
+function initPage(page){
     // Fade in any idle push messages
     $("div[class^='push-message-container']").fadeIn(300);
-    addEventListeners();
+    addEventListeners(page);
     registerModals();
     scrollToBottom($(".chat-body"));
 }
@@ -1070,10 +1075,10 @@ function initPage(){
  * has finished loading and is ready to work with.
  */
 $(document).on("pjax:success", function(){
-    initPage();
+    initPage(false);
 });
 
 $(document).on("ready", function(){
     _startSocket();
-    initPage();
+    initPage(true);
 });

@@ -6,4 +6,8 @@
 Nothing yet.
 
 **Changelog:**
- * Nothing yet
+ * Added a Pages app that handles any static pages.
+    * Merged Frontpage app into Pages app
+    * Merged shared files into Pages app
+ * Changed the way that Push Messages are handled internally.
+ * Added Browser Push Notifications (note: These are different from Push Messages)
