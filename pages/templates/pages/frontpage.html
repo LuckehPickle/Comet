@@ -2,13 +2,13 @@
 
 {% load staticfiles %}
 {% block title %}{{ title }} | Private, Open Source Messaging{% endblock %}
-{% block extra_css %}<link rel="stylesheet" type="text/css" href="{% static 'frontpage/main.css' %}">{% endblock %}
+{% block extra_css %}<link rel="stylesheet" type="text/css" href="{% static 'pages/css/frontpage.css' %}">{% endblock %}
 {% block extra_js %}{% endblock %}
 
 {% block content %}
     <div class="spacer"></div>
 
-    <!-- Jumbo -->
+    {# Jumbo #}
     <div class="jumbo">
         <div class="wrapper">
             <p id="head">Private, Open Source Messaging.</p>
@@ -22,7 +22,7 @@
         </div>
     </div>
 
-    <!-- Beta Warning -->
+    {# Beta Warning #}
     <div class="beta">
         <div class="wrapper">
             <i class="material-icons beta-item">warning</i>
@@ -31,7 +31,7 @@
         </div>
     </div>
 
-    <!-- About -->
+    {# About #}
     <div class="wrapper">
         <div class="about">
             <div class="topic"></div>
@@ -40,7 +40,7 @@
         </div>
     </div>
 
-    <!-- Features -->
+    {# Features #}
     <div class="features" id="features">
         <div class="wrapper">
             <div class="table"></div>

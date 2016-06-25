@@ -23,13 +23,12 @@ socketio.sdjango.autodiscover()
 # Other Imports
 from accounts import views as accounts
 from comet import views as comet
-from frontpage import views as front
 from pages import views as pages
 
 
 # URL Patterns
 urlpatterns = [
-    url(r'^$', front.index, name="frontpage"),
+    url(r'^$', pages.frontpage, name="frontpage"),
     url(r'^register', accounts.register, name="register"),
     url(r'^login', accounts.login, name="login"),
     url(r'^logout', accounts.logout, name="logout"),

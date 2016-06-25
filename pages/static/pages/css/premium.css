@@ -15,6 +15,7 @@
    limitations under the License.
 */
 
+/* BEGIN GENERAL STYLES */
 .menu{
     position: fixed;
     box-shadow: 0px 10px 0px rgba(0, 0, 0, 0.15);
@@ -23,6 +24,13 @@
 
 .navigation-menu li a{
     color: #E3E3E3;
+    background-color: #3B3B3B;
+    border-top-color: #4B4B4B;
+}
+
+.mobile-button-wrapper{
+    background-color: #3B3B3B;
+    border-top-color: #4B4B4B;
 }
 
 .nav-dropdown a{
@@ -33,7 +41,7 @@
 .nav-dropdown a:hover{
     background-color: #333333;
 }
-
+/* END GENERAL STYLES */
 
 /* BEGIN PREMIUM JUMBO */
 section.premium-jumbo{
