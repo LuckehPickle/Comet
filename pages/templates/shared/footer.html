@@ -17,7 +17,7 @@
 
 {% load static %}
 
-<div class="footer-top">
+<footer class="footer-top">
     <div class="footer-wrapper">
         <section>
             <p>Comet Info</p>
@@ -69,9 +69,9 @@
             {% endif %}
         </section>
     </div>
-</div>
+</footer>
 
-<div class="footer-bottom">
+<footer class="footer-bottom">
     <div class="footer-wrapper">
         <a href="{% url 'frontpage' %}" class="logo noselect" data-pjax>
             <img src="{% static 'shared/img/logo.svg' %}"></img>
@@ -79,4 +79,4 @@
         <p>© 2015-2016 Sean Bailey and Contributors. All Rights Reserved.</p>
         <a href="{% url 'frontpage' %}" class="privacy" data-pjax>Privacy</a>
     </div>
-</div>
+</footer>

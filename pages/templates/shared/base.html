@@ -57,22 +57,35 @@
         {% include 'shared/push-messages.html' %}
         {% include 'shared/nav.html' %}
 
-        <!-- Modals -->
-        <div class="_modal-wrapper">
-            {% for modal in modals %}
-                {% include modal.foreground %}
-            {% endfor %}
-        </div>
-        <div class="_modal-queue">
-            {% for modal in modals %}
-                {% include modal.background %}
-            {% endfor %}
+        {# Modals #}
+        <div class="modals">
+            {# Connecting Modal #}
+            <div class="modal-connecting modal">
+                <img src="{% static 'shared/img/logo.svg' %}">
+                <p>Connection lost. Attempting to reconnect...</p>
+                <div class="spinner">
+                    <div class="bounce1"></div>
+                    <div class="bounce2"></div>
+                    <div class="bounce3"></div>
+                </div>
+
+                {# Run in Background Button #}
+                <section class="noselect bgify tooltip-trigger">
+                    Continue in Background
+                    <div class="tooltip-container" data-fill-type="fill">
+                        Clicking this button will let you continue using Comet, but you will not be able to complete any tasks which require a connection.
+                    </div>
+                </section>
+            </div>
+
+            {% block modals %}{% endblock %}
         </div>
 
         <div class="pjax-body">{% block content %}{% endblock %}</div>
 
         {% block extra_inline_js %}{% endblock %}
 
+        {# Inline Scripts #}
         <script src="{% static 'shared/js/jquery-2.2.2.min.js' %}"></script>
         <script src="{% static 'shared/js/jquery.pjax.js' %}"></script>
         <script src="{% static 'shared/js/nprogress.js' %}"></script>

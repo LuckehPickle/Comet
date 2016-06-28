@@ -278,13 +278,10 @@
         position: absolute;
         top: 55px;
         right: 0;
-        min-width: 200px;
+        min-width: 240px;
         list-style-type: none;
         margin: 0;
         padding: 0;
-        border-bottom-color: #EBEBEB;
-        border-bottom-style: solid;
-        border-bottom-width: 3px;
         border-radius: 0 0 3px 3px;
         display: none;
     }
@@ -310,7 +307,7 @@
     }
 
     .nav-dropdown a{
-        padding: 8px 10px;
+        padding: 10px 12px;
         white-space: nowrap;
         height: 100%;
         color: #EBEBEB;
@@ -323,6 +320,9 @@
                 display: flex;
         -webkit-align-items: center;
                 align-items: center;
+        border-top-style: solid;
+        border-top-color: #4B4B4B;
+        border-top-width: 1px;
     }
 
     .nav-dropdown a:hover{

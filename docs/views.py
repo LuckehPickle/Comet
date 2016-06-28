@@ -20,7 +20,6 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 # Other Imports
 import cr_config as config
-from comet import dynamic_modals
 
 
 def index(request):
@@ -30,11 +29,9 @@ def index(request):
     if request.user.is_authenticated():
         user_id = str(request.user.user_id)[:8]
 
-    modals = dynamic_modals
     return render(request, "docs/index.html", {
         "title": (config.TITLE_FORMAT % "Documentation"),
         "user_id": user_id,
-        "modals": modals,
     })
 
 def category(request, category, slug=None):

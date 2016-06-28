@@ -22,7 +22,6 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 # Other Imports
 import cr_config as config
-from comet import dynamic_modals
 from comet.decorators import login_required_message
 
 
@@ -55,11 +54,8 @@ def render_page(request, location=None, data={}):
     if request.user.is_authenticated():
         user_id = str(request.user.user_id)[:8]
 
-    modals = dynamic_modals
-
     template_args = {
         "user_id": user_id,
-        "modals": modals,
     }
     template_args.update(data)
 

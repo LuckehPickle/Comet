@@ -29,11 +29,14 @@
 
         {# Navigation Menu #}
         <ul class="navigation-menu">
-            <li><a href="{% url 'premium' %}" data-pjax>Premium</a></li>
+            <li><a class="tooltip-trigger" data-pjax>
+                Premium
+                <div class="tooltip-container"><span class="tooltip">Coming soon!</span></div>
+            </a></li>
             <li><a href="{% url 'docs' %}" data-pjax>Documentation</a></li>
             <li><a class="tooltip-trigger">
                 Features
-                <div class="tooltip-container" data-fill-type="width">Coming soon!</div>
+                <div class="tooltip-container"><p class="tooltip">Coming soon!</p></div>
             </a></li>
             <li><a href="https://github.com/LuckehPickle/Comet" target="_blank">Source</a></li>
 

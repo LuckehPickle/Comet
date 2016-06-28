@@ -29,7 +29,6 @@ from messenger.models import Channel, ChannelPermissions, ChatInvite, ChatMessag
 # Other Imports
 import cr_config as config
 from accounts.models import User
-from comet import dynamic_modals
 from comet.decorators import login_required_message
 
 @login_required_message
@@ -168,8 +167,6 @@ def renderMessenger(request, title, form=CreateChatForm(), is_group=False, chann
 
     notify.check_notifications(request) # Check for new messages
 
-    modals = dynamic_modals
-
     groups = Channel.objects.filter(
         Q(users__in=[request.user]),
         is_group=True,
@@ -184,7 +181,6 @@ def renderMessenger(request, title, form=CreateChatForm(), is_group=False, chann
         "channel_id": channel_id,
         "chat_title": chat_title,
         "latest_messages": get_latest_messages(channel_id),
-        "modals": modals,
         "chunk": chunk,
     })
 

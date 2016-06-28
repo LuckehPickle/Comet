@@ -3,10 +3,40 @@
 {% load staticfiles %}
 {% block title %}{{ title }}{% endblock %}
 {% block extra_css %}<link href="{% static 'messenger/css/main.css' %}" type="text/css" rel="stylesheet">{% endblock %}
-
-{% block modals %}{% include 'messenger/modal_create.html' %}{% endblock %}
+{% block extra_js %}<script src="{% static 'messenger/js/messenger.js' %}"></script>{% endblock %}
 
 {% load messenger_tags %}
+
+{% block modals %}
+<div class="modal-create modal">
+    <p class="modal-title">Create Group</p>
+
+    {# Modal Form TODO Rewrite form without Django #}
+    <form action="{% url 'create' %}" method="post" novalidate>
+        {% csrf_token %}
+
+        <div class="modal-input-container">
+            <p>Group Name</p>
+            <div><input id="id_name" maxlength="32" name="name" type="text" /></div>
+        </div>
+
+        <div class="modal-checkbox-container">
+            <input id="id_is_public" name="is_public" type="checkbox" />
+            <label for="id_is_public" class="noselect">Make this group public</label>
+        </div>
+
+        {# Modal Button Wrapper #}
+        <div class="modal-button-wrapper">
+            <input type="submit" value="Create">
+            <div class="modal-silent-button noselect modal-create-cancel">
+                Cancel
+                <link class="rippleJS"/>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
 {% block content %}
     <script>
         {% if channel_id != None %}
