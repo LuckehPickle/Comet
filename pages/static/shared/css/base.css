@@ -30,7 +30,7 @@
  * The following rules apply styles to the scrollbar, but only work
  * on webkit browsers (e.g. Chrome, Safari). For non webkit browsers
  * such as Firefox, a JScrollPane fallback will be applied.
- */
+ *
 div::-webkit-scrollbar{width: 8px;}
 div::-webkit-scrollbar-track{-webkit-box-shadow: none;}
 div::-webkit-scrollbar-thumb{
@@ -40,7 +40,7 @@ div::-webkit-scrollbar-thumb{
 }
 div:hover::-webkit-scrollbar-thumb{
     background-color: rgba(20, 20, 20, 0.4);
-}
+}*/
 
 body{
     margin: 0;
@@ -341,7 +341,12 @@ body.modal-open{
     pointer-events: none;
 }
 
-.tooltip{
+.tooltip-container[data-above]{
+    top: auto;
+    bottom: 40px;
+}
+
+.tooltip-container .tooltip{
     background-color: rgba(0, 0, 0, 0.8);
     padding: 4px 8px;
     border-radius: 3px;
@@ -358,9 +363,14 @@ body.modal-open{
     width: auto;
     margin: 0 auto;
     display: block;
+    z-index: 100;
 }
 
-.tooltip::before{
+.tooltip-container[data-above] .tooltip{
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.tooltip-container .tooltip::before{
     content: "";
     width: 0;
     height: 0;
@@ -369,7 +379,15 @@ body.modal-open{
     right: calc(50% - 6px);
     border-style: solid;
     border-width: 0 6px 6px 6px;
-    border-color: transparent transparent rgba(0, 0, 0, 0.8) transparent;;
+    border-color: transparent transparent rgba(0, 0, 0, 0.8) transparent;
+}
+
+.tooltip-container[data-above] .tooltip::before{
+    top: auto;
+    bottom: -6px;
+    border-style: solid;
+    border-width: 6px 6px 0 6px;
+    border-color: rgba(0, 0, 0, 0.6) transparent transparent transparent;
 }
 
 @media screen and (min-width: 40.5em){

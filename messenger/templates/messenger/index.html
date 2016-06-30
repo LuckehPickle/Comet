@@ -2,7 +2,7 @@
 
 {% load staticfiles %}
 {% block title %}{{ title }}{% endblock %}
-{% block extra_css %}<link href="{% static 'messenger/css/main.css' %}" type="text/css" rel="stylesheet">{% endblock %}
+{% block extra_css %}<link href="{% static 'messenger/css/messenger.css' %}" type="text/css" rel="stylesheet">{% endblock %}
 {% block extra_js %}<script src="{% static 'messenger/js/messenger.js' %}"></script>{% endblock %}
 
 {% load messenger_tags %}
@@ -47,262 +47,130 @@
         {% endif %}
     </script>
 
-    {% if chunk == ".chat-right" %}
-        {# Toolbar #}
-        <div class="toolbar">
-            {# Desktop Tools #}
-            <div class="desktop-tools">
-                {# Chat Title #}
-                <p class="chat-title">
-                    {% if chat_title != None %}
-                        {{ chat_title }}
-                    {% else %}No channel{% endif %}
-                </p>
+    {# Wrapper #}
+    <div class="messenger-wrapper">
 
-                {% if is_group %}
-                    {# Copy URL #}
-                    <!-- TODO Copy URL -->
-
-                    {# Add Users #}
-                    <div class="add-users-button">
-                        <span>Add Users</span>
-                        <link class="rippleJS"/>
-                    </div>
-                {% endif %}
-            </div>
-
-            {# Mobile Tools #}
-            <div class="mobile-tools">
-                <!-- TODO Mobile tools -->
-            </div>
-        </div>
-
-        {# Chat Body #}
-        <div class="chat-body">
-            {% if channel_id != None %}
-                {% for message in latest_messages reversed %}
-                    {% with other=message|is_other:request.user.user_id %}
-                        <div class="chat-message-container{{ other }}" data-user-id="{{ message.sender_id }}">
-                            <div class="chat-message-image{{ other }}"></div>
-                            <span class="triangle-top-{% if message|is_other:request.user.user_id == "" %}left{% else %}right{% endif %}"></span>
-                            <section>
-                                <div class="chat-message-content{{ other }}">{{ message.contents|safe|linebreaks }}</div>
-                            </section>
-                            <p class="chat-message-sender{{ other }}">{{ message.sender }} ({{ message.time_sent|date:"H:i" }})</p>
-                        </div>
-                    {% endwith %}
-                {% empty %}
-                    <p class="no-messages">No messages have been sent in this channel yet.</p>
-                {% endfor %}
-            {% else %}
-                <p class="no-channel">You're not currently connected to a channel.</p>
-            {% endif %}
-        </div>
-
-        {# Chat Footer #}
-        <div class="chat-footer">
-            <form class="chat-form" novalidate{% if channel_id == None %} disabled{% endif %}>
-                <div class="chat-form-input" {% if channel_id != None %}contenteditable="true"{% endif %}></div>
-                <div class="chat-send">
-                    <i class="material-icons">send</i>
-                    <link class="rippleJS"/>
-                </div>
-                <input type="submit"><!-- Hidden, allows users to press 'enter' -->
-            </form>
-        </div>
-    {% else %}
-        {# Begin Section Wrapper #}
-        <section class="section-wrapper">
-        <section class="section-area">
-
-        {% comment %}
-          Chat Section Left
-          This section is only loaded if there was no PJAX call for .chat-right
-        {% endcomment %}
-        <section class="chat-left">
-
-            {% comment %}
-              Toolbar
-              This toolbar is not loaded in the mobile version, so all
-              mobile tools must be contained in the chat section right.
-            {% endcomment %}
-            <div class="toolbar">
-                {# Desktop Tools #}
-                <div class="desktop-tools">
-
-                    {# Create Group Button #}
-                    <div class="create-group-dropdown dropdown-trigger" data-dropdown-id="create-dropdown">
-                        <span style="padding-right:5px;">
-                            Create Group
-                            <i class="material-icons">keyboard_arrow_down</i>
-                        </span>
-                        <link class="rippleJS"/>
-
-                        {# Create Group Dropdown #}
-                        <ul class="dropdown" data-dropdown-id="create-dropdown">
-                            <li class="create-group-trigger">Private Group</li>
-                            <li class="create-group-trigger">Public Group</li>
-                        </ul>
-                    </div>
-
-                    {# Search #}
-                    <div class="search">
-                        <i class="material-icons noselect">search</i>
-                        <input type="text" spellcheck="false" placeholder="Search...">
-
-                        {# Search Dropdown #}
-                        <div class="search-dropdown">
-                            <section class="search-dropdown-users">
-                                <p class="search-dropdown-title">Users</p>
-                                <p class="search-dropdown-no-results">No results found.</p>
-                            </section>
-                            <section class="search-dropdown-pages">
-                                <p class="search-dropdown-title">Docs</p>
-                                <p class="search-dropdown-no-results">No results found.</p>
-                            </section>
-                            <section>
-                                <a class="search-dropdown-silent">
-                                    See all results
-                                    <link class="rippleJS">
-                                </a>
-                            </section>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {% comment %}
-              Tab Area
-              Contains friends list and groups list.
-            {% endcomment %}
-            <div class="tab-area">
-                {# Tab Heads #}
-                <div class="tab-heads">
-                    <div class="tab-head noselect" data-tab="tab-friends" {% if not is_group %}active{% endif %}>Friends</div>
-                    <div class="tab-head noselect" data-tab="tab-groups" {% if is_group %}active{% endif %}>Groups</div>
-                </div>
-
-                {# Friends List Tab Body #}
-                <div class="tab-body" data-tab="tab-friends" {% if not is_group %}active{% endif %}>
-                    {% for friend in request.user.friends.all %}
-                        <a class="friend-container" href="{{ friend.get_absolute_url }}" data-pjax-m {% if not is_group and friend.user_url in channel_id %}active{% endif %}>
-                            <div class="friend-image"></div>
-                            <section>
-                                <p class="friend-name">{{ friend.username }}</p>
-                                <!-- TODO {{ friend.get_latest_message }} -->
-                                <p class="friend-message">todo</p>
-                            </section>
-                            <div class="friend-status-{% if friend|is_online %}online{% else %}offline{% endif %}"></div>
-                        </a>
-                    {% empty %}
-                        <div class="no-friends">
-                             Looks like you don't have any friends yet.
-                             <img src="{% static 'messenger/img/tutorial_users.gif' %}">
-                        </div>
-                    {% endfor %}
-                </div>
-
-                {# Groups List Tab Body #}
-                <div class="tab-body" data-tab="tab-groups" {% if is_group %}active{% endif %}>
-                    {% for group in groups %}
-                        <a class="group-container" href="{{ group.get_absolute_url }}" data-pjax-m {% if is_group and channel_id == group.channel_id %}active{% endif %}>
-                            <div class="group-image"></div>
-                            <section>
-                                <p class="group-name">{{ group.name }}</p>
-                                <p class="group-message">{{ group.get_latest_message }}</p>
-                            </section>
-                        </a>
-                    {% empty %}
-                        <div class="no-groups">
-                            Looks like your not in any groups yet. Create one by clicking 'Create Group' on the toolbar above.
-                            <img src="{% static 'messenger/img/tutorial_groups.gif' %}">
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-        </section>
-
-
-        {% comment %}
-          Chat Section Right
-          This section is always loaded, even if it's a PJAX call. The layout
-          of the messenger interface is split into two halves, in order to
-          simplify updating new content with PJAX.
-        {% endcomment %}
-        <section class="chat-right">
-
+        {# Section One: Channel List #}
+        <section class="channel-list">
             {# Toolbar #}
-            <div class="toolbar">
-                {# Desktop Tools #}
-                <div class="desktop-tools">
-                    {# Chat Title #}
-                    <p class="chat-title">
-                        {% if chat_title != None %}
-                            {{ chat_title }}
-                        {% else %}No channel{% endif %}
-                    </p>
+            <div class="messenger-toolbar"></div>
 
-                    {% if is_group %}
-                        {# Copy URL #}
-                        <!-- TODO Copy URL -->
-
-                        {# Add Users #}
-                        <div class="add-users-button">
-                            <span>Add Users</span>
-                            <link class="rippleJS"/>
-                        </div>
-                    {% endif %}
-                </div>
-
-                {# Mobile Tools #}
-                <div class="mobile-tools">
-                    <!-- TODO Mobile tools -->
+            {# Search #}
+            <div class="search-wrapper">
+                <div class="search">
+                    <i class="material-icons noselect">search</i>
+                    <input class="search-input" type="text" spellcheck="false" placeholder="Search Users">
                 </div>
             </div>
 
-            {# Chat Body #}
-            <div class="chat-body">
-                {% if channel_id != None %}
-                    {% for message in latest_messages reversed %}
-                        {% with other=message|is_other:request.user.user_id %}
-                            <div class="chat-message-container{{ other }}" data-user-id="{{ message.sender_id }}">
-                                <div class="chat-message-image{{ other }}"></div>
-                                <span class="triangle-top-{% if message|is_other:request.user.user_id == "" %}left{% else %}right{% endif %}"></span>
-                                <section>
-                                    <div class="chat-message-content{{ other }}">{{ message.contents|safe|linebreaks }}</div>
-                                </section>
-                                <p class="chat-message-sender{{ other }}">{{ message.sender }} ({{ message.time_sent|date:"H:i" }})</p>
-                            </div>
-                        {% endwith %}
-                    {% empty %}
-                        <p class="no-messages">No messages have been sent in this channel yet.</p>
-                    {% endfor %}
+            {# Friends/Groups #} <!-- TODO Update with AJAX or Sockets -->
+            <!-- Load the 10 most recent channels and refresh frequently -->
+            <div class="channel-list-inner">
+
+                {# Channel Template #}
+                <a class="chnl-wrapper">
+                    <div class="chnl-image"></div>
+                    <div class="chnl-info">
+                        <p class="chnl-name">Template Channel</p>
+                        <div class="last-message-wrapper">
+                            <p class="last-message">User: This is the last message that was sent in this channel.</p>
+                            <p class="last-message-time">2:30pm</p>
+                        </div>
+                    </div>
+                </a>
+
+                {# Channel Template #}
+                <a class="chnl-wrapper" active>
+                    <div class="chnl-image"></div>
+                    <div class="chnl-info">
+                        <p class="chnl-name">Template Channel</p>
+                        <div class="last-message-wrapper">
+                            <p class="last-message">User: This is the last message that was sent in this channel.</p>
+                            <p class="last-message-time">2:30pm</p>
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+        </section>
+
+
+        {# Section Two: Channel Panel #}
+        <section class="channel-panel">
+            {# Toolbar #}
+            <div class="messenger-toolbar">
+                {% if channel_id == None %}
+                    <p class="no-channel">No Channel Selected</p>
+                {% elif is_group %}
+                    <p class="channel-title">{{ chat_title }}</p>
                 {% else %}
-                    <p class="no-channel">You're not currently connected to a channel.</p>
+                    <p class="channel-username">{{ chat_title }}</p>
+                    <input class="channel-nickname" type="text">
                 {% endif %}
             </div>
 
-            {# Chat Footer #}
-            <div class="chat-footer">
-                <form class="chat-form" novalidate{% if channel_id == None %} disabled{% endif %}>
-                    <div class="chat-form-input" {% if channel_id != None %}contenteditable="true"{% endif %}></div>
-                    <div class="chat-send">
-                        <i class="material-icons">send</i>
-                        <link class="rippleJS"/>
-                    </div>
-                    <input type="submit"><!-- Hidden, allows users to press 'enter' -->
-                </form>
+            {# Messenger Body #}
+            <div class="messenger-body"></div>
+
+            {# Messenger Footer #}
+            <div class="messenger-footer">
+
+                {# Messenger Input #}
+                <div class="messenger-input-wrapper">
+                    <p class="messenger-input-placeholder">Enter a message...</p>
+                    <div class="messenger-input" contenteditable></div>
+                </div>
+
+                {# Messenger Tools #}
+                <div class="messenger-tool tooltip-trigger">
+                    <i class="material-icons noselect">image</i>
+                    <div class="tooltip-container" data-above><p class="tooltip">Attach Image... (Coming Soon)</p></div>
+                </div>
+
+                <div class="messenger-tool tooltip-trigger">
+                    <i class="material-icons noselect">attach_file</i>
+                    <div class="tooltip-container" data-above><p class="tooltip">Attach File... (Coming Soon)</p></div>
+                </div>
+
+                <!-- TODO Emoji and improve aesthetics of input -->
             </div>
         </section>
 
-        {# End Section Wrapper #}
-        </section>
+
+        {# Section Three: Channel Info #}
+        <section class="channel-info">
+            {# Toolbar #}
+            <div class="messenger-toolbar"></div>
+
+            <!-- TODO Allow this to be PJAXed and AJAXed -->
+            {% if is_group %}
+                {# Channel Title and Type #}
+
+                {# Channel URL #}
+
+                {# Channel Image #}
+
+                {# Channel Moderators #}
+
+                {# Channel Members (If not too large) #}
+
+                {# Creator Info and Date #}
+            {% else %}
+                {# Username and Nickname #}
+
+                {# User Tags and Achievements (In a Modal) #}
+
+                {# User Image #}
+
+                {# User Bio #}
+
+                {# User Links #}
+
+                {# Friend Status #}
+
+                {# Private Message (If not in private message) #}
+            {% endif %}
         </section>
 
-        {# Compressed Footer #}
-        <!-- TODO Redo -->
-        <div class="compact-footer">
-            <div>Copyright © 2016 - Sean Bailey - All Rights Reserved</div>
-        </div>
-    {% endif %}
+    </div>
 {% endblock %}

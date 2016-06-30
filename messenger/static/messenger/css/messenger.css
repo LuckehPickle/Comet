@@ -1,0 +1,499 @@
+/**
+ * Copyright (c) 2016 - Sean Bailey - All Rights Reserved
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
+/* BEGIN GENERAL STYLES */
+.menu{
+    box-shadow: none;
+    background-color: #3B3B3B;
+}
+
+.menu-wrapper{
+    margin: 0;
+    max-width: 100%;
+}
+
+.navigation-menu li a{
+    color: #E3E3E3;
+}
+
+@media screen and (max-width: 899px){
+    .navigation-menu li a{
+        background-color: #3B3B3B;
+        border-top-color: #4B4B4B;
+    }
+}
+
+.mobile-button-wrapper{
+    background-color: #3B3B3B;
+    border-top-color: #4B4B4B;
+}
+
+.nav-dropdown a{
+    color: #EBEBEB;
+    background-color: #3B3B3B;
+}
+
+.nav-dropdown a:hover{
+    background-color: #333333;
+}
+/* END GENERAL STYLES */
+
+
+/* BEGIN MESSENGER STYLES */
+.messenger-wrapper{
+    position: absolute;
+    top: 50px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.messenger-toolbar{
+    height: 40px;
+    width: 100%;
+    background-color: #404040;
+    padding: 0 10px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media screen and (min-width: 900px){
+    .messenger-wrapper{
+        top: 70px;
+    }
+
+    .messenger-toolbar{
+        height: 50px
+    }
+}
+
+.messenger-wrapper > section{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    background-color: #4A4A4A;
+    box-sizing: border-box;
+}
+
+.channel-panel{
+    background-color: #464646 !important;
+}
+/* END MESSENGER STYLES */
+
+
+/* BEGIN TOOLBAR STYLES */
+.no-channel, .channel-title, .channel-username{
+    color: #DBDBDB;
+    font-family: 'Roboto', sans-serif;
+    font-size: 17px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.channel-username{
+    padding-right: 10px;
+}
+/* END TOOLBAR STYLES */
+
+
+/* BEGIN SEARCH */
+.search-wrapper{
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.search{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #404040;
+    border-radius: 3px;
+    cursor: text;
+}
+
+.search > i{
+    color: #DBDBDB;
+    padding: 0;
+    padding-left: 12px;
+    font-size: 20px;
+}
+
+.search-input{
+    border: none;
+    outline: none;
+    background-color: transparent;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    color: #DBDBDB;
+    flex-grow: 1;
+    padding: 10px 12px;
+    box-sizing: border-box;
+}
+
+.search-input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color: #D8D8D8;
+}
+
+.search-input:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: #D8D8D8;
+    opacity: 1;
+}
+
+.search-input::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: #D8D8D8;
+    opacity: 1;
+}
+
+.search-input:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: #D8D8D8;
+}
+
+@media screen and (min-width: 801px){
+    .search-wrapper{
+        padding: 15px 12px;
+    }
+
+    .search-input{
+        font-size: 15px;
+    }
+
+    .search > i{
+        font-size: 22px;
+    }
+}
+/* END SEARCH */
+
+
+/* BEGIN CHANNEL LIST */
+.channel-list-inner{
+    width: 100%;
+    height: calc(100% - 99px);
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.chnl-wrapper{
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    border-top: 1px solid #454545;
+    cursor: pointer;
+}
+
+.chnl-wrapper[active]{
+    background-color: #555555;
+}
+
+.chnl-image{
+    width: 34px;
+    height: 34px;
+    background-color: #3A3A3A;
+    flex-shrink: 0;
+    border-radius: 2px;
+}
+
+.chnl-info{
+    flex-grow: 1;
+    padding-left: 10px;
+    box-sizing: border-box;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.chnl-wrapper p{
+    font-family: 'Roboto', sans-serif;
+    font-size: 13px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    margin: 0;
+    color: #DBDBDB;
+}
+
+p.chnl-name{
+    margin-bottom: 3px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.last-message-wrapper{
+    display: flex;
+    width: 100%;
+    overflow: hidden;
+}
+
+p.last-message{
+    color: #CBCBCB;
+}
+
+p.last-message-time{
+    color: #CBCBCB;
+    margin-left: 5px;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+@media screen and (min-width: 801px){
+    .channel-list-inner{
+        height: calc(100% - 120px);
+    }
+
+    .chnl-wrapper{
+        padding: 15px;
+    }
+
+    .chnl-wrapper p{
+        font-size: 15px;
+    }
+
+    p.chnl-name{
+        font-size: 16px;
+    }
+
+    .chnl-image{
+        height: 42px;
+        width: 42px;
+    }
+}
+/* END CHANNEL LIST */
+
+
+/* BEGIN CHANNEL PANEL */
+.channel-panel{
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.messenger-toolbar{
+    flex-shrink: 0;
+}
+
+.messenger-body{
+    flex-grow: 1;
+}
+
+.messenger-footer{
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    padding-right: 10px;
+}
+
+.messenger-input-wrapper{
+    flex-grow: 1;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    padding: 12px;
+    padding-right: 6px;
+    box-sizing: border-box;
+}
+
+.messenger-input-placeholder{
+    position: absolute;
+    pointer-events: none;
+    margin: 0;
+    top: 0;
+    left: 0;
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    padding: 22px 26px;
+    color: #D8D8D8;
+}
+
+.messenger-input{
+    width: 100%;
+    outline: none;
+    padding: 10px 14px;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    overflow: hidden;
+    color: #DBDBDB;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    min-height: 41px;
+    background-color: #3B3B3B;
+    border-radius: 2px;
+}
+
+.messenger-tool{
+    padding: 8px;
+}
+
+.messenger-tool > i{
+    color: #DBDBDB;
+}
+
+@media screen and (min-width: 801px){
+    .messenger-input-wrapper{
+        padding: 18px;
+        padding-right: 9px;
+    }
+
+    .messenger-input-placeholder{
+        padding: 28px 32px;
+    }
+}
+/* END CHANNEL PANEL */
+
+
+/**
+ * All devices less than 800px.
+ */
+@media screen and (max-width: 800px){
+    /* BEGIN CHANNEL PANEL */
+    .channel-panel{
+        right: 0;
+        left: 0;
+    }
+    /* END CHANNEL PANEL */
+
+
+    /* BEGIN CHANNEL LIST */
+    .channel-list{
+        left: -278px;
+        width: 270px;
+        z-index: 2;
+    }
+
+    .channel-list[active]{
+        left: 0;
+    }
+    /* END CHANNEL LIST */
+
+
+    /* BEGIN CHANEL INFO */
+    .channel-info{
+        right: -278px;
+        width: 270px;
+        z-index: 2;
+    }
+
+    .channel-info[active]{
+        right: 0;
+    }
+    /* END CHANNEL INFO */
+
+    .messenger-wrapper > section:first-child{
+        box-shadow: 6px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    .messenger-wrapper > section:last-child{
+        box-shadow: -6px 0 rgba(0, 0, 0, 0.3);
+    }
+}
+
+
+/**
+ * All devices between 801px and 1450px.
+ */
+@media screen and (min-width: 801px) and (max-width: 1450px){
+
+    /* BEGIN CHANNEL PANEL */
+    .channel-panel{
+        right: 0;
+        left: 350px;
+    }
+    /* END CHANNEL PANEL */
+
+
+    /* BEGIN CHANNEL LIST */
+    .channel-list{
+        left: 0;
+        width: 350px;
+        z-index: 2;
+    }
+    /* END CHANNEL LIST */
+
+
+    /* BEGIN CHANEL INFO */
+    .channel-info{
+        right: -278px;
+        width: 270px;
+        z-index: 2;
+    }
+
+    .channel-info[active]{
+        right: 0;
+    }
+    /* END CHANNEL INFO */
+
+    .messenger-wrapper > section:first-child{
+        border-right-color: #404040;
+        border-right-style: solid;
+        border-right-width: 2px;
+    }
+
+    .messenger-wrapper > section:last-child{
+        box-shadow: -6px 0 rgba(0, 0, 0, 0.3);
+    }
+}
+
+
+/**
+ * All devices greater than 1451px.
+ */
+@media screen and (min-width: 1451px){
+
+    /* BEGIN CHANNEL PANEL */
+    .channel-panel{
+        right: 350px;
+        left: 350px;
+    }
+    /* END CHANNEL PANEL */
+
+
+    /* BEGIN CHANNEL LIST */
+    .channel-list{
+        left: 0;
+        width: 350px;
+        z-index: 2;
+    }
+    /* END CHANNEL LIST */
+
+
+    /* BEGIN CHANEL INFO */
+    .channel-info{
+        right: 0;
+        width: 350px;
+        z-index: 2;
+    }
+    /* END CHANNEL INFO */
+
+    .messenger-wrapper > section:first-child{
+        border-right-color: #404040;
+        border-right-style: solid;
+        border-right-width: 2px;
+    }
+
+    .messenger-wrapper > section:last-child{
+        border-left-color: #404040;
+        border-left-style: solid;
+        border-left-width: 2px;
+    }
+}

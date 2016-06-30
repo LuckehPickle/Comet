@@ -98,7 +98,7 @@ class MessengerNamespace(BaseNamespace, ChannelMixin):
         if most_recent == None:
             most_recent = create_message(
                 sender=self.request.user,
-                contents=escape(message),
+                message=escape(message),
                 channel_id=channel_id
             )
 
