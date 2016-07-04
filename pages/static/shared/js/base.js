@@ -136,7 +136,7 @@ function addEventListeners(fullLoad){
     /* END NAV DROPDOWN */
 
     /* BEGIN SEARCH */
-    var searchInput = $(".search input, .docs-search input");
+    var searchInput = $(".docs-search input");
     searchInput.off(".base");
     searchInput.on("keyup.base", function(){
         clearTimeout(typing_timer);
@@ -146,24 +146,18 @@ function addEventListeners(fullLoad){
         clearTimeout(typing_timer);
     });
 
-    var searchIcon = $(".search:not([active]) i, .docs-search:not([active]) i");
+    var searchIcon = $(".docs-search:not([active]) i");
     searchIcon.off(".base");
     searchIcon.on("click.base", function(){
         searchInput.focus();
     });
 
     // No need to remove events here, it was done above
-    $(".search:not([active]) input, .docs-search:not([active]) input").on("focus.base", function(){
-        $(".search-dropdown, .docs-search-dropdown").hide();
+    $(".docs-search:not([active]) input").on("focus.base", function(){
+        $(".docs-search-dropdown").hide();
         $(this).parent().attr("active", "");
         $(this).select();
-        if(!$(this).parent().is("[class*='docs']")){
-            setTimeout(function(){
-                $(".search-dropdown").slideDown(200);
-            }, 300);
-        }else{
-            $(".docs-search-dropdown").slideDown(200);
-        }
+        $(".docs-search-dropdown").slideDown(200);
     });
     /* END SEARCH */
 
@@ -693,22 +687,6 @@ function answerFriendRequest(accept, user_id){
     });
     print((accept ? "Accepted" : "Denied") + " friend request from user with id '" + user_id + "'.");
 }
-
-
-/**
- * Request Query Response
- * Request a response to the search query via Socket IO.
- * @param {string} query Query to be requested.
- */
-var requestQueryResponse = function(query){
-    if(query == "" || query == null || query.length < 2){
-        print("Query cancelled (Possibly too short).");
-        return;
-    }
-
-    send("search", query);
-    print("Sent a query for users named '" + query + "'");
-};
 
 
 /**

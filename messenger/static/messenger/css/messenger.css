@@ -109,7 +109,7 @@
     cursor: pointer;
 }
 
-.no-channel, .channel-title, .channel-username{
+.channel-title, .channel-username{
     color: #DBDBDB;
     font-family: 'Roboto', sans-serif;
     font-size: 17px;
@@ -149,6 +149,7 @@
     padding: 0;
     padding-left: 12px;
     font-size: 20px;
+    pointer-events: none;
 }
 
 .search-input{
@@ -194,6 +195,40 @@
         font-size: 22px;
     }
 }
+
+.search-results{
+    display: none;
+    width: 100%;
+    height: calc(100% - 99px);
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.search-no-results{
+    width: 100%;
+    padding: 0 30px;
+    box-sizing: border-box;
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    color: #DBDBDB;
+}
+
+.search-all-results{
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    color: #DBDBDB;
+    border-radius: 2px;
+    padding: 8px 10px;
+    box-sizing: border-box;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    white-space: nowrap;
+    margin: 0 10px;
+}
 /* END SEARCH */
 
 
@@ -213,6 +248,7 @@
     align-items: center;
     border-top: 1px solid #454545;
     cursor: pointer;
+    text-decoration: none;
 }
 
 .chnl-wrapper[active]{

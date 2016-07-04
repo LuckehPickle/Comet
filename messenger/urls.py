@@ -22,6 +22,6 @@ from . import views
 urlpatterns = [
     url(r'^$', views.index, name="messages"),
     url(r'^create', views.create, name="create"),
-    url(r'^user/(?P<identifier>[a-zA-Z0-9]+)$', views.private),
-    url(r'^(?P<group_id>[a-zA-Z0-9]+)$', views.group),
+    url(r'^user/(?P<user_url>[a-zA-Z0-9]+)$', views.private),
+    url(r'^(?P<channel_id>[a-zA-Z0-9]+)$', views.group),
 ]

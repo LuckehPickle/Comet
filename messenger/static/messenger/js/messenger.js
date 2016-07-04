@@ -20,14 +20,16 @@
  */
 
 /** @const */ var NAMESPACE = "messenger";
+/** @const */ var SEARCH_TYPING_INTERVAL = 100; // How long should typing last (milliseconds)
 var createModal;
+var searchTimer;
 
 /**
  * Animations
  */
 var channelListIn = anime({
     targets: ".channel-list",
-    duration: 80,
+    duration: 100,
     easing: "easeInCubic",
     autoplay: false,
     top: ["100%", 0],
@@ -36,7 +38,7 @@ var channelListIn = anime({
 
 var channelListOut = anime({
     targets: ".channel-list",
-    duration: 80,
+    duration: 100,
     easing: "easeInCubic",
     autoplay: false,
     top: [0, "100%"],
@@ -45,7 +47,7 @@ var channelListOut = anime({
 
 var channelInfoIn = anime({
     targets: ".channel-info",
-    duration: 80,
+    duration: 100,
     easing: "easeInCubic",
     autoplay: false,
     top: ["100%", 0],
@@ -54,7 +56,7 @@ var channelInfoIn = anime({
 
 var channelInfoOut = anime({
     targets: ".channel-info",
-    duration: 80,
+    duration: 100,
     easing: "easeInCubic",
     autoplay: false,
     top: [0, "100%"],
@@ -176,6 +178,53 @@ function addMessengerEventListeners(fullLoad){
     });
     /* END CHANNEL LIST */
 
+    /* BEGIN SEARCH */
+    var searchResults = $(".search-results");
+    var searchInput = $(".search-input");
+    searchInput.off("." + NAMESPACE);
+    searchInput.on("keyup." + NAMESPACE, function(event){
+        if(event.which == 16 || // Shift
+           event.which == 17 || // Ctrl
+           event.which == 18){  // Alt
+            return;
+        }
+
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(searchComplete, SEARCH_TYPING_INTERVAL);
+
+        var query = searchInput.val().trim();
+        if(!query.length){ // Query is empty, show channel list.
+            searchResults.hide();
+            searchResults.removeAttr("active");
+            $(".channel-list-inner").fadeIn(100);
+        }else if(query.length && !searchResults.is("[active]")){
+            $(".channel-list-inner").hide();
+            searchResults.fadeIn(100);
+            searchResults.attr("active", "");
+        }
+
+        if(query.length < 3){ // Search not long enough.
+            removeStaleSearches();
+            $(".search-results").append("<p class=\"search-no-results\">Search not long enough.</p>");
+        }
+    });
+
+    searchInput.on("keydown." + NAMESPACE, function(event){
+        if(event.which == 16 || // Shift
+           event.which == 17 || // Ctrl
+           event.which == 18){  // Alt
+            return;
+        }
+        clearTimeout(searchTimer);
+    });
+
+    var search = $(".search");
+    search.off("." + NAMESPACE);
+    search.on("click." + NAMESPACE, function(){
+        searchInput.focus();
+    });
+    /* END SEARCH */
+
     /* BEGIN DOCUMENT */
     $("html").off("." + NAMESPACE);
     $("html").on("click." + NAMESPACE, handleMessengerDocumentEvent);
@@ -265,9 +314,6 @@ function appendMessage(message, sender, senderID, timeSent){
 
 
 /* BEGIN SEARCH */
-/** @const */ var DONE_TYPING_INTERVAL = 100; // How long should typing last (milliseconds)
-var typing_timer; // Tracks the typing timeout
-
 /**
  * Update Search
  * Removes stale search data and adds the latest data from the server.
@@ -277,57 +323,52 @@ var typing_timer; // Tracks the typing timeout
 function updateSearch(users, friends){
     removeStaleSearches();
 
-    if(users.length == 0){ // No data returned (i.e. Empty result)
-        $(".search-dropdown-users").append("<p class=\"search-dropdown-no-results\">No results found.</p>");
+    if(users.length == 0){
+        // No data returned
+        $(".search-results").append("<p class=\"search-no-results\">No results found.</p>");
         return;
     }
 
     // Iterate over each user
     jQuery.each(users, function(){
         // Defaults
-        var innerHTML = "<i class=\"material-icons\">add</i> Add";
-        var queryClass = "add"; // Class that the response should be given
+        var innerHTML = "Add Friend (Coming Soon)";
 
         if(this.pk in friends){
-            // There is a relationship between these two users
             switch(friends[this.pk]){
                 case "friend":
-                    // Users are friends
                     innerHTML = "Friends";
-                    queryClass = "friend";
                     break;
                 case "request_sent":
-                    // User has sent a request to response user
                     innerHTML = "Request Sent";
-                    queryClass = "sent";
                     break;
                 case "request_received":
-                    // User has received a request from the response user
                     innerHTML = "Accept Request";
-                    queryClass = "request";
                     break;
             }
         }
 
-        $(".search-dropdown-users").append(
-        "<div class=\"dropdown-results-container\">" +
-            "<div class=\"dropdown-result-image\"></div>" +
-            "<section>" +
-                "<p class=\"dropdown-result-username\">" + this.fields.username + " (" + this.pk.substring(0, 8).toUpperCase() + ")</p>" +
-                "<p class=\"dropdown-result-tags\">Regular User</p>" +
-            "</section>" +
-            "<div class=\"dropdown-result-button-" + queryClass + "\" data-user-id=" + this.pk + " data-user-url=" + this.fields.user_url + ">" + innerHTML + "<link class=\"rippleJS\"/></div>" +
-            //"<link class=\"rippleJS\"/>" +
-        "</div>");
+        // Add search result
+        $(".search-results").append(
+            "<a class=\"chnl-wrapper noselect\" href=\"/messages/user/" + this.fields.user_url + "\" data-pjax-m>" +
+                "<div class=\"chnl-image\"></div>" +
+                "<div class=\"chnl-info\">" +
+                    "<p class=\"chnl-name\">" + this.fields.username + " (" + this.pk.substring(0, 8).toUpperCase() + ")</p>" +
+                    "<div class=\"last-message-wrapper\">" +
+                        "<p class=\"last-message\">" + innerHTML + "</p>" +
+                    "</div>" +
+                "</div>" +
+            "</a>"
+        );
     });
 
-    // Add event listeners to the new data
-    var queryItems = $(".dropdown-result-button-add, .dropdown-result-button-request");
-    queryItems.on("click", function(){
-        sendFriendRequest($(this).attr("data-user-id"));
-        // Update the old data by requesting a new query
-        requestQueryResponse($(".search input").val());
-    });
+    // Add "See all results" button.
+    $(".search-results").append(
+        "<a class=\"search-all-results\">" +
+            "See all results." +
+            "<link class=\"rippleJS\">" +
+        "</a>"
+    );
 };
 
 
@@ -336,21 +377,24 @@ function updateSearch(users, friends){
  * Clears the search list of any stale data.
  */
 var removeStaleSearches = function(){
-    var $children = $(".search-dropdown-users").children(":not(.search-dropdown-title)");
-    $children.each(function(){
+    var children = $(".search-results").children();
+    children.each(function(){
         $(this).remove();
     });
 };
 
 
 /**
- * Search Typing Complete
+ * Search Complete
  * Function which runs whenever the typing timer runs out. It essentially
  * means the user has finished typing.
  */
-function searchTypingComplete(){
-    var query = $(".search input").val();
-    requestQueryResponse(query);
+function searchComplete(){
+    var query = $(".search-input").val().trim();
+    if(query != "" && query != null && query.length > 2){
+        send("search", query);
+        print("Sent a query for users named '" + query + "'");
+    }
 };
 /* END SEARCH */
 

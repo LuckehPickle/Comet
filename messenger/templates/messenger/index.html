@@ -67,34 +67,28 @@
             </div>
 
             {# Friends/Groups #} <!-- TODO Update with AJAX or Sockets -->
-            <!-- Load the 10 most recent channels and refresh frequently -->
             <div class="channel-list-inner">
 
-                {# Channel Template #}
-                <a class="chnl-wrapper noselect">
-                    <div class="chnl-image"></div>
-                    <div class="chnl-info">
-                        <p class="chnl-name">Template Channel</p>
-                        <div class="last-message-wrapper">
-                            <p class="last-message">User: This is the last message that was sent in this channel.</p>
-                            <p class="last-message-time">2:30pm</p>
+                {% for channel in channels %}
+                    <a class="chnl-wrapper noselect" href="{{ channel.get_absolute_url }}" data-pjax-m>
+                        <div class="chnl-image"></div>
+                        <div class="chnl-info">
+                            <p class="chnl-name">{{ channel.name }}</p>
+                            <div class="last-message-wrapper">
+                                <p class="last-message">{{ channel.get_latest_message }}</p>
+                                <p class="last-message-time">2:30pm</p>
+                            </div>
                         </div>
-                    </div>
-                </a>
-
-                {# Channel Template #}
-                <a class="chnl-wrapper noselect" active>
-                    <div class="chnl-image"></div>
-                    <div class="chnl-info">
-                        <p class="chnl-name">Template Channel</p>
-                        <div class="last-message-wrapper">
-                            <p class="last-message">User: This is the last message that was sent in this channel.</p>
-                            <p class="last-message-time">2:30pm</p>
-                        </div>
-                    </div>
-                </a>
-
+                    </a>
+                {% empty %}
+                    <p class="search-no-results">There's nothing here!</p>
+                    <p class="search-no-results">Channels that you've interacted with recently will appear here.</p>
+                {% endfor %}
             </div>
+
+            {# Search Results #}
+            <div class="search-results"></div>
+
         </section>
 
 
@@ -106,12 +100,10 @@
                 {# Open Channel Tab (Mobile) #}
                 <i class="open-channel-tab material-icons noselect">menu</i>
 
-                {% if channel_id == None %}
-                    <p class="no-channel">No Channel Selected</p>
-                {% elif is_group %}
-                    <p class="channel-title">{{ chat_title }}</p>
+                {% if is_group or channel_id == None %}
+                    <p class="channel-title">{{ channel_title }}</p>
                 {% else %}
-                    <p class="channel-username">{{ chat_title }}</p>
+                    <p class="channel-username">{{ channel_title }}</p>
                     <input class="channel-nickname" type="text">
                 {% endif %}
 
@@ -121,6 +113,17 @@
 
             {# Messenger Body #}
             <div class="messenger-body">
+
+                {% for message in channel_messages %}
+                    <div class="message-wrapper" data-left data-image data-sender="{{ message.sender }}">
+                        <div class="message-image"></div>
+                        <div class="message-content-wrapper">
+                            <p class="message-content">Hey, did you get the milk?</p>
+                        </div>
+                    </div>
+                {% empty %}
+                    <!-- TODO -->
+                {% endfor %}
 
                 {# Template Message #}
                 <div class="message-wrapper" data-left data-image data-sender="Lewis">
@@ -168,11 +171,7 @@
             {# Toolbar #}
             <div class="messenger-toolbar">
                 <i class="channel-info-back material-icons noselect">arrow_back</i>
-                {% if channel_id == None %}
-                    <p class="channel-info-title">No Channel</p>
-                {% else %}
-                    <p class="channel-info-title">{{ chat_title }}</p>
-                {% endif %}
+                <p class="channel-info-title">{{ channel_title }}</p>
                 <i class="hidden-icon material-icons noselect">fingerprint</i>
             </div>
 

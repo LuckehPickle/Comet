@@ -67,7 +67,7 @@ class Channel(models.Model):
     def get_absolute_url(self):
         if self.is_group:
             return reverse("messenger.views.group", args=[str(self.channel_id)])
-        return reverse("messenger.views.private", args=[str(self.channel_id)])
+        return "reverse(\"messenger.views.private\", args=[str(self.channel_id)])"
 
     def get_latest_message(self):
         query_set = ChatMessage.objects.filter(is_group=self.is_group, channel_id=self.channel_id).order_by("-time_sent")
@@ -156,7 +156,7 @@ class ChannelPermissions(models.Model):
     )
 
 
-class ChatInvite(models.Model):
+class ChannelInvite(models.Model):
     # The user that received the invite
     recipient = models.ForeignKey(
         "accounts.User",
