@@ -22,6 +22,45 @@
 /** @const */ var NAMESPACE = "messenger";
 var createModal;
 
+/**
+ * Animations
+ */
+var channelListIn = anime({
+    targets: ".channel-list",
+    duration: 80,
+    easing: "easeInCubic",
+    autoplay: false,
+    top: ["100%", 0],
+    opacity: [0, 1],
+});
+
+var channelListOut = anime({
+    targets: ".channel-list",
+    duration: 80,
+    easing: "easeInCubic",
+    autoplay: false,
+    top: [0, "100%"],
+    opacity: [1, 0],
+});
+
+var channelInfoIn = anime({
+    targets: ".channel-info",
+    duration: 80,
+    easing: "easeInCubic",
+    autoplay: false,
+    top: ["100%", 0],
+    opacity: [0, 1],
+});
+
+var channelInfoOut = anime({
+    targets: ".channel-info",
+    duration: 80,
+    easing: "easeInCubic",
+    autoplay: false,
+    top: [0, "100%"],
+    opacity: [1, 0],
+});
+
 
 /**
  * Init Messenger
@@ -52,8 +91,9 @@ function initMessenger(fullLoad){
  * @param {Boolean} fullLoad Determines whether the page was a PJAX load.
  */
 function addMessengerEventListeners(fullLoad){
+
     /* BEGIN CREATE MODAL */
-    var createTrigger = $(".create-group-trigger");
+    var createTrigger = $(".create-group");
     createTrigger.off("." + NAMESPACE);
     createTrigger.on("click." + NAMESPACE, function(){
         if(createModal == null)
@@ -69,51 +109,77 @@ function addMessengerEventListeners(fullLoad){
     /* END CREATE MODAL */
 
     /* BEGIN CHAT */
-    var chatForm = $(".chat-form");
-    chatForm.off("submit");
-    chatForm.submit(function(){
-        sendSocketMessage($(".chat-form-input").text());
-        $(".chat-form-input").text("");
-        return false; // Prevents the form from submitting
-    });
-
-    var chatFormInput = $(".chat-form-input");
-    chatFormInput.off("." + NAMESPACE);
-    chatFormInput.on("keydown." + NAMESPACE, function(event){
-        if(event.which == 13){ // Enter key press
-            chatForm.submit();
+    var input = $(".messenger-input");
+    input.off("." + NAMESPACE);
+    input.on("keydown." + NAMESPACE, function(event){
+        if(event.which == 13 && !(event.shiftKey)){
+            handleMessengerInput(input.text());
+            input.text("");
             return false;
         }
     });
 
-    var chatSend = $(".chat-send");
-    chatSend.off("." + NAMESPACE);
-    chatSend.on("click." + NAMESPACE, function(){
-        chatForm.submit();
+    var placeholder = $(".messenger-input-placeholder");
+    input.on("focus." + NAMESPACE, function(){
+        placeholder.hide();
+    });
+
+    input.on("blur." + NAMESPACE, function(){
+        if(!input.text().length){ // Only show if empty
+            placeholder.show();
+        }
     });
     /* END CHAT */
 
     /* BEGIN TABS */
-    var tabHeads = $(".tab-head");
-    tabHeads.off("." + NAMESPACE);
-    tabHeads.on("click." + NAMESPACE, function(event){
-        openTab($(this));
+    var openChannelTab = $(".open-channel-tab");
+    var channelList = $(".channel-list");
+    openChannelTab.off("." + NAMESPACE);
+    openChannelTab.on("click." + NAMESPACE, function(){
+        channelListIn.play();
+        channelList.attr("active", "");
     });
 
-    var tabContainers = $(".friend-container, .group-container");
-    tabContainers.off("." + NAMESPACE);
-    tabContainers.on("click." + NAMESPACE, function(){
-        tabContainers.removeAttr("active");
-        if(!$(this).is("[active]")){
-            $(this).attr("active", "");
-        }
+    var closeChannelTab = $(".channel-tab-back");
+    closeChannelTab.off("." + NAMESPACE);
+    closeChannelTab.on("click." + NAMESPACE, function(){
+        channelListOut.play();
+        channelList.removeAttr("active");
+    });
+
+    var openInfoTab = $(".open-info-tab");
+    var channelInfo = $(".channel-info");
+    openInfoTab.off("." + NAMESPACE);
+    openInfoTab.on("click." + NAMESPACE, function(){
+        channelInfoIn.play();
+        channelInfo.attr("active", "");
+    });
+
+    var closeInfoTab = $(".channel-info");
+    closeInfoTab.off("." + NAMESPACE);
+    closeInfoTab.on("click." + NAMESPACE, function(){
+        channelInfoOut.play();
+        channelInfo.removeAttr("active");
     });
     /* END TABS */
 
-    /* BEGIN DOCUMENT - Not currrently necessary.
+    /* BEGIN CHANNEL LIST */
+    var channelWrappers = $(".chnl-wrapper");
+    channelWrappers.off("." + NAMESPACE);
+    channelWrappers.on("click." + NAMESPACE, function(){
+        channelWrappers.removeAttr("active");
+        $(this).closest(".chnl-wrapper").attr("active", "");
+        if(channelList.is("[active]")){
+            channelListOut.play();
+            channelList.removeAttr("active");
+        }
+    });
+    /* END CHANNEL LIST */
+
+    /* BEGIN DOCUMENT */
     $("html").off("." + NAMESPACE);
     $("html").on("click." + NAMESPACE, handleMessengerDocumentEvent);
-     END DOCUMENT */
+    /* END DOCUMENT */
 }
 
 
@@ -123,6 +189,20 @@ function addMessengerEventListeners(fullLoad){
  */
 function handleMessengerDocumentEvent(event){
     var target = $(event.target);
+
+    /* BEGIN TABS
+    if($(".channel-list").is("[active]")){
+        if(target.closest(".channel-list").length ||
+           target.is(".channel-list") ||
+           target.closest(".open-channel-tab").length ||
+           target.is(".open-channel-tab")){
+            return;
+        }
+
+        $(".channel-list").removeAttr("active");
+        channelListOut.play();
+    }
+    /* END TABS */
 }
 
 
@@ -133,20 +213,6 @@ $(document).on("pjax:success", function(){
 $(document).on("ready", function(){
     initMessenger(true);
 });
-
-
-/* BEGIN TABS */
-/**
- * Open Tab
- * Closes all tabs, then opens the tab-head that is passed.
- * @param {Element} tab The 'tab-head' or 'tab-body' to be opened.
- */
-function openTab(tab){
-    $(".tab-head[active], .tab-body[active]").removeAttr("active");
-    $("[data-tab=\"" + tab.attr("data-tab") + "\"]").attr("active", "");
-    print("Opened tab with id '" + tab.attr("data-tab") + "'")
-}
-/* END TABS */
 
 
 /* BEGIN CHAT */
@@ -160,8 +226,8 @@ function openTab(tab){
  */
 function appendMessage(message, sender, senderID, timeSent){
     $(".no-messages").remove();
-    var mostRecent = $(".chat-body").children().last();
-    var classTag = (senderID == window.user_id) ? "" : "-other";
+    var mostRecent = $(".messenger-body").children().last();
+    var origin = (senderID != window.user_id) ? "left" : "right";
     var time = new Date(timeSent).toLocaleTimeString(navigator.language, {
         hour: "numeric",
         minute: "numeric",
@@ -169,31 +235,31 @@ function appendMessage(message, sender, senderID, timeSent){
     });
 
     if(mostRecent.attr("data-user-id") == senderID){
-        // A new message from the same user. We can safely tag.
-        mostRecent.children(".chat-message-sender" + classTag).remove();
-        mostRecent.append("<p class=\"chat-message-sender" + classTag + "\">" + sender + " (" + time + ")</p>");
-        mostRecent.children("section").append("<div class=\"chat-message-content" + classTag + "-tag\" data-new></div>");
+        $(".messenger-body").append(
+            "<div class='message-wrapper' data-" + origin + " data-sender='" + sender + "' data-user-id='" + senderID + "'>" +
+                "<div class='message-content-wrapper'>" +
+                    "<p class='message-content' data-new></p>" +
+                "</div>" +
+            "</div>"
+        );
     }else{
-        // From a new user, append.
-        $(".chat-body").append(
-            "<div class=\"chat-message-container" + classTag + "\" data-user-id=\"" + senderID + "\">" +
-                "<div class=\"chat-message-image" + classTag + "\"></div>" +
-                "<span class=\"triangle-top-" + (classTag ? "right" : "left") + "\"></span>" +
-                "<section>" +
-                    "<div class=\"chat-message-content" + classTag + "\" data-new></div>" +
-                "</section>" +
-                "<p class=\"chat-message-sender" + classTag + "\">" + sender + " (" + time + ")</p>" +
+        $(".messenger-body").append(
+            "<div class='message-wrapper' data-" + origin + " data-image data-sender='" + sender + "' data-user-id='" + senderID + "'>" +
+                "<div class='message-image'></div>" +
+                "<div class='message-content-wrapper'>" +
+                    "<p class='message-content' data-new></p>" +
+                "</div>" +
             "</div>"
         );
     }
 
     // Add the message afterwards via .text() to escape HTML
-    messageContent = $("[class^=\"chat-message-content\"][data-new]");
+    messageContent = $(".message-content[data-new]");
     messageContent.text(message);
     messageContent.removeAttr("data-new");
 
     // Make sure that the body is scrolled to the bottom
-    scrollToBottom($(".chat-body"));
+    scrollToBottom($(".messenger-body"));
 }
 /* END CHAT */
 
@@ -287,3 +353,35 @@ function searchTypingComplete(){
     requestQueryResponse(query);
 };
 /* END SEARCH */
+
+
+/* BEGIN INPUT */
+/**
+ * Handle Messenger Input
+ * Handles user input from the messenger.
+ * @param {String} input Contents of the input.
+ */
+function handleMessengerInput(input){
+    input = input.trim(); // Remove excessive whitespace
+    var re = /^\//; // Matches the literal '/'
+    if(re.test(input)){
+        parseCommand(input); // Parse command
+        return;
+    }
+
+    if(input.length){  // Make sure the string isn't empty.
+        sendSocketMessage(input);
+        appendMessage(input, window.username, window.user_id, Date.now());
+    }
+}
+
+
+/**
+ * Parse Command
+ * Parses and handles commands.
+ * @param {String} command Command to be parsed.
+ */
+function parseCommand(command){
+    print("Parsing command: '" + command + "'");
+}
+/* END INPUT */

@@ -52,8 +52,11 @@
 
         {# Section One: Channel List #}
         <section class="channel-list">
+
             {# Toolbar #}
-            <div class="messenger-toolbar"></div>
+            <div class="messenger-toolbar">
+                <i class="channel-tab-back material-icons noselect">arrow_back</i>
+            </div>
 
             {# Search #}
             <div class="search-wrapper">
@@ -68,7 +71,7 @@
             <div class="channel-list-inner">
 
                 {# Channel Template #}
-                <a class="chnl-wrapper">
+                <a class="chnl-wrapper noselect">
                     <div class="chnl-image"></div>
                     <div class="chnl-info">
                         <p class="chnl-name">Template Channel</p>
@@ -80,7 +83,7 @@
                 </a>
 
                 {# Channel Template #}
-                <a class="chnl-wrapper" active>
+                <a class="chnl-wrapper noselect" active>
                     <div class="chnl-image"></div>
                     <div class="chnl-info">
                         <p class="chnl-name">Template Channel</p>
@@ -99,6 +102,10 @@
         <section class="channel-panel">
             {# Toolbar #}
             <div class="messenger-toolbar">
+
+                {# Open Channel Tab (Mobile) #}
+                <i class="open-channel-tab material-icons noselect">menu</i>
+
                 {% if channel_id == None %}
                     <p class="no-channel">No Channel Selected</p>
                 {% elif is_group %}
@@ -107,13 +114,43 @@
                     <p class="channel-username">{{ chat_title }}</p>
                     <input class="channel-nickname" type="text">
                 {% endif %}
+
+                {# Open Info Tab (Mobile) #}
+                <i class="open-info-tab material-icons noselect">info_outline</i>
             </div>
 
             {# Messenger Body #}
-            <div class="messenger-body"></div>
+            <div class="messenger-body">
+
+                {# Template Message #}
+                <div class="message-wrapper" data-left data-image data-sender="Lewis">
+                    <div class="message-image"></div>
+                    <div class="message-content-wrapper">
+                        <p class="message-content">Hey, did you get the milk?</p>
+                    </div>
+                </div>
+
+                {# Template Message (No image) #}
+                <div class="message-wrapper" data-left data-sender="Lewis">
+                    <div class="message-content-wrapper">
+                        <p class="message-content">Actually nevermind, I just found some old milk in the fridge.</p>
+                    </div>
+                </div>
+
+                {# Template Message (From user) #}
+                <div class="message-wrapper" data-right data-image data-sender="Sean">
+                    <div class="message-image"></div>
+                    <div class="message-content-wrapper">
+                        <p class="message-content">Don't drink that! It's atleast a few months old...</p>
+                    </div>
+                </div>
+
+            </div>
 
             {# Messenger Footer #}
             <div class="messenger-footer">
+
+                <!-- TODO X is typing... -->
 
                 {# Messenger Input #}
                 <div class="messenger-input-wrapper">
@@ -121,26 +158,23 @@
                     <div class="messenger-input" contenteditable></div>
                 </div>
 
-                {# Messenger Tools #}
-                <div class="messenger-tool tooltip-trigger">
-                    <i class="material-icons noselect">image</i>
-                    <div class="tooltip-container" data-above><p class="tooltip">Attach Image... (Coming Soon)</p></div>
-                </div>
-
-                <div class="messenger-tool tooltip-trigger">
-                    <i class="material-icons noselect">attach_file</i>
-                    <div class="tooltip-container" data-above><p class="tooltip">Attach File... (Coming Soon)</p></div>
-                </div>
-
-                <!-- TODO Emoji and improve aesthetics of input -->
             </div>
         </section>
 
 
         {# Section Three: Channel Info #}
         <section class="channel-info">
+
             {# Toolbar #}
-            <div class="messenger-toolbar"></div>
+            <div class="messenger-toolbar">
+                <i class="channel-info-back material-icons noselect">arrow_back</i>
+                {% if channel_id == None %}
+                    <p class="channel-info-title">No Channel</p>
+                {% else %}
+                    <p class="channel-info-title">{{ chat_title }}</p>
+                {% endif %}
+                <i class="hidden-icon material-icons noselect">fingerprint</i>
+            </div>
 
             <!-- TODO Allow this to be PJAXed and AJAXed -->
             {% if is_group %}

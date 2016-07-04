@@ -60,16 +60,20 @@
     bottom: 0;
     left: 0;
     right: 0;
+    overflow: hidden;
 }
 
 .messenger-toolbar{
     height: 40px;
     width: 100%;
     background-color: #404040;
-    padding: 0 10px;
     box-sizing: border-box;
     display: flex;
     align-items: center;
+    justify-content: space-between;
+}
+
+.channel-panel > .messenger-toolbar{
     justify-content: center;
 }
 
@@ -98,6 +102,13 @@
 
 
 /* BEGIN TOOLBAR STYLES */
+.messenger-toolbar > .material-icons{
+    color: #DBDBDB;
+    padding: 10px;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
 .no-channel, .channel-title, .channel-username{
     color: #DBDBDB;
     font-family: 'Roboto', sans-serif;
@@ -105,6 +116,9 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+    flex-grow: 1;
+    margin: 0;
+    text-align: center;
 }
 
 .channel-username{
@@ -234,7 +248,7 @@
 }
 
 p.chnl-name{
-    margin-bottom: 3px;
+    margin-bottom: 1px;
     font-size: 14px;
     font-weight: bold;
 }
@@ -254,6 +268,7 @@ p.last-message-time{
     margin-left: 5px;
     box-sizing: border-box;
     flex-shrink: 0;
+    margin-left: auto;
 }
 
 @media screen and (min-width: 801px){
@@ -262,20 +277,20 @@ p.last-message-time{
     }
 
     .chnl-wrapper{
-        padding: 15px;
+        padding: 12px;
     }
 
     .chnl-wrapper p{
-        font-size: 15px;
+        font-size: 14px;
     }
 
     p.chnl-name{
-        font-size: 16px;
+        font-size: 15px;
     }
 
     .chnl-image{
-        height: 42px;
-        width: 42px;
+        height: 36px;
+        width: 36px;
     }
 }
 /* END CHANNEL LIST */
@@ -294,23 +309,125 @@ p.last-message-time{
 
 .messenger-body{
     flex-grow: 1;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px 0;
+    box-sizing: border-box;
 }
+
+    /* BEGIN MESSAGE */
+    .message-wrapper{
+        padding: 1px 12px;
+        display: flex;
+        align-items: flex-start;
+        flex-direction: row;
+    }
+
+    .message-wrapper[data-image]{
+        padding-top: 10px;
+    }
+
+    /**
+     * [data-right] denotes a message originating from the right
+     * hand side of the messenger body (i.e. sent from the user).
+     */
+    .message-wrapper[data-right]{
+        flex-direction: row-reverse; /* Change the order of the elems */
+    }
+
+    /**
+     * Some messages do not require a user image, so we have to account
+     * for that with some additional padding on the side.
+     */
+    .message-wrapper[data-left]:not([data-image]){
+        padding-left: 47px; /* Accounts for the missing image */
+    }
+
+    .message-wrapper[data-right]:not([data-image]){
+        padding-right: 47px; /* Accounts for the missing image */
+    }
+
+    .message-image{
+        width: 35px;
+        height: 35px;
+        background-color: #EBEBEB;
+        border-radius: 3px;
+        flex-shrink: 0;
+    }
+
+    /**
+     * We need to wrap the message to prevent it from leaving the screen.
+     */
+    .message-wrapper[data-left] .message-content-wrapper{
+        flex-grow: 1;
+        margin-left: 6px;
+        margin-right: 55px;
+        text-align: left;
+    }
+
+    .message-wrapper[data-right] .message-content-wrapper{
+        flex-grow: 1;
+        margin-left: 55px;
+        margin-right: 6px;
+        text-align: right;
+    }
+
+    .message-content{
+        margin: 0;
+        padding: 8px 12px;
+        font-family: 'Roboto', sans-serif;
+        font-size: 14px;
+        display: inline-block;
+        border-radius: 3px;
+        max-width: 400px;
+        word-wrap: break-word;
+    }
+
+    .message-wrapper[data-left] .message-content{
+        color: #454545;
+        background-color: #EBEBEB;
+    }
+
+    .message-wrapper[data-right] .message-content{
+        color: #EBEBEB;
+        background-color: #F1592B;
+        text-align: left;
+    }
+
+    @media screen and (min-width: 801px){
+        .message-wrapper{
+            padding: 1px 18px;
+        }
+
+        .message-wrapper[data-left]:not([data-image]){
+            padding-left: 53px; /* Accounts for the missing image */
+        }
+
+        .message-wrapper[data-right]:not([data-image]){
+            padding-right: 53px; /* Accounts for the missing image */
+        }
+
+        .message-content{
+            padding: 8px 13px;
+        }
+    }
+    /* END MESSAGE */
 
 .messenger-footer{
     flex-shrink: 0;
     display: flex;
-    align-items: center;
-    padding-right: 10px;
+    flex-direction: column;
+    align-items: stretch;
 }
 
 .messenger-input-wrapper{
-    flex-grow: 1;
     position: relative;
     overflow: hidden;
-    width: 100%;
-    padding: 12px;
-    padding-right: 6px;
     box-sizing: border-box;
+    padding: 12px;
 }
 
 .messenger-input-placeholder{
@@ -320,9 +437,10 @@ p.last-message-time{
     top: 0;
     left: 0;
     font-family: 'Roboto', sans-serif;
-    font-size: 15px;
-    padding: 22px 26px;
+    font-size: 14px;
+    padding: 22.5px 26px;
     color: #D8D8D8;
+    white-space: nowrap;
 }
 
 .messenger-input{
@@ -331,35 +449,57 @@ p.last-message-time{
     padding: 10px 14px;
     box-sizing: border-box;
     font-family: 'Roboto', sans-serif;
-    font-size: 15px;
+    font-size: 14px;
     overflow: hidden;
     color: #DBDBDB;
     white-space: pre-wrap;
     word-wrap: break-word;
     min-height: 41px;
+    border-radius: 3px;
     background-color: #3B3B3B;
-    border-radius: 2px;
 }
 
-.messenger-tool{
-    padding: 8px;
-}
-
-.messenger-tool > i{
-    color: #DBDBDB;
+.messenger-tools-wrapper{
+    box-sizing: border-box;
+    border-radius: 0 0 2px 2px;
+    border-top: 1px solid #5F5F5F;
+    padding: 10px 14px;
 }
 
 @media screen and (min-width: 801px){
     .messenger-input-wrapper{
         padding: 18px;
-        padding-right: 9px;
     }
 
     .messenger-input-placeholder{
+        font-size: 15px;
         padding: 28px 32px;
+    }
+
+    .messenger-input{
+        font-size: 15px;
     }
 }
 /* END CHANNEL PANEL */
+
+
+/* BEGIN CHANNEL INFO */
+.channel-info-title{
+    color: #DBDBDB;
+    font-family: 'Roboto', sans-serif;
+    font-size: 17px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    flex-grow: 1;
+    margin: 0;
+    text-align: center;
+}
+
+.hidden-icon{
+    visibility: hidden;
+}
+/* END CHANNEL INFO */
 
 
 /**
@@ -367,7 +507,7 @@ p.last-message-time{
  */
 @media screen and (max-width: 800px){
     /* BEGIN CHANNEL PANEL */
-    .channel-panel{
+    section.channel-panel{
         right: 0;
         left: 0;
     }
@@ -375,37 +515,23 @@ p.last-message-time{
 
 
     /* BEGIN CHANNEL LIST */
-    .channel-list{
-        left: -278px;
-        width: 270px;
-        z-index: 2;
-    }
-
-    .channel-list[active]{
+    section.channel-list{
         left: 0;
+        right: 0;
+        top: 100%;
+        z-index: 2;
     }
     /* END CHANNEL LIST */
 
 
     /* BEGIN CHANEL INFO */
-    .channel-info{
-        right: -278px;
-        width: 270px;
+    section.channel-info{
+        left: 0;
+        right: 0;
+        top: 100%;
         z-index: 2;
     }
-
-    .channel-info[active]{
-        right: 0;
-    }
     /* END CHANNEL INFO */
-
-    .messenger-wrapper > section:first-child{
-        box-shadow: 6px 0 rgba(0, 0, 0, 0.3);
-    }
-
-    .messenger-wrapper > section:last-child{
-        box-shadow: -6px 0 rgba(0, 0, 0, 0.3);
-    }
 }
 
 
@@ -415,42 +541,49 @@ p.last-message-time{
 @media screen and (min-width: 801px) and (max-width: 1450px){
 
     /* BEGIN CHANNEL PANEL */
-    .channel-panel{
+    section.channel-panel{
         right: 0;
         left: 350px;
+    }
+
+    .open-channel-tab{
+        display: none;
     }
     /* END CHANNEL PANEL */
 
 
     /* BEGIN CHANNEL LIST */
-    .channel-list{
+    section.channel-list{
         left: 0;
         width: 350px;
         z-index: 2;
+        /**
+         * We need to override any styles set by Anime.js.
+         * If we don't set it here, when a user rotates their
+         * phone or resizes their browser certain menus will
+         * appear off screen.
+         */
+        top: 0 !important;
+        opacity: 1 !important;
+    }
+
+    .channel-tab-back{
+        display: none;
     }
     /* END CHANNEL LIST */
 
 
     /* BEGIN CHANEL INFO */
-    .channel-info{
-        right: -278px;
-        width: 270px;
-        z-index: 2;
-    }
-
-    .channel-info[active]{
+    section.channel-info{
+        left: 350px;
         right: 0;
+        top: 100%;
+        z-index: 2;
     }
     /* END CHANNEL INFO */
 
     .messenger-wrapper > section:first-child{
-        border-right-color: #404040;
-        border-right-style: solid;
-        border-right-width: 2px;
-    }
-
-    .messenger-wrapper > section:last-child{
-        box-shadow: -6px 0 rgba(0, 0, 0, 0.3);
+        border-right: 2px solid #404040;
     }
 }
 
@@ -465,6 +598,10 @@ p.last-message-time{
         right: 350px;
         left: 350px;
     }
+
+    .open-channel-tab, .open-info-tab{
+        display: none;
+    }
     /* END CHANNEL PANEL */
 
 
@@ -473,6 +610,16 @@ p.last-message-time{
         left: 0;
         width: 350px;
         z-index: 2;
+        /**
+         * We need to override any styles set by Anime.js.
+         * See comment above for explanation.
+         */
+        top: 0 !important;
+        opacity: 1 !important;
+    }
+
+    .channel-tab-back{
+        display: none;
     }
     /* END CHANNEL LIST */
 
@@ -482,18 +629,24 @@ p.last-message-time{
         right: 0;
         width: 350px;
         z-index: 2;
+        /**
+         * We need to override any styles set by Anime.js.
+         * See comment above for explanation.
+         */
+        top: 0 !important;
+        opacity: 1 !important;
+    }
+
+    .channel-info-back, .channel-info-title, .hidden-icon{
+        display: none;
     }
     /* END CHANNEL INFO */
 
     .messenger-wrapper > section:first-child{
-        border-right-color: #404040;
-        border-right-style: solid;
-        border-right-width: 2px;
+        border-right: 2px solid #404040;
     }
 
     .messenger-wrapper > section:last-child{
-        border-left-color: #404040;
-        border-left-style: solid;
-        border-left-width: 2px;
+        border-left: 2px solid #404040;
     }
 }
