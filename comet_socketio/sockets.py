@@ -30,20 +30,20 @@ from socketio.sdjango import namespace
 from accounts.models import User, FriendInvites
 from comet_socketio import notify
 from comet_socketio.mixins import ChannelMixin
-from messenger.models import Channel, ChatMessage
+from messenger.models import Channel, ChannelMessage
 
 
-def create_message(sender, message, channel_id):
+def create_message(sender, message, channel_url):
     """
     Creates a new chat message instance.
     :param sender: The user that sent the message.
     :param message: The message that was sent.
-    :param channel_id: Identifier of the channel which handled the message.
+    :param channel_url: URL of the channel which handled the message.
     """
-    return ChatMessage.objects.create(
+    return ChannelMessage.objects.create(
         sender=sender,
         contents=message,
-        channel_id=channel_id,
+        channel_url=channel_url,
     )
 
 
@@ -72,47 +72,29 @@ class MessengerNamespace(BaseNamespace, ChannelMixin):
 
         TODO Check message length, and whether user is in group.
         """
-        if not "channel_id" in data and not "message" in data:
+        if not "channel_url" in data and not "message" in data:
             return
 
-        channel_id = data["channel_id"]
+        channel_url = data["channel_url"]
         message = data["message"]
 
-        # Check if a messsage has been sent in this channel before.
-        most_recent = ChatMessage.objects.filter(channel_id=channel_id).order_by("-time_sent")
-
-        if most_recent.count() != 0:
-            # A message has been sent, retrieve the most recent
-            most_recent = most_recent[0]
-
-            if most_recent.sender == self.request.user:
-                # This user sent the most recent message, tag it instead of creating a new one.
-                most_recent.contents += "\n" + escape(message)
-                most_recent.time_sent = timezone.now()
-                most_recent.save()
-            else:
-                most_recent = None
-        else:
-            most_recent = None
-
-        if most_recent == None:
-            most_recent = create_message(
-                sender=self.request.user,
-                message=escape(message),
-                channel_id=channel_id
-            )
+        model = create_message(
+            sender=self.request.user,
+            message=escape(message),
+            channel_url=channel_url
+        )
 
         self.emit("message", {
             "action": "message_sent",
         })
 
-        self.emit_to_channel(channel_id, "message", {
+        self.emit_to_channel(channel_url, "message", {
             "action": "message",
             "message": message,
-            "channel_id": channel_id,
+            "channel_url": channel_url,
             "sender": self.request.user.username,
             "sender_id": str(self.request.user.user_id),
-            "time_sent": most_recent.time_sent.isoformat(),
+            "time_sent": model.time_sent.isoformat(),
         })
 
         return True

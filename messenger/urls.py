@@ -23,5 +23,5 @@ urlpatterns = [
     url(r'^$', views.index, name="messages"),
     url(r'^create', views.create, name="create"),
     url(r'^user/(?P<user_url>[a-zA-Z0-9]+)$', views.private),
-    url(r'^(?P<channel_id>[a-zA-Z0-9]+)$', views.group),
+    url(r'^(?P<channel_url>[a-zA-Z0-9]+)$', views.group),
 ]

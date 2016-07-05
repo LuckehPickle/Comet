@@ -49,6 +49,7 @@
             {% if request.user.is_authenticated %}
                 window.username = "{{ request.user.username }}";
                 window.user_id = "{{ request.user.user_id }}";
+                window.user_url = "{{ request.user.user_url }}";
             {% endif %}
         </script>
         <script src="{% static 'comet_socketio/js/socket.io.js' %}"></script>

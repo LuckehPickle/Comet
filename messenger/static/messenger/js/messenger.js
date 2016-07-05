@@ -21,6 +21,7 @@
 
 /** @const */ var NAMESPACE = "messenger";
 /** @const */ var SEARCH_TYPING_INTERVAL = 100; // How long should typing last (milliseconds)
+/** @const */ var PUSH_TIMEOUT = 8000;
 var createModal;
 var searchTimer;
 
@@ -238,20 +239,6 @@ function addMessengerEventListeners(fullLoad){
  */
 function handleMessengerDocumentEvent(event){
     var target = $(event.target);
-
-    /* BEGIN TABS
-    if($(".channel-list").is("[active]")){
-        if(target.closest(".channel-list").length ||
-           target.is(".channel-list") ||
-           target.closest(".open-channel-tab").length ||
-           target.is(".open-channel-tab")){
-            return;
-        }
-
-        $(".channel-list").removeAttr("active");
-        channelListOut.play();
-    }
-    /* END TABS */
 }
 
 
@@ -309,6 +296,13 @@ function appendMessage(message, sender, senderID, timeSent){
 
     // Make sure that the body is scrolled to the bottom
     scrollToBottom($(".messenger-body"));
+
+    if(document.hidden){
+        Push.create("Message from '" + sender + "'.", {
+            body: message,
+            timeout: PUSH_TIMEOUT,
+        });
+    }
 }
 /* END CHAT */
 
@@ -332,39 +326,40 @@ function updateSearch(users, friends){
     // Iterate over each user
     jQuery.each(users, function(){
         // Defaults
-        var innerHTML = "Add Friend (Coming Soon)";
+        var innerHTML = "User";
+        var className = "user-add";
 
         if(this.pk in friends){
             switch(friends[this.pk]){
                 case "friend":
                     innerHTML = "Friends";
+                    className = "user-friend";
                     break;
                 case "request_sent":
                     innerHTML = "Request Sent";
+                    className = "user-request-sent";
                     break;
                 case "request_received":
                     innerHTML = "Accept Request";
+                    className = "user-accept-request";
                     break;
             }
         }
 
         // Add search result
         $(".search-results").append(
-            "<a class=\"chnl-wrapper noselect\" href=\"/messages/user/" + this.fields.user_url + "\" data-pjax-m>" +
-                "<div class=\"chnl-image\"></div>" +
-                "<div class=\"chnl-info\">" +
-                    "<p class=\"chnl-name\">" + this.fields.username + " (" + this.pk.substring(0, 8).toUpperCase() + ")</p>" +
-                    "<div class=\"last-message-wrapper\">" +
-                        "<p class=\"last-message\">" + innerHTML + "</p>" +
-                    "</div>" +
+            "<div class=\"search-user-wrapper noselect\" href=\"/messages/user/" + this.fields.user_url + "\" data-pjax-m>" +
+                "<div class=\"search-user-image\"></div>" +
+                "<div class=\"search-user-info\">" +
+                    "<p class=\"search-user-name\">" + this.fields.username + " (" + this.pk.substring(0, 8).toUpperCase() + ")</p>" +
                 "</div>" +
-            "</a>"
+            "</div>"
         );
     });
 
     // Add "See all results" button.
     $(".search-results").append(
-        "<a class=\"search-all-results\">" +
+        "<a class=\"search-all-results noselect\">" +
             "See all results." +
             "<link class=\"rippleJS\">" +
         "</a>"
@@ -414,8 +409,19 @@ function handleMessengerInput(input){
     }
 
     if(input.length){  // Make sure the string isn't empty.
-        sendSocketMessage(input);
+        if(window.channel_url == null){
+            print("Attempted to send a message but not currently connected to a channel.", true);
+            return;
+        }
+
+        data = {
+            channel_url: window.channel_url,
+            message: input,
+        }
+
+        send("message", data);
         appendMessage(input, window.username, window.user_id, Date.now());
+        print("Message sent to socket server.");
     }
 }
 

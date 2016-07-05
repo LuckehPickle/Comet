@@ -623,7 +623,9 @@ function handleSocketMessage(data){
             handleSocketPushMessage(data);
             break;
         case "message":
-            handleSocketChatMessage(data);
+            handleSocketChannelMessage(data);
+            break;
+        case "message_sent":
             break;
         default:
             print("A message was received with an unrecognized action: '" + data.action + "'");
@@ -719,41 +721,24 @@ function announceUserJoin(data){
 
 
 /**
- * Send Socket Message
- * Sends a chat message to the Socket IO server.
- * @param {string} message Chat message to be sent to Socket IO server
- */
-var sendSocketMessage = function(message){
-    if(message == null || message == "")
-        return;
-
-    if(window.channel_id == null){
-        print("Attempted to send a message but not currently connected to a channel.", true);
-        return;
-    }
-
-    send("message", {channel_id: window.channel_id, message: message});
-    appendMessage(message, window.username, window.user_id, Date.now());
-    print("Chat message successfully sent to Socket IO server.");
-};
-
-
-/**
  * Handle Chat Message
  * Displays a chat message in the chat body.
  * @param {Object} data Data from Socket IO server
  */
-var handleSocketChatMessage = function(data){
-    if(!("sender_id" in data) || !("time_sent" in data) || !("message" in data) || !("channel_id" in data)){
+var handleSocketChannelMessage = function(data){
+    if(!("sender_id" in data) || !("time_sent" in data) || !("message" in data) || !("channel_url" in data)){
         print("A malformed message was received from the Socket IO server. (Chat Message)", true);
         return;
     }
 
-    if(data.channel_id == window.channel_id){
+    if(data.channel_url == window.channel_url){
+        if(data.sender_id == window.user_id){
+            print("Message successfully sent.");
+            return;
+        }
         appendMessage(data.message, data.sender, data.sender_id, data.time_sent);
     }else{
         new PushMessage(MessageType.INFO, "You have received a new message from '" + data.sender + "'. Check it out here: <div class='push-message-well'><a href=''>" + "put a bloody url here mate." + "</a></div>");
     }
-
 }
 /* END SOCKETS */

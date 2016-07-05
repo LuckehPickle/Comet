@@ -25,7 +25,7 @@ from django.utils.html import escape
 from comet_socketio import notify
 from messenger.forms import CreateChatForm
 from messenger.identifier import generate
-from messenger.models import Channel, ChannelPermissions, ChannelInvite, ChatMessage
+from messenger.models import Channel, ChannelPermissions, ChannelInvite, ChannelMessage
 
 # Other Imports
 import cr_config as config
@@ -47,32 +47,42 @@ def private(request, user_url=None):
     Handles connections to private channels (directly to a user).
 
     :param request: Django request object.
-    :param channel_id: Channel ID.
+    :param channel_url: Channel ID.
     """
 
     target = get_object_or_404(User, user_url=user_url)
-    channel_id = None
+    channel_url = None
     channel_urls = [
-        request.user.user_url + "-" + user_url,
-        user_url + "-" + request.user.user_url,
+        "#[" + request.user.user_url + "][" + user_url + "]",
+        "#[" + user_url + "][" + request.user.user_url + "]",
     ]
 
     for possible_url in channel_urls:
         channel = Channel.objects.filter(
             is_group=False,
-            channel_id=possible_url,
+            channel_url=possible_url,
         )
 
         if channel.exists():
-            channel_id = possible_url
+            channel_url = possible_url
             break;
 
-    if channel_id == None:
-        # Channel hasn't been created yet.
-        channel_id = request.user.user_url + "-" + user_url
+    if channel_url == None:
+        # Channel hasn't been created yet
+        """
+        Note: User channels are denoted with the following syntax:
+        `#[nameA][nameB]`
+        `#[urlA][urlB]`
+        This is so that the correct URL and name can be selected later by
+        the client. This doesn't seem to be a very good way of doing things,
+        but it's all I can think of for right now.
+        TODO Rethink this.
+        """
+        channel_name = "#[" + request.user.username + "][" + target.username + "]"
+        channel_url = "#[" + request.user.user_url + "][" + user_url + "]"
         channel = Channel.objects.create(
-            name=channel_id,
-            channel_id=channel_id,
+            channel_name=channel_name,
+            channel_url=channel_url,
             is_public=False,
             is_group=False,
         )
@@ -81,7 +91,6 @@ def private(request, user_url=None):
         ChannelPermissions.objects.create(
             channel=channel,
             user=request.user,
-            is_creator=True,
         )
 
         ChannelPermissions.objects.create(
@@ -91,24 +100,24 @@ def private(request, user_url=None):
 
     data = {
         "title": (config.TITLE_FORMAT % target.username),
-        "channel_id": channel_id,
+        "channel_url": channel_url,
         "channel_title": target.username,
-        "channel_messages": get_latest_messages(channel_id),
+        "channel_messages": get_latest_messages(channel_url),
     }
 
     return renderMessenger(request, data)
 
 
 @login_required_message
-def group(request, channel_id=None):
+def group(request, channel_url=None):
     """
     Handles connections to group channels.
 
     :param request: Django request object.
-    :param channel_id: Channel ID.
+    :param channel_url: Channel ID.
     """
 
-    channel = get_object_or_404(Channel, channel_id=channel_id)
+    channel = get_object_or_404(Channel, channel_url=channel_url)
     is_member = channel.users.filter(user_id=request.user.user_id).count() >= 1
 
     if channel.is_public and not is_member:
@@ -141,9 +150,9 @@ def group(request, channel_id=None):
 
     data = {
         "title": (config.TITLE_FORMAT % channel),
-        "channel_id": channel_id,
+        "channel_url": channel_url,
         "channel_title": channel.name,
-        "channel_messages": get_latest_messages(channel_id),
+        "channel_messages": get_latest_messages(channel_url),
         "is_group": True,
     }
 
@@ -168,7 +177,7 @@ def renderMessenger(request, data={}):
         "title": (config.TITLE_FORMAT % "Messages"),
         "user_id": str(request.user.user_id)[:8],
         "channels": channels,
-        "channel_id": None,
+        "channel_url": None,
         "channel_title": "No Channel Selected.",
         "channel_messages": None,
         "is_group": False,
@@ -179,15 +188,15 @@ def renderMessenger(request, data={}):
     return render(request, "messenger/index.html", template_args)
 
 
-def get_latest_messages(channel_id, n=15):
+def get_latest_messages(channel_url, n=15):
     """
     Gets and returns the latest messages sent in any channel.
     The number of messages can be configured by adjusting n.
     """
-    if channel_id == None:
+    if channel_url == None:
         return None
-    return ChatMessage.objects.filter(
-        channel_id=channel_id,
+    return ChannelMessage.objects.filter(
+        channel_url=channel_url,
     ).order_by("-time_sent")[:n]
 
 
@@ -208,9 +217,9 @@ def create(request):
         return redirect("messages")
 
     # Generate a new identifier
-    channel_id = generate()
-    while Channel.objects.filter(channel_id=channel_id).count() != 0:
-        channel_id = generate()
+    channel_url = generate()
+    while Channel.objects.filter(channel_url=channel_url).count() != 0:
+        channel_url = generate()
 
     data = form.cleaned_data
 
@@ -218,7 +227,7 @@ def create(request):
     group = Channel.objects.create(
         name=data["name"],
         is_public=data["is_public"],
-        channel_id=channel_id,
+        channel_url=channel_url,
         is_group=True,
     )
 

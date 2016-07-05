@@ -18,6 +18,7 @@ from django import template
 register = template.Library()
 
 # Other Imports
+import re
 from comet_socketio import utils
 
 
@@ -47,10 +48,24 @@ def is_other(model, user_id):
     return "-other"
 
 
-@register.filter(name="is_online")
-def is_online(model):
+@register.filter(name="to_external")
+def to_external(internal, user_info):
     """
-    Tests to see if a user is online
+    Converts internal data to external data. Only needed
+    in non-group channels.
+
+    Matches data conforming to the following syntax:
+    `#[dataA][dataB]`
     """
-    return False
-    # return utils.is_connected(model)
+    pattern = re.compile(r"#\[([\w]+)\]\[([\w]+)\]")
+    match = pattern.findall(internal)
+    if not len(match):
+        return internal
+
+    match = match[0]
+
+    for m in match:
+        if m != user_info:
+            return m
+
+    return internal

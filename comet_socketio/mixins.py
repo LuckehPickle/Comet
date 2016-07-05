@@ -23,11 +23,11 @@ class ChannelMixin(object):
     Mixin for channel related functions.
     """
 
-    def emit_to_channel(self, channel_id, event, *args):
+    def emit_to_channel(self, channel_url, event, *args):
         """
         Emits to every socket in the channel.
         """
-        channel = Channel.objects.filter(channel_id=channel_id)
+        channel = Channel.objects.filter(channel_url=channel_url)
         if not channel.exists():
             return
 

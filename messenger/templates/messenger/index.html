@@ -39,11 +39,11 @@
 
 {% block content %}
     <script>
-        {% if channel_id != None %}
-            window.channel_id = "{{ channel_id }}";
+        {% if channel_url != None %}
+            window.channel_url = "{{ channel_url }}";
             window.is_group = {{ is_group|yesno:"true,false" }};
         {% else %}
-            window.channel_id = null;
+            window.channel_url = null;
         {% endif %}
     </script>
 
@@ -70,10 +70,14 @@
             <div class="channel-list-inner">
 
                 {% for channel in channels %}
-                    <a class="chnl-wrapper noselect" href="{{ channel.get_absolute_url }}" data-pjax-m>
+                    {% if not channel.is_group %}
+                    <a class="chnl-wrapper noselect" href="/messages/user/{{ channel.get_absolute_url|to_external:request.user.user_url }}" data-pjax-m{% if channel_url == channel.channel_url %} active{% endif %}>
+                    {% else %}
+                    <a class="chnl-wrapper noselect" href="{{ channel.get_absolute_url }}" data-pjax-m{% if channel_url == channel.channel_url %} active{% endif %}>
+                    {% endif %}
                         <div class="chnl-image"></div>
                         <div class="chnl-info">
-                            <p class="chnl-name">{{ channel.name }}</p>
+                            <p class="chnl-name">{{ channel.channel_name|to_external:request.user.username }}</p>
                             <div class="last-message-wrapper">
                                 <p class="last-message">{{ channel.get_latest_message }}</p>
                                 <p class="last-message-time">2:30pm</p>
@@ -82,7 +86,6 @@
                     </a>
                 {% empty %}
                     <p class="search-no-results">There's nothing here!</p>
-                    <p class="search-no-results">Channels that you've interacted with recently will appear here.</p>
                 {% endfor %}
             </div>
 
@@ -100,11 +103,13 @@
                 {# Open Channel Tab (Mobile) #}
                 <i class="open-channel-tab material-icons noselect">menu</i>
 
-                {% if is_group or channel_id == None %}
+                {% if is_group or channel_url == None %}
                     <p class="channel-title">{{ channel_title }}</p>
                 {% else %}
-                    <p class="channel-username">{{ channel_title }}</p>
-                    <input class="channel-nickname" type="text">
+                    <div class="messenger-toolbar-wrapper">
+                        <p class="channel-username">{{ channel_title }}</p>
+                        <!--<input class="channel-nickname" type="text">-->
+                    </div>
                 {% endif %}
 
                 {# Open Info Tab (Mobile) #}
@@ -114,39 +119,18 @@
             {# Messenger Body #}
             <div class="messenger-body">
 
-                {% for message in channel_messages %}
+                {% for message in channel_messages reversed %}
                     <div class="message-wrapper" data-left data-image data-sender="{{ message.sender }}">
                         <div class="message-image"></div>
                         <div class="message-content-wrapper">
-                            <p class="message-content">Hey, did you get the milk?</p>
+                            <p class="message-content">{{ message.contents }}</p>
                         </div>
                     </div>
                 {% empty %}
-                    <!-- TODO -->
+                    {% if channel_url != None %}
+                        <p class="no-messages">No messages have been sent in this channel yet.</p>
+                    {% endif %}
                 {% endfor %}
-
-                {# Template Message #}
-                <div class="message-wrapper" data-left data-image data-sender="Lewis">
-                    <div class="message-image"></div>
-                    <div class="message-content-wrapper">
-                        <p class="message-content">Hey, did you get the milk?</p>
-                    </div>
-                </div>
-
-                {# Template Message (No image) #}
-                <div class="message-wrapper" data-left data-sender="Lewis">
-                    <div class="message-content-wrapper">
-                        <p class="message-content">Actually nevermind, I just found some old milk in the fridge.</p>
-                    </div>
-                </div>
-
-                {# Template Message (From user) #}
-                <div class="message-wrapper" data-right data-image data-sender="Sean">
-                    <div class="message-image"></div>
-                    <div class="message-content-wrapper">
-                        <p class="message-content">Don't drink that! It's atleast a few months old...</p>
-                    </div>
-                </div>
 
             </div>
 
@@ -194,6 +178,7 @@
                 {# User Tags and Achievements (In a Modal) #}
 
                 {# User Image #}
+                <div class="info-image"></div>
 
                 {# User Bio #}
 
