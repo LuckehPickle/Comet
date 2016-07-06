@@ -19,6 +19,7 @@ register = template.Library()
 
 # Other Imports
 import re
+import comet.utils
 from comet_socketio import utils
 
 
@@ -53,19 +54,5 @@ def to_external(internal, user_info):
     """
     Converts internal data to external data. Only needed
     in non-group channels.
-
-    Matches data conforming to the following syntax:
-    `#[dataA][dataB]`
     """
-    pattern = re.compile(r"#\[([\w]+)\]\[([\w]+)\]")
-    match = pattern.findall(internal)
-    if not len(match):
-        return internal
-
-    match = match[0]
-
-    for m in match:
-        if m != user_info:
-            return m
-
-    return internal
+    return comet.utils.to_external(internal, user_info)

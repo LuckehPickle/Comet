@@ -27,6 +27,7 @@ from socketio.namespace import BaseNamespace
 from socketio.sdjango import namespace
 
 # Other Imports
+import re
 from accounts.models import User, FriendInvites
 from comet_socketio import notify
 from comet_socketio.mixins import ChannelMixin
@@ -77,6 +78,7 @@ class MessengerNamespace(BaseNamespace, ChannelMixin):
 
         channel_url = data["channel_url"]
         message = data["message"]
+        channel = Channel.objects.get(channel_url=channel_url)
 
         model = create_message(
             sender=self.request.user,
@@ -91,6 +93,7 @@ class MessengerNamespace(BaseNamespace, ChannelMixin):
         self.emit_to_channel(channel_url, "message", {
             "action": "message",
             "message": message,
+            "channel_name": channel.channel_name,
             "channel_url": channel_url,
             "sender": self.request.user.username,
             "sender_id": str(self.request.user.user_id),
@@ -266,3 +269,37 @@ class MessengerNamespace(BaseNamespace, ChannelMixin):
             )
 
         return True
+
+
+    def on_user_profile(self, user_id):
+        """
+        Event handler for responses to user profiles.
+        """
+        target = get_object_or_404(User, user_id=user_id)
+
+        relationship = "none"
+
+        if self.request.user == target:
+            relationship = "me"
+        else:
+            if self.request.user.friends.filter(user_id=target.user_id).exists():
+                relationship = "friend"
+            elif FriendInvites.objects.filter(sender=self.request.user, recipient=target).exists():
+                relationship = "request_sent"
+            elif FriendInvites.objects.filter(sender=target, recipient=self.request.user).exists():
+                relationship = "request_received"
+
+        ribbons = ["tester"]
+        if str(target.user_id) == "0a490f62-b307-4643-b6aa-95efd872c096":
+            ribbons.append("developer")
+
+        self.emit("message", {
+            "action": "user_profile",
+            "user_data": {
+                "username": target.username,
+                "user_id": str(target.user_id),
+                "user_ribbons": ribbons,
+                "user_bio": "Custom user description.",
+                "relationship": relationship,
+            },
+        })

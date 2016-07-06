@@ -51,6 +51,14 @@ def private(request, user_url=None):
     """
 
     target = get_object_or_404(User, user_url=user_url)
+
+    if target == request.user:
+        # TODO Redirect to settings file here.
+        raise Http404("Your user settings would be here, but I haven't made them yet.")
+
+    if request.user.friends.filter(user_id=target.user_id).exists():
+        raise Http404("You are not friends with this user!")
+
     channel_url = None
     channel_urls = [
         "#[" + request.user.user_url + "][" + user_url + "]",
@@ -102,7 +110,7 @@ def private(request, user_url=None):
         "title": (config.TITLE_FORMAT % target.username),
         "channel_url": channel_url,
         "channel_title": target.username,
-        "channel_messages": get_latest_messages(channel_url),
+        "channel_messages": get_latest_messages(request, channel_url),
     }
 
     return renderMessenger(request, data)
@@ -152,7 +160,7 @@ def group(request, channel_url=None):
         "title": (config.TITLE_FORMAT % channel),
         "channel_url": channel_url,
         "channel_title": channel.name,
-        "channel_messages": get_latest_messages(channel_url),
+        "channel_messages": get_latest_messages(request, channel_url),
         "is_group": True,
     }
 
@@ -170,7 +178,7 @@ def renderMessenger(request, data={}):
     # TODO Only get channels from the last week(?)
     channels = Channel.objects.filter(
         Q(users__in=[request.user]),
-    ).order_by("-last_message")
+    ).order_by("-last_message")[:30]
 
     # Default values
     template_args = {
@@ -188,16 +196,78 @@ def renderMessenger(request, data={}):
     return render(request, "messenger/index.html", template_args)
 
 
-def get_latest_messages(channel_url, n=15):
+def get_latest_messages(request, channel_url, n=25):
     """
-    Gets and returns the latest messages sent in any channel.
-    The number of messages can be configured by adjusting n.
+    Gets and returns the latest messages sent in any channel. Converting
+    to HTML, as it is too complicated to perform in the tempalte.
+
+    :param channel_url: URL of the channel in question.
+    :param n: Number of messages to retrieve.
+
+    TODO Improve/rethink
     """
     if channel_url == None:
         return None
-    return ChannelMessage.objects.filter(
+
+    messages = ChannelMessage.objects.filter(
         channel_url=channel_url,
     ).order_by("-time_sent")[:n]
+
+    out = ""
+    previous_sender_name = None
+    previous_sender_id = None
+    previous_origin = None
+    count = 0
+
+    for message in reversed(messages):
+        count += 1
+        origin = "left" if message.sender != request.user else "right"
+        sender_id = str(message.sender.user_id)
+        sender_name = str(message.sender.username)
+
+        if previous_sender_id == sender_id:
+            out += (
+                "<div class='message-wrapper' data-{0} data-user-id='{1}'>"
+                    "<div class='message-content-wrapper'>"
+                        "<p class='message-content'>{2}</p>"
+                    "</div>"
+                "</div>"
+            ).format(origin, sender_id, message.contents)
+        else:
+            if previous_sender_id != sender_id and count:
+                # The previous message was the last of its kind,
+                # so we need to append a name tag.
+                out += (
+                    "<div class='message-user-wrapper' data-{0} data-sender-id='{1}'>"
+                        "<p class='message-user-name noselect'>{2}</p>"
+                    "</div>"
+                ).format(previous_origin, previous_sender_id, previous_sender_name)
+
+            out += (
+                "<div class='message-wrapper' data-{0} data-image data-user-id='{1}'>"
+                    "<div class='message-image'></div>"
+                    "<div class='message-content-wrapper'>"
+                        "<p class='message-content'>{2}</p>"
+                    "</div>"
+                "</div>"
+            ).format(origin, sender_id, message.contents)
+
+        previous_sender_name = sender_name
+        previous_sender_id = sender_id
+        previous_origin = origin
+
+    # Add nametag for the final message
+    out += (
+        "<div class='message-user-wrapper' data-{0} data-sender-id='{1}'>"
+            "<p class='message-user-name noselect'>{2}</p>"
+        "</div>"
+    ).format(previous_origin, previous_sender_id, previous_sender_name)
+
+    return out
+
+
+
+
 
 
 @login_required_message

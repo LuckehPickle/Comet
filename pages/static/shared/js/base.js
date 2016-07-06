@@ -43,8 +43,10 @@ function init(fullLoad){
     initSocket();
     addEventListeners(fullLoad);
     $("div[class^='push-message-container']").fadeIn(300);
+    $(".nano").nanoScroller();
     if(!DEBUG)
         printWarning();
+
 
     print("Initialised Base.");
 }
@@ -56,7 +58,7 @@ function init(fullLoad){
  * @param {Boolean} page Is this a page load?
  */
 function addEventListeners(fullLoad){
-    /* BEGIN PJAX */
+    /* BEGIN PJAX
     $(document).off(".base");
     $(document).pjax("a[data-pjax]", ".pjax-body");
     $(document).pjax("a[data-pjax-m]", ".chat-right");
@@ -627,6 +629,9 @@ function handleSocketMessage(data){
             break;
         case "message_sent":
             break;
+        case "user_profile":
+            handleSocketUserProfile(data);
+            break;
         default:
             print("A message was received with an unrecognized action: '" + data.action + "'");
     }
@@ -731,14 +736,40 @@ var handleSocketChannelMessage = function(data){
         return;
     }
 
-    if(data.channel_url == window.channel_url){
+    if(data.channel_url == window.absolute_channel_url){
         if(data.sender_id == window.user_id){
             print("Message successfully sent.");
             return;
         }
         appendMessage(data.message, data.sender, data.sender_id, data.time_sent);
+
+        if(document.hidden){
+            Push.create("Message from '" + data.sender + "'.", {
+                body: data.message,
+                timeout: PUSH_TIMEOUT,
+            });
+        }
     }else{
-        new PushMessage(MessageType.INFO, "You have received a new message from '" + data.sender + "'. Check it out here: <div class='push-message-well'><a href=''>" + "put a bloody url here mate." + "</a></div>");
+        var channelName = data.channel_name;
+        if(channelName == window.username){
+            channelName = data.sender;
+        }
+
+        var p = Push.create("New message in '" + channelName + "'.", {
+            body: data.sender + ": " + data.message,
+            timeout: PUSH_TIMEOUT,
+            onClick: function(){
+                var loc = data.channel_url;
+                if(!loc.startsWith("/messages/")){
+                    loc = "/messages/user/" + loc;
+                }
+                location.href = loc;
+
+                p.then(function(notification) {
+                    notification.close();
+                });
+            },
+        });
     }
 }
 /* END SOCKETS */

@@ -14,3 +14,5 @@ Nothing yet.
  * Created a new script: messenger.js
  * Migrated all of the content that is messenger specific from base.js to messenger.js
  * Added Browser Push Notifications (note: These are different from Push Messages)
+ * Temporarily disabled PJAX
+ * Redesigned Messenger Interface

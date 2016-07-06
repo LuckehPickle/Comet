@@ -81,7 +81,7 @@ function initMessenger(fullLoad){
 
     print("Initialising Messenger...");
 
-    scrollToBottom($(".chat-body"));
+    scrollToBottom($(".messenger-content"));
     addMessengerEventListeners(fullLoad);
 
     print("Initialised Messenger.");
@@ -158,7 +158,7 @@ function addMessengerEventListeners(fullLoad){
         channelInfo.attr("active", "");
     });
 
-    var closeInfoTab = $(".channel-info");
+    var closeInfoTab = $(".channel-info-back");
     closeInfoTab.off("." + NAMESPACE);
     closeInfoTab.on("click." + NAMESPACE, function(){
         channelInfoOut.play();
@@ -206,7 +206,7 @@ function addMessengerEventListeners(fullLoad){
 
         if(query.length < 3){ // Search not long enough.
             removeStaleSearches();
-            $(".search-results").append("<p class=\"search-no-results\">Search not long enough.</p>");
+            $(".search-content").append("<p class=\"search-no-results\">Search not long enough.</p>");
         }
     });
 
@@ -225,6 +225,22 @@ function addMessengerEventListeners(fullLoad){
         searchInput.focus();
     });
     /* END SEARCH */
+
+    /* BEGIN CHANNEL INFO */
+    var username = $(".message-user-name");
+    username.off("." + NAMESPACE);
+    username.on("click." + NAMESPACE, function(){
+        retrieveUserProfile($(this).parent().attr("data-sender-id"));
+    });
+
+    var infoClose = $(".channel-info-close");
+    infoClose.off("." + NAMESPACE);
+    infoClose.on("click." + NAMESPACE, function(){
+        infoClose.css("visibility", "hidden");
+        $(".channel-info-inner").fadeIn(150);
+        $(".retrieved-info").hide();
+    });
+    /* END CHANNEL INFO */
 
     /* BEGIN DOCUMENT */
     $("html").off("." + NAMESPACE);
@@ -262,7 +278,7 @@ $(document).on("ready", function(){
  */
 function appendMessage(message, sender, senderID, timeSent){
     $(".no-messages").remove();
-    var mostRecent = $(".messenger-body").children().last();
+    var mostRecent = $(".messenger-content").children(".message-wrapper").last();
     var origin = (senderID != window.user_id) ? "left" : "right";
     var time = new Date(timeSent).toLocaleTimeString(navigator.language, {
         hour: "numeric",
@@ -271,22 +287,34 @@ function appendMessage(message, sender, senderID, timeSent){
     });
 
     if(mostRecent.attr("data-user-id") == senderID){
-        $(".messenger-body").append(
-            "<div class='message-wrapper' data-" + origin + " data-sender='" + sender + "' data-user-id='" + senderID + "'>" +
+        mostRecent.after(
+            "<div class='message-wrapper' data-" + origin + " data-user-id='" + senderID + "'>" +
                 "<div class='message-content-wrapper'>" +
                     "<p class='message-content' data-new></p>" +
                 "</div>" +
             "</div>"
         );
     }else{
-        $(".messenger-body").append(
-            "<div class='message-wrapper' data-" + origin + " data-image data-sender='" + sender + "' data-user-id='" + senderID + "'>" +
+        $(".messenger-content").append(
+            "<div class='message-wrapper' data-" + origin + " data-image data-user-id='" + senderID + "'>" +
                 "<div class='message-image'></div>" +
                 "<div class='message-content-wrapper'>" +
                     "<p class='message-content' data-new></p>" +
                 "</div>" +
             "</div>"
         );
+
+        $(".messenger-content").append(
+            "<div class=\"message-user-wrapper\" data-" + origin + " data-sender-id='" + senderID + "'>" +
+                "<p class=\"message-user-name noselect\" data-new>" + sender + "</p>" +
+            "</div>"
+        );
+
+        $(".message-user-name[data-new]").on("click." + NAMESPACE, function(){
+            retrieveUserProfile($(this).parent().attr("data-sender-id"));
+        });
+
+        $(".message-user-name[data-new]").removeAttr("data-new");
     }
 
     // Add the message afterwards via .text() to escape HTML
@@ -295,14 +323,7 @@ function appendMessage(message, sender, senderID, timeSent){
     messageContent.removeAttr("data-new");
 
     // Make sure that the body is scrolled to the bottom
-    scrollToBottom($(".messenger-body"));
-
-    if(document.hidden){
-        Push.create("Message from '" + sender + "'.", {
-            body: message,
-            timeout: PUSH_TIMEOUT,
-        });
-    }
+    scrollToBottom($(".messenger-content"));
 }
 /* END CHAT */
 
@@ -319,7 +340,7 @@ function updateSearch(users, friends){
 
     if(users.length == 0){
         // No data returned
-        $(".search-results").append("<p class=\"search-no-results\">No results found.</p>");
+        $(".search-content").append("<p class=\"search-no-results\">No results found.</p>");
         return;
     }
 
@@ -347,7 +368,7 @@ function updateSearch(users, friends){
         }
 
         // Add search result
-        $(".search-results").append(
+        $(".search-content").append(
             "<div class=\"search-user-wrapper noselect\" href=\"/messages/user/" + this.fields.user_url + "\" data-pjax-m>" +
                 "<div class=\"search-user-image\"></div>" +
                 "<div class=\"search-user-info\">" +
@@ -358,7 +379,7 @@ function updateSearch(users, friends){
     });
 
     // Add "See all results" button.
-    $(".search-results").append(
+    $(".search-content").append(
         "<a class=\"search-all-results noselect\">" +
             "See all results." +
             "<link class=\"rippleJS\">" +
@@ -372,7 +393,7 @@ function updateSearch(users, friends){
  * Clears the search list of any stale data.
  */
 var removeStaleSearches = function(){
-    var children = $(".search-results").children();
+    var children = $(".search-content").children();
     children.each(function(){
         $(this).remove();
     });
@@ -435,3 +456,89 @@ function parseCommand(command){
     print("Parsing command: '" + command + "'");
 }
 /* END INPUT */
+
+
+/* BEGIN CHANNEL INFO */
+/**
+ * Retrieve User Profile
+ * @param {String} user_id Target users ID.
+ */
+function retrieveUserProfile(user_id){
+    // Make sure panel is visible
+    channelInfoIn.play();
+    $(".channel-info").attr("active", "");
+    $(".channel-info-close").css("visibility", "visible");
+
+    send("user_profile", user_id);
+    print("Retrieving user profile...");
+
+    var panel = $(".retrieved-info");
+    var panelContent = $(".retrieved-info-content");
+    $(".channel-info-inner").hide();
+    panelContent.children().remove();
+    panel.fadeIn(150);
+
+    panelContent.append(
+        "<p class=\"no-messages\">Retrieving user profile...</p>" +
+        "<div class=\"sk-folding-cube channel-info-loader\">" +
+            "<div class=\"sk-cube1 sk-cube\"></div>" +
+            "<div class=\"sk-cube2 sk-cube\"></div>" +
+            "<div class=\"sk-cube4 sk-cube\"></div>" +
+            "<div class=\"sk-cube3 sk-cube\"></div>" +
+        "</div>"
+    );
+}
+
+
+/**
+ * Handle Socket User Profile
+ * TODO Show close icon.
+ * TODO Right-click/long press menu with additional options.
+ */
+function handleSocketUserProfile(data){
+    if(!("user_data" in data)){
+        print("A malformed message was received from the SocketIO server. (User Profile)", true);
+        return;
+    }
+
+    print("User profile retrieved.");
+
+    var userData = data.user_data;
+    var out = "";
+
+    out += "<p class=\"user-profile-username\">" + userData.username + "</p>";
+    out += "<p class=\"user-profile-userid\">" + userData.user_id + "</p>";
+    out += "<div class=\"user-profile-image\"></div>";
+
+    var ribbons = userData.user_ribbons;
+    if(ribbons.length){
+        out += "<div class=\"ribbon-wrapper\">";
+        for(var i = 0; i < ribbons.length; i++){
+            out += "<p class=\"user-profile-ribbon-" + ribbons[i] + "\"></p>";
+        }
+        out += "</div>";
+    }
+
+    out += "<p class=\"user-profile-bio\"><span>User Bio:</span><br>" + userData.user_bio + "</p>";
+
+    switch(userData.relationship){
+        case "none":
+            out += "<div class=\"user-profile-button\">Add Friend<link class=\"rippleJS\"></div>";
+            break;
+        case "friend":
+            out += "<div class=\"user-profile-button\">Friends<link class=\"rippleJS\"></div>";
+            out += "<div class=\"user-profile-button\">Message<link class=\"rippleJS\"></div>"
+            break;
+        case "request_sent":
+            out += "<div class=\"user-profile-button\">Request Sent<link class=\"rippleJS\"></div>";
+            break;
+        case "request_received":
+            out += "<div class=\"user-profile-button\">Request Received<link class=\"rippleJS\"></div>";
+            break;
+    }
+
+    var panel = $(".retrieved-info-content");
+    panel.children().remove();
+    panel.append(out);
+}
+/* END CHANNEL INFO */
