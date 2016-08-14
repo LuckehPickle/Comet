@@ -28,7 +28,7 @@ var searchTimer;
 /**
  * Animations
  */
-var channelListIn = anime({
+var channelListIn = anime ({
     targets: ".channel-list",
     duration: 100,
     easing: "easeInCubic",
@@ -37,7 +37,7 @@ var channelListIn = anime({
     opacity: [0, 1],
 });
 
-var channelListOut = anime({
+var channelListOut = anime ({
     targets: ".channel-list",
     duration: 100,
     easing: "easeInCubic",
@@ -46,7 +46,7 @@ var channelListOut = anime({
     opacity: [1, 0],
 });
 
-var channelInfoIn = anime({
+var channelInfoIn = anime ({
     targets: ".channel-info",
     duration: 100,
     easing: "easeInCubic",
@@ -55,7 +55,7 @@ var channelInfoIn = anime({
     opacity: [0, 1],
 });
 
-var channelInfoOut = anime({
+var channelInfoOut = anime ({
     targets: ".channel-info",
     duration: 100,
     easing: "easeInCubic",
@@ -70,11 +70,11 @@ var channelInfoOut = anime({
  * Initialises messenger related functions.
  * @param {Boolean} fullLoad Determines whether the page was a PJAX load.
  */
-function initMessenger(fullLoad){
-    if(createModal == null)
+function initMessenger(fullLoad) {
+    if (createModal == null)
         createModal = new Modal("create", $(".modal-create"));
 
-    if(!fullLoad){ // If this is a PJAX load we only want to add event handlers.
+    if (!fullLoad) { // If this is a PJAX load we only want to add event handlers.
         addMessengerEventListeners(fullLoad);
         return;
     }
@@ -93,29 +93,29 @@ function initMessenger(fullLoad){
  * Initialises event listeners for things on the messenger page.
  * @param {Boolean} fullLoad Determines whether the page was a PJAX load.
  */
-function addMessengerEventListeners(fullLoad){
+function addMessengerEventListeners(fullLoad) {
 
     /* BEGIN CREATE MODAL */
     var createTrigger = $(".create-group");
     createTrigger.off("." + NAMESPACE);
-    createTrigger.on("click." + NAMESPACE, function(){
-        if(createModal == null)
+    createTrigger.on("click." + NAMESPACE, function() {
+        if (createModal == null)
             createModal = new Modal("create", $(".modal-create"));
         createModal.display();
     });
 
     var createCancel = $(".modal-create-cancel");
     createCancel.off("." + NAMESPACE);
-    createCancel.on("click." + NAMESPACE, function(){
+    createCancel.on("click." + NAMESPACE, function() {
         createModal.hide();
     });
     /* END CREATE MODAL */
 
-    /* BEGIN CHAT */
+    /* BEGIN MESSENGER */
     var input = $(".messenger-input");
     input.off("." + NAMESPACE);
-    input.on("keydown." + NAMESPACE, function(event){
-        if(event.which == 13 && !(event.shiftKey)){
+    input.on("keydown." + NAMESPACE, function(event) {
+        if (event.which == 13 && !(event.shiftKey)) {
             handleMessengerInput(input.text());
             input.text("");
             return false;
@@ -123,29 +123,39 @@ function addMessengerEventListeners(fullLoad){
     });
 
     var placeholder = $(".messenger-input-placeholder");
-    input.on("focus." + NAMESPACE, function(){
+    input.on("focus." + NAMESPACE, function() {
         placeholder.hide();
     });
 
-    input.on("blur." + NAMESPACE, function(){
-        if(!input.text().length){ // Only show if empty
+    input.on("blur." + NAMESPACE, function() {
+        if (!input.text().length) { // Only show if empty
             placeholder.show();
         }
     });
-    /* END CHAT */
+
+    var messageContent = $(".message-content");
+    messageContent.off("." + NAMESPACE);
+    messageContent.on("click." + NAMESPACE, function() {
+        if ($(this).is("[active]")) {
+            $(this).removeAttr("active");
+        } else {
+            $(this).attr("active", "");
+        }
+    });
+    /* END MESSENGER */
 
     /* BEGIN TABS */
     var openChannelTab = $(".open-channel-tab");
     var channelList = $(".channel-list");
     openChannelTab.off("." + NAMESPACE);
-    openChannelTab.on("click." + NAMESPACE, function(){
+    openChannelTab.on("click." + NAMESPACE, function() {
         channelListIn.play();
         channelList.attr("active", "");
     });
 
     var closeChannelTab = $(".channel-tab-back");
     closeChannelTab.off("." + NAMESPACE);
-    closeChannelTab.on("click." + NAMESPACE, function(){
+    closeChannelTab.on("click." + NAMESPACE, function() {
         channelListOut.play();
         channelList.removeAttr("active");
     });
@@ -153,14 +163,14 @@ function addMessengerEventListeners(fullLoad){
     var openInfoTab = $(".open-info-tab");
     var channelInfo = $(".channel-info");
     openInfoTab.off("." + NAMESPACE);
-    openInfoTab.on("click." + NAMESPACE, function(){
+    openInfoTab.on("click." + NAMESPACE, function() {
         channelInfoIn.play();
         channelInfo.attr("active", "");
     });
 
     var closeInfoTab = $(".channel-info-back");
     closeInfoTab.off("." + NAMESPACE);
-    closeInfoTab.on("click." + NAMESPACE, function(){
+    closeInfoTab.on("click." + NAMESPACE, function() {
         channelInfoOut.play();
         channelInfo.removeAttr("active");
     });
@@ -169,10 +179,10 @@ function addMessengerEventListeners(fullLoad){
     /* BEGIN CHANNEL LIST */
     var channelWrappers = $(".chnl-wrapper");
     channelWrappers.off("." + NAMESPACE);
-    channelWrappers.on("click." + NAMESPACE, function(){
+    channelWrappers.on("click." + NAMESPACE, function() {
         channelWrappers.removeAttr("active");
         $(this).closest(".chnl-wrapper").attr("active", "");
-        if(channelList.is("[active]")){
+        if (channelList.is("[active]")) {
             channelListOut.play();
             channelList.removeAttr("active");
         }
@@ -183,10 +193,10 @@ function addMessengerEventListeners(fullLoad){
     var searchResults = $(".search-results");
     var searchInput = $(".search-input");
     searchInput.off("." + NAMESPACE);
-    searchInput.on("keyup." + NAMESPACE, function(event){
-        if(event.which == 16 || // Shift
-           event.which == 17 || // Ctrl
-           event.which == 18){  // Alt
+    searchInput.on("keyup." + NAMESPACE, function(event) {
+        if (event.which == 16 || // Shift
+            event.which == 17 || // Ctrl
+            event.which == 18) { // Alt
             return;
         }
 
@@ -194,26 +204,26 @@ function addMessengerEventListeners(fullLoad){
         searchTimer = setTimeout(searchComplete, SEARCH_TYPING_INTERVAL);
 
         var query = searchInput.val().trim();
-        if(!query.length){ // Query is empty, show channel list.
+        if (!query.length) { // Query is empty, show channel list.
             searchResults.hide();
             searchResults.removeAttr("active");
             $(".channel-list-inner").fadeIn(100);
-        }else if(query.length && !searchResults.is("[active]")){
+        } else if (query.length && !searchResults.is("[active]")) {
             $(".channel-list-inner").hide();
             searchResults.fadeIn(100);
             searchResults.attr("active", "");
         }
 
-        if(query.length < 3){ // Search not long enough.
+        if (query.length < 2) { // Search not long enough.
             removeStaleSearches();
             $(".search-content").append("<p class=\"search-no-results\">Search not long enough.</p>");
         }
     });
 
-    searchInput.on("keydown." + NAMESPACE, function(event){
-        if(event.which == 16 || // Shift
-           event.which == 17 || // Ctrl
-           event.which == 18){  // Alt
+    searchInput.on("keydown." + NAMESPACE, function(event) {
+        if (event.which == 16 || // Shift
+            event.which == 17 || // Ctrl
+            event.which == 18) { // Alt
             return;
         }
         clearTimeout(searchTimer);
@@ -221,7 +231,7 @@ function addMessengerEventListeners(fullLoad){
 
     var search = $(".search");
     search.off("." + NAMESPACE);
-    search.on("click." + NAMESPACE, function(){
+    search.on("click." + NAMESPACE, function() {
         searchInput.focus();
     });
     /* END SEARCH */
@@ -229,13 +239,13 @@ function addMessengerEventListeners(fullLoad){
     /* BEGIN CHANNEL INFO */
     var username = $(".message-user-name");
     username.off("." + NAMESPACE);
-    username.on("click." + NAMESPACE, function(){
+    username.on("click." + NAMESPACE, function() {
         retrieveUserProfile($(this).parent().attr("data-sender-id"));
     });
 
     var infoClose = $(".channel-info-close");
     infoClose.off("." + NAMESPACE);
-    infoClose.on("click." + NAMESPACE, function(){
+    infoClose.on("click." + NAMESPACE, function() {
         infoClose.css("visibility", "hidden");
         $(".channel-info-inner").fadeIn(150);
         $(".retrieved-info").hide();
@@ -253,16 +263,20 @@ function addMessengerEventListeners(fullLoad){
  * Handle Messenger Document Event
  * Click event that always fires. Not currently used.
  */
-function handleMessengerDocumentEvent(event){
+function handleMessengerDocumentEvent(event) {
     var target = $(event.target);
+
+    if (!target.closest(".message-content").length && !target.is(".message-content")) {
+        $(".message-content").removeAttr("active");
+    }
 }
 
 
-$(document).on("pjax:success", function(){
+$(document).on("pjax:success", function() {
     initMessenger(false);
 });
 
-$(document).on("ready", function(){
+$(document).on("ready", function() {
     initMessenger(true);
 });
 
@@ -276,7 +290,7 @@ $(document).on("ready", function(){
  * @param {String} senderID UUID of the sender.
  * @param {String} timeSent Time that the message was sent.
  */
-function appendMessage(message, sender, senderID, timeSent){
+function appendMessage(message, sender, senderID, timeSent) {
     $(".no-messages").remove();
     var mostRecent = $(".messenger-content").children(".message-wrapper").last();
     var origin = (senderID != window.user_id) ? "left" : "right";
@@ -286,7 +300,7 @@ function appendMessage(message, sender, senderID, timeSent){
         hour12: false,
     });
 
-    if(mostRecent.attr("data-user-id") == senderID){
+    if (mostRecent.attr("data-user-id") == senderID) {
         mostRecent.after(
             "<div class='message-wrapper' data-" + origin + " data-user-id='" + senderID + "'>" +
                 "<div class='message-content-wrapper'>" +
@@ -294,7 +308,7 @@ function appendMessage(message, sender, senderID, timeSent){
                 "</div>" +
             "</div>"
         );
-    }else{
+    } else {
         $(".messenger-content").append(
             "<div class='message-wrapper' data-" + origin + " data-image data-user-id='" + senderID + "'>" +
                 "<div class='message-image'></div>" +
@@ -310,7 +324,7 @@ function appendMessage(message, sender, senderID, timeSent){
             "</div>"
         );
 
-        $(".message-user-name[data-new]").on("click." + NAMESPACE, function(){
+        $(".message-user-name[data-new]").on("click." + NAMESPACE, function() {
             retrieveUserProfile($(this).parent().attr("data-sender-id"));
         });
 
@@ -335,34 +349,30 @@ function appendMessage(message, sender, senderID, timeSent){
  * @param {JSON} users A list of users that mach the query
  * @param {Object} friends A dict of friend statuses
  */
-function updateSearch(users, friends){
+function updateSearch(users, friends) {
     removeStaleSearches();
 
-    if(users.length == 0){
+    if (users.length == 0) {
         // No data returned
         $(".search-content").append("<p class=\"search-no-results\">No results found.</p>");
         return;
     }
 
     // Iterate over each user
-    jQuery.each(users, function(){
+    jQuery.each(users, function() {
         // Defaults
         var innerHTML = "User";
-        var className = "user-add";
 
-        if(this.pk in friends){
-            switch(friends[this.pk]){
+        if (this.pk in friends) {
+            switch (friends[this.pk]) {
                 case "friend":
                     innerHTML = "Friends";
-                    className = "user-friend";
                     break;
                 case "request_sent":
-                    innerHTML = "Request Sent";
-                    className = "user-request-sent";
+                    innerHTML = "Friend Request Sent";
                     break;
                 case "request_received":
-                    innerHTML = "Accept Request";
-                    className = "user-accept-request";
+                    innerHTML = "Friend Request Received";
                     break;
             }
         }
@@ -373,7 +383,9 @@ function updateSearch(users, friends){
                 "<div class=\"search-user-image\"></div>" +
                 "<div class=\"search-user-info\">" +
                     "<p class=\"search-user-name\">" + this.fields.username + " (" + this.pk.substring(0, 8).toUpperCase() + ")</p>" +
+                    "<p class=\"search-user-friend-status\">" + innerHTML + "</p>" +
                 "</div>" +
+                "<i class=\"search-user-more material-icons\">more_vert</i>" +
             "</div>"
         );
     });
@@ -392,9 +404,9 @@ function updateSearch(users, friends){
  * Remove Stale Searches
  * Clears the search list of any stale data.
  */
-var removeStaleSearches = function(){
+var removeStaleSearches = function() {
     var children = $(".search-content").children();
-    children.each(function(){
+    children.each(function() {
         $(this).remove();
     });
 };
@@ -405,9 +417,9 @@ var removeStaleSearches = function(){
  * Function which runs whenever the typing timer runs out. It essentially
  * means the user has finished typing.
  */
-function searchComplete(){
+function searchComplete() {
     var query = $(".search-input").val().trim();
-    if(query != "" && query != null && query.length > 2){
+    if (query != "" && query != null && query.length > 1) {
         send("search", query);
         print("Sent a query for users named '" + query + "'");
     }
@@ -421,16 +433,16 @@ function searchComplete(){
  * Handles user input from the messenger.
  * @param {String} input Contents of the input.
  */
-function handleMessengerInput(input){
+function handleMessengerInput(input) {
     input = input.trim(); // Remove excessive whitespace
     var re = /^\//; // Matches the literal '/'
-    if(re.test(input)){
+    if (re.test(input)) {
         parseCommand(input); // Parse command
         return;
     }
 
-    if(input.length){  // Make sure the string isn't empty.
-        if(window.channel_url == null){
+    if (input.length) { // Make sure the string isn't empty.
+        if (window.channel_url == null) {
             print("Attempted to send a message but not currently connected to a channel.", true);
             return;
         }
@@ -452,7 +464,7 @@ function handleMessengerInput(input){
  * Parses and handles commands.
  * @param {String} command Command to be parsed.
  */
-function parseCommand(command){
+function parseCommand(command) {
     print("Parsing command: '" + command + "'");
 }
 /* END INPUT */
@@ -463,7 +475,7 @@ function parseCommand(command){
  * Retrieve User Profile
  * @param {String} user_id Target users ID.
  */
-function retrieveUserProfile(user_id){
+function retrieveUserProfile(user_id) {
     // Make sure panel is visible
     channelInfoIn.play();
     $(".channel-info").attr("active", "");
@@ -495,8 +507,8 @@ function retrieveUserProfile(user_id){
  * TODO Show close icon.
  * TODO Right-click/long press menu with additional options.
  */
-function handleSocketUserProfile(data){
-    if(!("user_data" in data)){
+function handleSocketUserProfile(data) {
+    if (!("user_data" in data)) {
         print("A malformed message was received from the SocketIO server. (User Profile)", true);
         return;
     }
@@ -511,9 +523,9 @@ function handleSocketUserProfile(data){
     out += "<div class=\"user-profile-image\"></div>";
 
     var ribbons = userData.user_ribbons;
-    if(ribbons.length){
+    if (ribbons.length) {
         out += "<div class=\"ribbon-wrapper\">";
-        for(var i = 0; i < ribbons.length; i++){
+        for (var i = 0; i < ribbons.length; i++) {
             out += "<p class=\"user-profile-ribbon-" + ribbons[i] + "\"></p>";
         }
         out += "</div>";
@@ -521,7 +533,7 @@ function handleSocketUserProfile(data){
 
     out += "<p class=\"user-profile-bio\"><span>User Bio:</span><br>" + userData.user_bio + "</p>";
 
-    switch(userData.relationship){
+    switch (userData.relationship) {
         case "none":
             out += "<div class=\"user-profile-button\">Add Friend<link class=\"rippleJS\"></div>";
             break;

@@ -73,7 +73,7 @@ class Channel(models.Model):
             channel_url=self.channel_url
         ).order_by("-time_sent")
 
-        if query_set.count() != 0:
+        if query_set.exists():
             query_set = query_set[0]
         else:
             return None

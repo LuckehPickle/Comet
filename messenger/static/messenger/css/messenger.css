@@ -16,45 +16,48 @@
 
 
 /* BEGIN GENERAL STYLES */
-.menu{
+
+.menu {
     box-shadow: none;
     background-color: #3B3B3B;
 }
 
-.menu-wrapper{
+.menu-wrapper {
     margin: 0;
     max-width: 100%;
 }
 
-.navigation-menu li a{
+.navigation-menu li a {
     color: #E3E3E3;
 }
 
-@media screen and (max-width: 899px){
-    .navigation-menu li a{
+@media screen and (max-width: 899px) {
+    .navigation-menu li a {
         background-color: #3B3B3B;
         border-top-color: #4B4B4B;
     }
 }
 
-.mobile-button-wrapper{
+.mobile-button-wrapper {
     background-color: #3B3B3B;
     border-top-color: #4B4B4B;
 }
 
-.nav-dropdown a{
+.nav-dropdown a {
     color: #EBEBEB;
     background-color: #3B3B3B;
 }
 
-.nav-dropdown a:hover{
+.nav-dropdown a:hover {
     background-color: #333333;
 }
+
 /* END GENERAL STYLES */
 
 
 /* BEGIN MESSENGER STYLES */
-.messenger-wrapper{
+
+.messenger-wrapper {
     position: absolute;
     top: 50px;
     bottom: 0;
@@ -63,7 +66,7 @@
     overflow: hidden;
 }
 
-.messenger-toolbar{
+.messenger-toolbar {
     height: 40px;
     width: 100%;
     background-color: #404040;
@@ -73,21 +76,20 @@
     justify-content: space-between;
 }
 
-.channel-panel > .messenger-toolbar{
+.channel-panel> .messenger-toolbar {
     justify-content: center;
 }
 
-@media screen and (min-width: 900px){
-    .messenger-wrapper{
+@media screen and (min-width: 900px) {
+    .messenger-wrapper {
         top: 70px;
     }
 
-    .messenger-toolbar{
+    .messenger-toolbar {
         height: 50px
     }
 }
-
-.messenger-wrapper > section{
+.messenger-wrapper> section {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -95,21 +97,23 @@
     box-sizing: border-box;
 }
 
-.channel-panel{
+.channel-panel {
     background-color: #464646 !important;
 }
+
 /* END MESSENGER STYLES */
 
 
 /* BEGIN TOOLBAR STYLES */
-.messenger-toolbar > .material-icons{
+
+.messenger-toolbar> .material-icons {
     color: #DBDBDB;
     padding: 10px;
     flex-shrink: 0;
     cursor: pointer;
 }
 
-.channel-title, .channel-username{
+.channel-title, .channel-username {
     color: #DBDBDB;
     font-family: 'Roboto', sans-serif;
     font-size: 17px;
@@ -121,11 +125,11 @@
     text-align: center;
 }
 
-.channel-username{
+.channel-username {
     /* padding-right: 10px; */
 }
 
-.channel-nickname{
+.channel-nickname {
     outline: none;
     border: none;
     background-color: transparent;
@@ -138,28 +142,30 @@
     box-sizing: border-box;
 }
 
-.channel-nickname:focus{
+.channel-nickname:focus {
     background-color: #313131;
     width: auto;
 }
 
-.messenger-toolbar-wrapper{
+.messenger-toolbar-wrapper {
     display: flex;
     align-items: center;
     margin: 0 auto;
 }
+
 /* END TOOLBAR STYLES */
 
 
 /* BEGIN SEARCH */
-.search-wrapper{
+
+.search-wrapper {
     width: 100%;
     padding: 10px;
     box-sizing: border-box;
     border-bottom: 1px solid #454545;
 }
 
-.search{
+.search {
     display: flex;
     align-items: center;
     width: 100%;
@@ -169,7 +175,7 @@
     cursor: text;
 }
 
-.search > i{
+.search> i {
     color: #DBDBDB;
     padding: 0;
     padding-left: 12px;
@@ -177,7 +183,7 @@
     pointer-events: none;
 }
 
-.search-input{
+.search-input {
     border: none;
     outline: none;
     background-color: transparent;
@@ -189,39 +195,46 @@
     box-sizing: border-box;
 }
 
-.search-input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+.search-input::-webkit-input-placeholder {
+    /* WebKit, Blink, Edge */
     color: #D8D8D8;
 }
 
-.search-input:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-    color: #D8D8D8;
-    opacity: 1;
-}
-
-.search-input::-moz-placeholder { /* Mozilla Firefox 19+ */
+.search-input:-moz-placeholder {
+    /* Mozilla Firefox 4 to 18 */
     color: #D8D8D8;
     opacity: 1;
 }
 
-.search-input:-ms-input-placeholder { /* Internet Explorer 10-11 */
+.search-input::-moz-placeholder {
+    /* Mozilla Firefox 19+ */
+    color: #D8D8D8;
+    opacity: 1;
+}
+.search-input:-ms-input-placeholder {
+    /* Internet Explorer 10-11 */
     color: #D8D8D8;
 }
 
-@media screen and (min-width: 801px){
-    .search-wrapper{
+@media screen and (min-width: 801px) {
+    .search-wrapper {
         padding: 15px 12px;
     }
 
-    .search-input{
+    .search-input {
         font-size: 15px;
     }
 
-    .search > i{
+    .search> i {
         font-size: 22px;
     }
 }
 
-.search-results{
+div.search-user-wrapper {
+    cursor: auto;
+}
+
+.search-results {
     display: none;
     width: 100%;
     height: calc(100% - 99px);
@@ -229,7 +242,7 @@
     overflow-y: hidden;
 }
 
-.search-no-results{
+.search-no-results {
     width: 100%;
     padding: 0 30px;
     box-sizing: border-box;
@@ -239,7 +252,7 @@
     color: #DBDBDB;
 }
 
-.search-all-results{
+.search-all-results {
     font-family: 'Roboto', sans-serif;
     font-size: 14px;
     color: #DBDBDB;
@@ -253,18 +266,33 @@
     white-space: nowrap;
     margin: 10px;
 }
+
+p.search-user-friend-status {
+    color: #CBCBCB !important;
+}
+
+.search-user-more {
+    color: #EBEBEB;
+    font-size: 26px;
+    padding: 6px;
+    flex-shrink: 0;
+    cursor: pointer;
+    margin-right: -5px;
+}
+
 /* END SEARCH */
 
 
 /* BEGIN CHANNEL LIST */
-.channel-list-inner{
+
+.channel-list-inner {
     width: 100%;
     height: calc(100% - 99px);
     overflow-x: hidden;
     overflow-y: hidden;
 }
 
-.chnl-wrapper, .search-user-wrapper{
+.chnl-wrapper, .search-user-wrapper {
     width: 100%;
     padding: 10px;
     box-sizing: border-box;
@@ -275,11 +303,11 @@
     text-decoration: none;
 }
 
-.chnl-wrapper[active]{
+.chnl-wrapper[active] {
     background-color: #555555;
 }
 
-.chnl-image, .search-user-image{
+.chnl-image, .search-user-image {
     width: 34px;
     height: 34px;
     background-color: #3A3A3A;
@@ -287,7 +315,7 @@
     border-radius: 2px;
 }
 
-.chnl-info, .search-user-info{
+.chnl-info, .search-user-info {
     flex-grow: 1;
     padding-left: 10px;
     box-sizing: border-box;
@@ -297,7 +325,7 @@
     overflow: hidden;
 }
 
-.chnl-wrapper p, p.search-user-name{
+.chnl-wrapper p, .search-user-info p {
     font-family: 'Roboto', sans-serif;
     font-size: 14px;
     text-overflow: ellipsis;
@@ -307,22 +335,22 @@
     color: #DBDBDB;
 }
 
-p.chnl-name, p.search-user-name{
+p.chnl-name, p.search-user-name {
     margin-bottom: 1px;
     font-weight: bold;
 }
 
-.last-message-wrapper{
+.last-message-wrapper {
     display: flex;
     width: 100%;
     overflow: hidden;
 }
 
-p.last-message{
+p.last-message {
     color: #CBCBCB;
 }
 
-p.last-message-time{
+p.last-message-time {
     color: #CBCBCB;
     margin-left: 5px;
     box-sizing: border-box;
@@ -330,33 +358,35 @@ p.last-message-time{
     margin-left: auto;
 }
 
-@media screen and (min-width: 801px){
-    .channel-list-inner, .search-results{
+@media screen and (min-width: 801px) {
+    .channel-list-inner, .search-results {
         height: calc(100% - 120px);
     }
 
-    .chnl-wrapper, .search-user-wrapper{
+    .chnl-wrapper, .search-user-wrapper {
         padding: 12px;
     }
 
-    .chnl-wrapper p, p.search-user-name{
+    .chnl-wrapper p, .search-user-info p {
         font-size: 14px;
     }
 
-    p.chnl-name, p.search-user-name{
+    p.chnl-name, p.search-user-name {
         font-size: 15px;
     }
 
-    .chnl-image, .search-user-image{
+    .chnl-image, .search-user-image {
         height: 36px;
         width: 36px;
     }
 }
+
 /* END CHANNEL LIST */
 
 
 /* BEGIN CHANNEL PANEL */
-.channel-panel{
+
+.channel-panel {
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -364,11 +394,11 @@ p.last-message-time{
     background-image: url(/static/messenger/img/asanoha-400px.png);
 }
 
-.messenger-toolbar{
+.messenger-toolbar {
     flex-shrink: 0;
 }
 
-.messenger-body{
+.messenger-body {
     flex-grow: 1;
     overflow-x: hidden;
     padding-top: 6px;
@@ -377,7 +407,7 @@ p.last-message-time{
     position: relative;
 }
 
-.no-messages{
+.no-messages {
     width: 100%;
     padding: 10px 30px;
     box-sizing: border-box;
@@ -389,162 +419,172 @@ p.last-message-time{
     top: 0;
 }
 
-    /* BEGIN MESSAGE */
-    .message-wrapper{
-        padding: 1px 12px;
-        display: flex;
-        align-items: flex-start;
-        flex-direction: row;
+/* BEGIN MESSAGE */
+
+.message-wrapper {
+    padding: 1px 12px;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: row;
+}
+
+.message-wrapper[data-image] {
+    padding-top: 10px;
+}
+
+/**
+ * [data-right] denotes a message originating from the right
+ * hand side of the messenger body (i.e. sent from the user).
+ */
+
+.message-wrapper[data-right] {
+    flex-direction: row-reverse;
+    /* Change the order of the elems */
+}
+
+.message-wrapper[data-right] .message-content::selection {
+    background: #EBEBEB;
+    color: #464646;
+}
+
+/**
+ * Some messages do not require a user image, so we have to account
+ * for that with some additional padding on the side.
+ */
+
+.message-wrapper[data-left]:not([data-image]) {
+    padding-left: 47px;
+    /* Accounts for the missing image */
+}
+
+.message-wrapper[data-right]:not([data-image]) {
+    padding-right: 47px;
+    /* Accounts for the missing image */
+}
+
+.message-image {
+    width: 35px;
+    height: 35px;
+    background-color: #EBEBEB;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+/**
+ * We need to wrap the message to prevent it from leaving the screen.
+ */
+
+.message-wrapper[data-left] .message-content-wrapper {
+    flex-grow: 1;
+    margin-left: 6px;
+    margin-right: 55px;
+    text-align: left;
+}
+
+.message-wrapper[data-right] .message-content-wrapper {
+    flex-grow: 1;
+    margin-left: 55px;
+    margin-right: 6px;
+    text-align: right;
+}
+
+.message-content {
+    margin: 0;
+    padding: 8px 12px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    display: inline-block;
+    border-radius: 3px;
+    max-width: 400px;
+    word-wrap: break-word;
+}
+
+.message-wrapper[data-left] .message-content {
+    color: #454545;
+    background-color: #EBEBEB;
+}
+
+.message-wrapper[data-right] .message-content {
+    color: #EBEBEB;
+    background-color: #F1592B;
+    text-align: left;
+}
+
+.message-user-wrapper {
+    width: 100%;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    color: #DBDBDB;
+    padding: 4px 12px;
+    padding-bottom: 2px;
+    box-sizing: border-box;
+}
+
+.message-user-wrapper[data-right] .message-user-name {
+    margin-left: auto;
+    padding-right: 41px;
+    text-align: right;
+}
+
+.message-user-wrapper[data-left] .message-user-name {
+    padding-left: 41px;
+}
+
+.message-user-name {
+    width: 100%;
+    max-width: 300px;
+    margin: 0;
+    cursor: pointer;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.message-user-name:hover {
+    text-decoration: underline;
+}
+
+@media screen and (min-width: 801px) {
+    .message-wrapper {
+        padding: 2px 18px;
     }
 
-    .message-wrapper[data-image]{
-        padding-top: 10px;
+    .message-wrapper[data-left]:not([data-image]) {
+        padding-left: 53px;
+        /* Accounts for the missing image */
     }
 
-    /**
-     * [data-right] denotes a message originating from the right
-     * hand side of the messenger body (i.e. sent from the user).
-     */
-    .message-wrapper[data-right]{
-        flex-direction: row-reverse; /* Change the order of the elems */
+    .message-wrapper[data-right]:not([data-image]) {
+        padding-right: 53px;
+        /* Accounts for the missing image */
     }
 
-    .message-wrapper[data-right] .message-content::selection{
-        background: #EBEBEB;
-        color: #464646;
+    .message-content {
+        padding: 8px 13px;
     }
 
-    /**
-     * Some messages do not require a user image, so we have to account
-     * for that with some additional padding on the side.
-     */
-    .message-wrapper[data-left]:not([data-image]){
-        padding-left: 47px; /* Accounts for the missing image */
+    .message-user-wrapper {
+        padding: 4px 18px;
     }
+}
 
-    .message-wrapper[data-right]:not([data-image]){
-        padding-right: 47px; /* Accounts for the missing image */
-    }
+/* END MESSAGE */
 
-    .message-image{
-        width: 35px;
-        height: 35px;
-        background-color: #EBEBEB;
-        border-radius: 3px;
-        flex-shrink: 0;
-    }
-
-    /**
-     * We need to wrap the message to prevent it from leaving the screen.
-     */
-    .message-wrapper[data-left] .message-content-wrapper{
-        flex-grow: 1;
-        margin-left: 6px;
-        margin-right: 55px;
-        text-align: left;
-    }
-
-    .message-wrapper[data-right] .message-content-wrapper{
-        flex-grow: 1;
-        margin-left: 55px;
-        margin-right: 6px;
-        text-align: right;
-    }
-
-    .message-content{
-        margin: 0;
-        padding: 8px 12px;
-        font-family: 'Roboto', sans-serif;
-        font-size: 14px;
-        display: inline-block;
-        border-radius: 3px;
-        max-width: 400px;
-        word-wrap: break-word;
-    }
-
-    .message-wrapper[data-left] .message-content{
-        color: #454545;
-        background-color: #EBEBEB;
-    }
-
-    .message-wrapper[data-right] .message-content{
-        color: #EBEBEB;
-        background-color: #F1592B;
-        text-align: left;
-    }
-
-    .message-user-wrapper{
-        width: 100%;
-        font-family: 'Roboto', sans-serif;
-        font-size: 14px;
-        color: #DBDBDB;
-        padding: 4px 12px;
-        padding-bottom: 2px;
-        box-sizing: border-box;
-    }
-
-    .message-user-wrapper[data-right] .message-user-name{
-        margin-left: auto;
-        padding-right: 41px;
-        text-align: right;
-    }
-
-    .message-user-wrapper[data-left] .message-user-name{
-        padding-left: 41px;
-    }
-
-    .message-user-name{
-        width: 100%;
-        max-width: 300px;
-        margin: 0;
-        cursor: pointer;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
-    }
-
-    .message-user-name:hover{
-        text-decoration: underline;
-    }
-
-    @media screen and (min-width: 801px){
-        .message-wrapper{
-            padding: 2px 18px;
-        }
-
-        .message-wrapper[data-left]:not([data-image]){
-            padding-left: 53px; /* Accounts for the missing image */
-        }
-
-        .message-wrapper[data-right]:not([data-image]){
-            padding-right: 53px; /* Accounts for the missing image */
-        }
-
-        .message-content{
-            padding: 8px 13px;
-        }
-
-        .message-user-wrapper{
-            padding: 4px 18px;
-        }
-    }
-    /* END MESSAGE */
-
-.messenger-footer{
+.messenger-footer {
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
     align-items: stretch;
 }
 
-.messenger-input-wrapper{
+.messenger-input-wrapper {
     position: relative;
     overflow: hidden;
     box-sizing: border-box;
     padding: 12px;
 }
 
-.messenger-input-placeholder{
+.messenger-input-placeholder {
     position: absolute;
     pointer-events: none;
     margin: 0;
@@ -557,7 +597,7 @@ p.last-message-time{
     white-space: nowrap;
 }
 
-.messenger-input{
+.messenger-input {
     width: 100%;
     outline: none;
     padding: 10px 14px;
@@ -573,32 +613,34 @@ p.last-message-time{
     background-color: #3B3B3B;
 }
 
-.messenger-tools-wrapper{
+.messenger-tools-wrapper {
     box-sizing: border-box;
     border-radius: 0 0 2px 2px;
     border-top: 1px solid #5F5F5F;
     padding: 10px 14px;
 }
 
-@media screen and (min-width: 801px){
-    .messenger-input-wrapper{
+@media screen and (min-width: 801px) {
+    .messenger-input-wrapper {
         padding: 18px;
     }
 
-    .messenger-input-placeholder{
+    .messenger-input-placeholder {
         font-size: 15px;
         padding: 28px 32px;
     }
 
-    .messenger-input{
+    .messenger-input {
         font-size: 15px;
     }
 }
+
 /* END CHANNEL PANEL */
 
 
 /* BEGIN CHANNEL INFO */
-.channel-info-title{
+
+.channel-info-title {
     color: #DBDBDB;
     font-family: 'Roboto', sans-serif;
     font-size: 17px;
@@ -610,20 +652,20 @@ p.last-message-time{
     text-align: center;
 }
 
-.retrieved-info{
+.retrieved-info {
     display: none;
 }
 
-.channel-info-loader{
+.channel-info-loader {
     top: 60px;
 }
 
-.retrieved-info-content{
+.retrieved-info-content {
     padding: 20px;
     box-sizing: border-box;
 }
 
-.user-profile-username, .user-profile-userid{
+.user-profile-username, .user-profile-userid {
     color: #DBDBDB;
     font-family: 'Source Sans Pro', sans-serif;
     font-size: 18px;
@@ -634,12 +676,12 @@ p.last-message-time{
     margin: 0;
 }
 
-.user-profile-userid{
+.user-profile-userid {
     font-size: 15px;
     text-transform: uppercase;
 }
 
-.user-profile-image{
+.user-profile-image {
     width: 100px;
     height: 100px;
     margin: 10px 0;
@@ -647,7 +689,7 @@ p.last-message-time{
     border-radius: 3px;
 }
 
-.ribbon-wrapper{
+.ribbon-wrapper {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
@@ -656,7 +698,7 @@ p.last-message-time{
     margin-right: -15px;
 }
 
-[class^="user-profile-ribbon-"]{
+[class^="user-profile-ribbon-"] {
     background-color: #EBEBEB;
     width: 30px;
     height: 30px;
@@ -667,7 +709,7 @@ p.last-message-time{
     border-radius: 3px 3px 0 0;
 }
 
-[class^="user-profile-ribbon-"]::before{
+[class^="user-profile-ribbon-"]::before {
     content: "";
     position: absolute;
     bottom: -15px;
@@ -679,7 +721,7 @@ p.last-message-time{
     border-color: #EBEBEB transparent transparent transparent;
 }
 
-[class^="user-profile-ribbon-"]::after{
+[class^="user-profile-ribbon-"]::after {
     content: "";
     position: absolute;
     bottom: -15px;
@@ -691,43 +733,43 @@ p.last-message-time{
     border-color: transparent #EBEBEB transparent transparent;
 }
 
-.user-profile-ribbon-tester{
+.user-profile-ribbon-tester {
     background-color: #F44336;
 }
 
-.user-profile-ribbon-tester::before{
+.user-profile-ribbon-tester::before {
     border-color: #F44336 transparent transparent transparent;
 }
 
-.user-profile-ribbon-tester::after{
+.user-profile-ribbon-tester::after {
     border-color: transparent #F44336 transparent transparent;
 }
 
-.user-profile-ribbon-developer{
+.user-profile-ribbon-developer {
     background-color: #FFC107;
 }
 
-.user-profile-ribbon-developer::before{
+.user-profile-ribbon-developer::before {
     border-color: #FFC107 transparent transparent transparent;
 }
 
-.user-profile-ribbon-developer::after{
+.user-profile-ribbon-developer::after {
     border-color: transparent #FFC107 transparent transparent;
 }
 
-.user-profile-bio{
+.user-profile-bio {
     color: #CBCBCB;
     font-family: 'Roboto', sans-serif;
     font-size: 14px;
     margin: 5px 0;
 }
 
-.user-profile-bio span{
+.user-profile-bio span {
     color: #DBDBDB;
     font-size: 15px;
 }
 
-.user-profile-button{
+.user-profile-button {
     padding: 7px 12px;
     color: #464646;
     font-family: 'Roboto', sans-serif;
@@ -741,42 +783,40 @@ p.last-message-time{
     border-radius: 2px;
 }
 
-.channel-info-close{
+.channel-info-close {
     visibility: hidden;
 }
 
-@media screen and (min-width: 1451px){
-    .channel-info-close{
+@media screen and (min-width: 1451px) {
+    .channel-info-close {
         margin-left: auto;
     }
 }
+
 /* END CHANNEL INFO */
 
 
 /**
  * All devices less than 800px.
  */
-@media screen and (max-width: 800px){
+
+@media screen and (max-width: 800px) {
     /* BEGIN CHANNEL PANEL */
-    section.channel-panel{
+    section.channel-panel {
         right: 0;
         left: 0;
     }
     /* END CHANNEL PANEL */
-
-
     /* BEGIN CHANNEL LIST */
-    section.channel-list{
+    section.channel-list {
         left: 0;
         right: 0;
         top: 100%;
         z-index: 2;
     }
     /* END CHANNEL LIST */
-
-
     /* BEGIN CHANEL INFO */
-    section.channel-info{
+    section.channel-info {
         left: 0;
         right: 0;
         top: 100%;
@@ -785,26 +825,22 @@ p.last-message-time{
     /* END CHANNEL INFO */
 }
 
-
 /**
  * All devices between 801px and 1450px.
  */
-@media screen and (min-width: 801px) and (max-width: 1450px){
 
+@media screen and (min-width: 801px) and (max-width: 1450px) {
     /* BEGIN CHANNEL PANEL */
-    section.channel-panel{
+    section.channel-panel {
         right: 0;
         left: 350px;
     }
-
-    .open-channel-tab{
+    .open-channel-tab {
         visibility: hidden;
     }
     /* END CHANNEL PANEL */
-
-
     /* BEGIN CHANNEL LIST */
-    section.channel-list{
+    section.channel-list {
         left: 0;
         width: 350px;
         z-index: 2;
@@ -817,47 +853,39 @@ p.last-message-time{
         top: 0 !important;
         opacity: 1 !important;
     }
-
-    .channel-tab-back{
+    .channel-tab-back {
         display: none;
     }
     /* END CHANNEL LIST */
-
-
     /* BEGIN CHANEL INFO */
-    section.channel-info{
+    section.channel-info {
         left: 350px;
         right: 0;
         top: 100%;
         z-index: 2;
     }
     /* END CHANNEL INFO */
-
-    .messenger-wrapper > section:first-child{
+    .messenger-wrapper> section:first-child {
         border-right: 2px solid #404040;
     }
 }
 
-
 /**
  * All devices greater than 1451px.
  */
-@media screen and (min-width: 1451px){
 
+@media screen and (min-width: 1451px) {
     /* BEGIN CHANNEL PANEL */
-    .channel-panel{
+    .channel-panel {
         right: 350px;
         left: 350px;
     }
-
-    .open-channel-tab, .open-info-tab{
+    .open-channel-tab, .open-info-tab {
         display: none;
     }
     /* END CHANNEL PANEL */
-
-
     /* BEGIN CHANNEL LIST */
-    .channel-list{
+    .channel-list {
         left: 0;
         width: 350px;
         z-index: 2;
@@ -868,15 +896,12 @@ p.last-message-time{
         top: 0 !important;
         opacity: 1 !important;
     }
-
-    .channel-tab-back{
+    .channel-tab-back {
         display: none;
     }
     /* END CHANNEL LIST */
-
-
     /* BEGIN CHANEL INFO */
-    .channel-info{
+    .channel-info {
         right: 0;
         width: 350px;
         z-index: 2;
@@ -887,17 +912,14 @@ p.last-message-time{
         top: 0 !important;
         opacity: 1 !important;
     }
-
-    .channel-info-back, .channel-info-title, .hidden-icon{
+    .channel-info-back, .channel-info-title, .hidden-icon {
         display: none;
     }
     /* END CHANNEL INFO */
-
-    .messenger-wrapper > section:first-child{
+    .messenger-wrapper> section:first-child {
         border-right: 2px solid #404040;
     }
-
-    .messenger-wrapper > section:last-child{
+    .messenger-wrapper> section:last-child {
         border-left: 2px solid #404040;
     }
 }

@@ -132,13 +132,15 @@ class MessengerNamespace(BaseNamespace, ChannelMixin):
         friends_in_query = {}
 
         # Iterate over Query Set, looking for friends.
+        friends = self.request.user.friends
         for query_user in query_set:
-            if self.request.user.friends.filter(user_id=query_user.user_id).count() != 0:
-                friends_in_query[str(query_user.user_id)] = "friend"
-            elif FriendInvites.objects.filter(sender=self.request.user, recipient=query_user).count() != 0:
-                friends_in_query[str(query_user.user_id)] = "request_sent"
-            elif FriendInvites.objects.filter(sender=query_user, recipient=self.request.user).count() != 0:
-                friends_in_query[str(query_user.user_id)] = "request_received"
+            query_user_id = str(query_user.user_id)
+            if friends.filter(user_id=query_user.user_id).exists():
+                friends_in_query[query_user_id] = "friend"
+            elif FriendInvites.objects.filter(sender=self.request.user, recipient=query_user).exists():
+                friends_in_query[query_user_id] = "request_sent"
+            elif FriendInvites.objects.filter(sender=query_user, recipient=self.request.user).exists():
+                friends_in_query[query_user_id] = "request_received"
 
         # Emit Data.
         self.emit("message", {
@@ -161,7 +163,7 @@ class MessengerNamespace(BaseNamespace, ChannelMixin):
         target = get_object_or_404(User, user_id=user_id)
 
         # Check if the users are already friends.
-        if self.request.user.friends.filter(user_id=user_id).count() != 0:
+        if self.request.user.friends.filter(user_id=user_id).exists():
             # Users are already friends
             self.emit("message", {
                 "action":"push_message",
@@ -173,7 +175,7 @@ class MessengerNamespace(BaseNamespace, ChannelMixin):
             return True
 
         # Make sure there are no currently pending requests
-        if FriendInvites.objects.filter(sender=self.request.user, recipient=target).count() != 0:
+        if FriendInvites.objects.filter(sender=self.request.user, recipient=target).exists():
             # User has already sent a friend request to the target
             self.emit("message", {
                 "action":"push_message",

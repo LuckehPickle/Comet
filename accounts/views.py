@@ -128,7 +128,7 @@ def register(request):
             data = form.cleaned_data
 
             user_url = generate()
-            while User.objects.filter(user_url=user_url).count() != 0:
+            while User.objects.filter(user_url=user_url).exists():
                 user_url = generate()
 
             # You need to call user.objects.create_user rather than accessing

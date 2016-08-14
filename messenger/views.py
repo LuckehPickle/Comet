@@ -56,8 +56,8 @@ def private(request, user_url=None):
         # TODO Redirect to settings file here.
         raise Http404("Your user settings would be here, but I haven't made them yet.")
 
-    if request.user.friends.filter(user_id=target.user_id).exists():
-        raise Http404("You are not friends with this user!")
+    #if not request.user.friends.filter(user_id=target.user_id).exists():
+    #    raise Http404("You are not friends with this user!")
 
     channel_url = None
     channel_urls = [
@@ -266,10 +266,6 @@ def get_latest_messages(request, channel_url, n=25):
     return out
 
 
-
-
-
-
 @login_required_message
 def create(request):
     """
@@ -288,7 +284,7 @@ def create(request):
 
     # Generate a new identifier
     channel_url = generate()
-    while Channel.objects.filter(channel_url=channel_url).count() != 0:
+    while Channel.objects.filter(channel_url=channel_url).exists():
         channel_url = generate()
 
     data = form.cleaned_data
