@@ -1,0 +1,11 @@
+{% extends 'shared/base.html'|pjax:request %}
+
+{% load staticfiles %}
+{% block title %}{{ title }}{% endblock %}
+{% block extra_css %}<link rel="stylesheet" type="text/css" href="{% static 'docs/css/docs.css' %}">{% endblock %}
+
+{% block content %}
+    <div class="spacer"></div>
+
+    {% include 'shared/footer.html' %}
+{% endblock %}

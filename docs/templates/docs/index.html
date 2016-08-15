@@ -3,45 +3,36 @@
 {% load staticfiles %}
 {% block title %}{{ title }}{% endblock %}
 {% block extra_css %}<link rel="stylesheet" type="text/css" href="{% static 'docs/css/docs.css' %}">{% endblock %}
-{% block extra_js %}
-<script>
-    setTimeout(function(){
-        particlesJS.load('particles-js', '/static/docs/particles.json', function() {
-            print('particles.js config loaded');
-        });
-    }, 100);
-</script>
-{% endblock %}
 
 {% block content %}
     <div class="spacer"></div>
 
-    {# Jumbo #}
-    <section class="docs-jumbo">
+    {# Page Header #}
+    <section class="page-header">
+        <div class="content-wrapper">
+            <header>Comet Documentation</header>
+            <p>Learn and Develop with Comet.</p>
 
-        <p class="docs-title">Comet Documentation</p>
-        <p class="docs-subtitle">Learn and Develop with Comet</p>
+            {# Search #}
+            <div class="docs-search">
+                <i class="material-icons noselect">search</i>
+                <input type="text" spellcheck="false" placeholder="Search Articles...">
 
-        {# Search #}
-        <div class="docs-search">
-            <i class="material-icons noselect">search</i>
-            <input type="text" spellcheck="false" placeholder="Search Articles...">
-
-            {# Search Dropdown #}
-            <div class="docs-search-dropdown">
-                <section class="search-dropdown-pages">
-                    <p class="search-dropdown-title">Docs</p>
-                    <p class="search-dropdown-no-results">No results found.</p>
-                </section>
-                <section>
-                    <a class="search-dropdown-silent">
-                        See all results
-                        <link class="rippleJS">
-                    </a>
-                </section>
+                {# Search Dropdown #}
+                <div class="docs-search-dropdown">
+                    <section class="search-dropdown-pages">
+                        <p class="search-dropdown-title">Docs</p>
+                        <p class="search-dropdown-no-results">No results found.</p>
+                    </section>
+                    <section>
+                        <a class="search-dropdown-silent">
+                            See all results
+                            <link class="rippleJS">
+                        </a>
+                    </section>
+                </div>
             </div>
         </div>
-        <div id="particles-js"></div>
     </section>
 
     {# Categories #}
@@ -56,11 +47,6 @@
             <a href="{% url 'docs' %}support/" data-pjax>
                 <div class="cat-img"></div>
                 <header>Support</header>
-            </a>
-
-            <a href="{% url 'docs' %}tutorials/" data-pjax>
-                <div class="cat-img"></div>
-                <header>Tutorials</header>
             </a>
 
             <a href="{% url 'docs' %}developer/" data-pjax>

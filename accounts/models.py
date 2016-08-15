@@ -104,15 +104,13 @@ class User(AbstractBaseUser):
     is_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_super_user = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
     is_premium = models.BooleanField(default=False)
     is_online = models.BooleanField(default=False)
     socket_session = models.CharField(max_length=20, blank=True)
 
     objects = UserManager() # Reference to the UserManager class above.
 
-    # The default Django authentication backend requires a 'USERNAME_FIELD'
-    # which identifies which field is considered to be the unique, identifying
-    # field.
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username", "password"]
 
@@ -124,10 +122,6 @@ class User(AbstractBaseUser):
 
 
 class FriendInvites(models.Model):
-    """
-    Friend request/invite model.
-    TODO Rename to FriendRequest
-    """
 
     recipient = models.ForeignKey(
         "User",

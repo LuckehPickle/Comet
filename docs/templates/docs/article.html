@@ -1,0 +1,62 @@
+{% extends 'shared/base.html'|pjax:request %}
+
+{% load staticfiles %}
+{% block title %}{{ title }}{% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'docs/css/article.css' %}">
+    <style>
+        body {
+            color: {{ category.colour }};
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="spacer"></div>
+
+    {# Appended Menu #}
+    <div class="appended-menu">
+        <div class="content-wrapper">
+            {# Breadcrumbs #}
+            <div class="breadcrumbs">
+                <a href="{% url 'docs' %}" data-pjax>Documentation</a>
+                <i class="material-icons">keyboard_arrow_right</i>
+                <a href="{{ category.get_absolute_url }}" data-pjax>{{ category.title }}</a>
+            </div>
+
+            {# Heading #}
+            <header>{{ article.title }}</header>
+
+            {# Header Wrapper #}
+            <div class="header-wrapper">
+
+                {% if article.creator == None %}
+                    <p>Deleted</p>
+                {% else %}
+                    <p>{{ article.creator.username }}</p>
+                {% endif %}
+
+                <div class="header-button">
+                    Edit Article
+                    <link class="rippleJS">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-wrapper content">
+        {# Article Content #}
+        <section class="article-content">
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            <h1>Article Heading</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        </section>
+
+        {# Article Navigation #}
+        <div class="article-nav">
+            <p>Contents</p>
+        </div>
+    </div>
+
+    {% include 'shared/footer.html' %}
+{% endblock %}

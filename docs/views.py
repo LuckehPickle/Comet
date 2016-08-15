@@ -15,11 +15,16 @@
 
 # Django Imports
 from django.contrib import messages
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect, get_object_or_404
+
+# Docs Imports
+from docs.models import Article
+from docs.categories import CATEGORIES
 
 # Other Imports
 import cr_config as config
+from comet.decorators import login_required_message
 
 
 def index(request):
@@ -34,5 +39,115 @@ def index(request):
         "user_id": user_id,
     })
 
-def category(request, category, slug=None):
-    return HttpResponse("Category: {0}, Slug: {1}".format(category, slug))
+
+@login_required_message
+def create(request):
+    """
+    View for creating articles.
+    TODO Add permission for articles.
+    """
+
+    if not request.user.is_staff:
+        messages.add_message(
+            request,
+            messages.ERROR,
+            "You do not have permission to create articles. You can apply for permission <a href='/'>here</a>."
+        )
+        return redirect("docs")
+
+    return render_editor(request)
+
+
+@login_required_message
+def edit(request, slug=None):
+    """
+    View for editing articles.
+    """
+    if slug == None:
+        return redirect("docs_create")
+
+    article = get_object_or_404(Article, slug=slug)
+
+    if request.user != article.creator and not request.user.is_staff:
+        messages.add_message(
+            request,
+            messages.ERROR,
+            "You do not have permission to edit this article."
+        )
+        return redirect(article)
+
+    data = {
+        "title": (config.TITLE_FORMAT % str(article.title)),
+        "article": article,
+    }
+
+    return render_editor(request, data)
+
+
+def render_editor(request, data={}):
+    """
+    Function for creating an editor.
+    :param request: Django request object.
+    :param data: Additional data to pass to the template.
+    """
+
+    # Default values
+    template_args = {
+        "title": (config.TITLE_FORMAT % "Create"),
+        "user_id": str(request.user.user_id)[:8],
+    }
+    template_args.update(data)
+
+    return render(request, "docs/editor.html", template_args)
+
+
+def category(request, category):
+    """
+    Handles
+    """
+
+    article_category = None
+
+    for cat in CATEGORIES:
+        if cat.url == category:
+            article_category = cat
+
+    if article_category == None:
+        raise Http404()
+
+    user_id = None
+    if request.user.is_authenticated():
+        user_id = str(request.user.user_id)[:8]
+
+    return render(request, "docs/category.html", {
+        "title": (config.TITLE_FORMAT % article_category.title),
+        "user_id": user_id,
+        "category": article_category,
+    })
+
+
+def article(request, category, slug):
+    """
+    Handles and renders individual articles.
+    """
+    user_id = None
+    if request.user.is_authenticated():
+        user_id = str(request.user.user_id)[:8]
+
+    article = get_object_or_404(Article, slug=slug)
+
+    article_category = None
+
+    for cat in CATEGORIES:
+        if cat.url == category:
+            article_category = cat
+
+    if article_category == None:
+        raise Http404()
+
+    return render(request, "docs/article.html", {
+        "title": (config.TITLE_FORMAT % article.title),
+        "user_id": user_id,
+        "article": article,
+        "category": article_category,
+    })

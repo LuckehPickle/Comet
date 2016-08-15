@@ -1,0 +1,28 @@
+{% extends 'shared/base.html'|pjax:request %}
+
+{% load staticfiles %}
+{% block title %}{{ title }}{% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'docs/css/article.css' %}">
+    <style>
+        body {
+            color: {{ category.colour }};
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="spacer"></div>
+
+    {# Appended Menu #}
+    <div class="appended-menu">
+        <div class="content-wrapper">
+            <header>{{ category.title }}</header>
+        </div>
+    </div>
+
+    {# Page Header #}
+    <section class="page-header"></section>
+
+    {% include 'shared/footer.html' %}
+{% endblock %}

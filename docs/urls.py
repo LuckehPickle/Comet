@@ -21,6 +21,9 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index, name="docs"),
-    url(r'^(?P<category>[a-zA-Z0-9]+)/$', views.category),
-    url(r'^(?P<category>[a-zA-Z0-9]+)/(?P<slug>[a-zA-Z0-9-]+)$', views.category),
+    url(r'^create$', views.create, name="docs_create"),
+    url(r'^edit/$', views.edit),
+    url(r'^edit/(?P<slug>[a-zA-Z0-9-]+)$', views.edit, name="edit"),
+    url(r'^(?P<category>[a-zA-Z0-9]+)/$', views.category, name="category"),
+    url(r'^(?P<category>[a-zA-Z0-9]+)/(?P<slug>[a-zA-Z0-9-]+)$', views.article, name="article"),
 ]
