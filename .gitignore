@@ -50,7 +50,6 @@ chat_test
 accounts/static/accounts/main.min.css
 accounts/templates/accounts/index.min.html
 comet_socketio/static/comet_socketio/js/socket.io.js
-docs/models.py
 messenger/static/messenger/css/main.min.css
 messenger/static/messenger/js/messenger.min.js
 messenger/templates/messenger/index.min.html
