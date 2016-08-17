@@ -3,7 +3,7 @@
 {% load staticfiles %}
 {% block title %}{{ title }}{% endblock %}
 {% block extra_css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'docs/css/article.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'docs/css/docs.css' %}">
     <style>
         body {
             color: {{ category.colour }};
@@ -14,15 +14,80 @@
 {% block content %}
     <div class="spacer"></div>
 
-    {# Appended Menu #}
-    <div class="appended-menu">
+    {# Category Header #}
+    <section class="category-header page-header">
         <div class="content-wrapper">
-            <header>{{ category.title }}</header>
+            <header>{{ category.title }} Articles</header>
+            <p>{{ category.description }}</p>
         </div>
-    </div>
+    </section>
 
-    {# Page Header #}
-    <section class="page-header"></section>
+    {# Article List #}
+    <section class="article-list">
+        <div class="content-wrapper">
+
+            {# Button Wrapper #}
+            <div class="button-wrapper">
+                <div class="inner-button-left" active>
+                    <span>Recent</span>
+                </div>
+
+                <div class="inner-button-right tooltip-trigger">
+                    <span>Popular</span>
+                    <div class="tooltip-container"><span class="tooltip">Coming soon!</span></div>
+                </div>
+
+                <div class="create-article tooltip-trigger">
+                    <span>Create Article</span>
+                    <div class="tooltip-container"><span class="tooltip">Coming soon!</span></div>
+                </div>
+            </div>
+
+            {# Article List #}
+            <div class="articles">
+                {% for article in category.recent_articles %}
+                    <a class="article" href="{{ article.get_absolute_url }}">
+                        <div class=""
+                    </a>
+                {% empty %}
+                    <p class="category-empty">There are no articles in this category yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    {# Category Browse #}
+    <section class="categories">
+        <div class="content-wrapper">
+            <header class="categories-title">Browse Another Category</header>
+            <div class="category-wrapper">
+                <a class="category" href="{% url 'docs' %}news/" data-pjax>
+                    <i class="material-icons">new_releases</i>
+                    <p>News</p>
+                </a>
+
+                <a class="category" href="{% url 'docs' %}support/" data-pjax>
+                    <i class="material-icons">help</i>
+                    <p>Support</p>
+                </a>
+
+                <a class="category" href="{% url 'docs' %}developer/" data-pjax>
+                    <i class="material-icons">code</i>
+                    <p>Developer</p>
+                </a>
+
+                <a class="category" href="{% url 'docs' %}community/" data-pjax>
+                    <i class="material-icons">people</i>
+                    <p>Community</p>
+                </a>
+
+                <a class="category" href="{% url 'docs' %}other/" data-pjax>
+                    <i class="material-icons">folder</i>
+                    <p>Other</p>
+                </a>
+            </div>
+        </div>
+    </section>
 
     {% include 'shared/footer.html' %}
 {% endblock %}

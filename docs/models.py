@@ -31,14 +31,16 @@ class Article(models.Model):
 
     NEWS = "NE"
     SUPPORT = "SU"
-    DOCUMENTATION = "DO"
+    DEVELOPER = "DE"
     COMMUNITY = "CO"
+    OTHER = "OT"
 
     CATEGORIES = (
         (NEWS, "news"),
         (SUPPORT, "support"),
-        (DOCUMENTATION, "developer"),
+        (DEVELOPER, "developer"),
         (COMMUNITY, "community"),
+        (OTHER, "other"),
     )
 
     title = models.CharField(max_length=96)
@@ -46,7 +48,7 @@ class Article(models.Model):
     category = models.CharField(
         max_length = 2,
         choices = CATEGORIES,
-        default = COMMUNITY,
+        default = OTHER,
     )
 
     slug = models.SlugField(max_length=50)

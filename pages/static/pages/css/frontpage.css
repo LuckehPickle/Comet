@@ -66,8 +66,9 @@ body {
 }
 
 .page-header header {
-    font-family: bebas-neue, sans-serif;
+    font-family: "Bebas Neue", sans-serif;
     font-size: 50px;
+    margin: -8px auto;
     color: #FEFEFE;
     text-transform: uppercase;
 }

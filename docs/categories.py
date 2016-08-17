@@ -17,13 +17,17 @@ limitations under the License.
 # Django Imports
 from django.core.urlresolvers import reverse
 
+# Docs Imports
+from docs.models import Article
+
 class Category:
     """
     Article Category
     """
 
-    def __init__(self, title, url, colour, db_code):
+    def __init__(self, title, description, url, colour, db_code):
         self.title = title
+        self.description = description
         self.url = url
         self.colour = colour
         self.db_code = db_code
@@ -31,10 +35,53 @@ class Category:
     def get_absolute_url(self):
         return reverse("category", args=[self.url])
 
+    def recent_articles(self):
+        """
+        Collects the most recent articles of a category.
+        """
+        return Article.objects.filter(
+            category=self.db_code,
+        ).order_by("last_edited")[:10]
 
-NEWS = Category("News", "news", "#3F3F3F", "NE") #f44336
-SUPPORT = Category("Support", "support", "#3F3F3F", "SU") #ff5722
-DOCUMENTATION = Category("Developer Documentation", "developer", "#3F3F3F", "DO") #ffc107
-COMMUNITY = Category("Community Submissions", "community", "#3F3F3F", "CO") #689F38
 
-CATEGORIES = [NEWS, SUPPORT, DOCUMENTATION, COMMUNITY]
+NEWS = Category(
+    title = "News",
+    description = "Site news, changelogs and updates.",
+    url = "news",
+    colour = "#F44336",
+    db_code = "NE",
+)
+
+SUPPORT = Category(
+    title = "Support",
+    description = "Helping you understand Comet.",
+    url = "support",
+    colour = "#5E35B1",
+    db_code = "SU",
+)
+
+DEVELOPER = Category(
+    title = "Developer",
+    description = "Developer logs, explanations and all things code.",
+    url = "developer",
+    colour = "#E91E63",
+    db_code = "DE",
+)
+
+COMMUNITY = Category(
+    title = "Community",
+    description = "For the community, by the community.",
+    url = "community",
+    colour = "#689F38",
+    db_code = "CO",
+)
+
+OTHER = Category(
+    title = "Other",
+    description = "Miscellaneous articles.",
+    url = "other",
+    colour = "#2196F3",
+    db_code = "OT",
+)
+
+CATEGORIES = [NEWS, SUPPORT, DEVELOPER, COMMUNITY, OTHER]

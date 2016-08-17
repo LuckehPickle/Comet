@@ -83,12 +83,12 @@ section[class^="premium-jumbo-"] .wrapper{
     }
 
     .premium-jumbo-left .wrapper > p{
-        font-family: bebas-neue, sans-serif;
+        font-family: "Bebas Neue", sans-serif;
         font-size: 70px;
         color: #EBEBEB;
         text-transform: uppercase;
         padding: 0;
-        margin: 12px 0;
+        margin: 4px 0;
     }
 
     .premium-jumbo-left .btn-sheen{

@@ -74,11 +74,11 @@ form{
 }
 
 .form-title{
-    font-family: bebas-neue, sans-serif;
+    font-family: "Bebas Neue", sans-serif;
     font-size: 45px;
     color: #3B3B3B;
-    margin: 0;
-    margin-bottom: 5px;
+    margin: -8px auto;
+    margin-bottom: -3px;
 }
 
 .input-container{

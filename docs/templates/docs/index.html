@@ -2,7 +2,25 @@
 
 {% load staticfiles %}
 {% block title %}{{ title }}{% endblock %}
-{% block extra_css %}<link rel="stylesheet" type="text/css" href="{% static 'docs/css/docs.css' %}">{% endblock %}
+{% block extra_css %}<!--
+<style>
+.menu {
+    background-color: #376796;
+}
+
+.navigation-menu li a {
+    background-color: #376796;
+    border-top-color: #285079;
+    color: #FEFEFE;
+}
+
+.mobile-button-wrapper {
+    background-color: #376796;
+    border-top-color: #285079;
+}
+</style>-->
+<link rel="stylesheet" type="text/css" href="{% static 'docs/css/docs.css' %}">
+{% endblock %}
 
 {% block content %}
     <div class="spacer"></div>
@@ -37,27 +55,34 @@
 
     {# Categories #}
     <section class="categories">
-        <header class="categories-title">Article Categories</header>
-        <div class="cat-wrapper">
-            <a href="{% url 'docs' %}news/" data-pjax>
-                <div class="cat-img"></div>
-                <header>Site News</header>
-            </a>
+        <div class="content-wrapper">
+            <header class="categories-title">Browse by Category</header>
+            <div class="category-wrapper">
+                <a class="category" href="{% url 'docs' %}news/" data-pjax>
+                    <i class="material-icons">new_releases</i>
+                    <p>News</p>
+                </a>
 
-            <a href="{% url 'docs' %}support/" data-pjax>
-                <div class="cat-img"></div>
-                <header>Support</header>
-            </a>
+                <a class="category" href="{% url 'docs' %}support/" data-pjax>
+                    <i class="material-icons">help</i>
+                    <p>Support</p>
+                </a>
 
-            <a href="{% url 'docs' %}developer/" data-pjax>
-                <div class="cat-img"></div>
-                <header>Developer Documentation</header>
-            </a>
+                <a class="category" href="{% url 'docs' %}developer/" data-pjax>
+                    <i class="material-icons">code</i>
+                    <p>Developer</p>
+                </a>
 
-            <a href="{% url 'docs' %}community/" data-pjax>
-                <div class="cat-img"></div>
-                <header>Community Submissions</header>
-            </a>
+                <a class="category" href="{% url 'docs' %}community/" data-pjax>
+                    <i class="material-icons">people</i>
+                    <p>Community</p>
+                </a>
+
+                <a class="category" href="{% url 'docs' %}other/" data-pjax>
+                    <i class="material-icons">folder</i>
+                    <p>Other</p>
+                </a>
+            </div>
         </div>
     </section>
 
