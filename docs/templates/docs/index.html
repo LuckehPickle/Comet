@@ -2,23 +2,7 @@
 
 {% load staticfiles %}
 {% block title %}{{ title }}{% endblock %}
-{% block extra_css %}<!--
-<style>
-.menu {
-    background-color: #376796;
-}
-
-.navigation-menu li a {
-    background-color: #376796;
-    border-top-color: #285079;
-    color: #FEFEFE;
-}
-
-.mobile-button-wrapper {
-    background-color: #376796;
-    border-top-color: #285079;
-}
-</style>-->
+{% block extra_css %}
 <link rel="stylesheet" type="text/css" href="{% static 'docs/css/docs.css' %}">
 {% endblock %}
 

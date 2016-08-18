@@ -29,7 +29,7 @@ body {
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 25px;
+    padding: 0 15px;
     box-sizing: border-box;
 }
 
@@ -60,7 +60,7 @@ body {
 /* BEGIN PAGE HEADER */
 .page-header {
     width: 100%;
-    background-color: #457EB6;
+    background-color: #353535;
     background-image: url(/static/docs/pattern.png);
     background-size: cover;
     text-align: center;

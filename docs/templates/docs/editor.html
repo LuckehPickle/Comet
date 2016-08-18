@@ -2,10 +2,48 @@
 
 {% load staticfiles %}
 {% block title %}{{ title }}{% endblock %}
-{% block extra_css %}<link rel="stylesheet" type="text/css" href="{% static 'docs/css/docs.css' %}">{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'docs/css/docs.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'docs/css/editor.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'docs/css/article.css' %}">
+{% endblock %}
+{% block extra_js %}
+<script src="{% static 'shared/js/showdown.min.js' %}"></script>
+<script src="{% static 'docs/js/editor.js' %}"></script>
+{% endblock %}
 
 {% block content %}
     <div class="spacer"></div>
+
+    <section class="editor-section">
+        <div class="content-wrapper">
+            <header>Create an article</header>
+
+            {# Title #}
+            <input type="text" class="editor-title" placeholder="Title">
+
+            {# Editor #}
+            <div class="editor">
+                {# Tabs #}
+                <div class="tab-wrapper">
+                    <div class="tab" active data-tab="1">Editor</div>
+                    <div class="tab" data-tab="2">Preview</div>
+                </div>
+
+                {# Text Area #}
+                <textarea data-tab="1"></textarea>
+
+                <div class="output" data-tab="2"></div>
+            </div>
+
+            {# Buttons #}
+            <div class="button-main">Publish</div>
+            <div class="button-silent">
+                Cancel
+                <link class="rippleJS">
+            </div>
+        </div>
+    </section>
 
     {% include 'shared/footer.html' %}
 {% endblock %}
