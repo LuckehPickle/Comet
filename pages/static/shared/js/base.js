@@ -130,7 +130,9 @@ function addEventListeners(fullLoad){
     navDropdown.off(".base");
     navDropdown.on("click.base", function(){
         if(navDropdown.is("[active]")){
-            navDropdown.removeAttr("active");
+            setTimeout(function() {
+                navDropdown.removeAttr("active");
+            }, 300);
         }else{
             navDropdown.attr("active", "");
         }

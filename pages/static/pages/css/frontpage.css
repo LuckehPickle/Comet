@@ -63,6 +63,8 @@ body {
     background-image: url(/static/pages/img/pattern.png);
     background-size: cover;
     text-align: center;
+    padding-bottom: 0 !important;
+    overflow-y: hidden;
 }
 
 .page-header header {
@@ -95,14 +97,31 @@ body {
     display: none;
 }
 
+@media screen and (max-width: 40.5em) {
+    .page-header {
+        height: calc(100vh - 85px);
+    }
+}
+
 /* For Desktops and some tablets only */
 @media screen and (min-width: 40.5em) {
+    .page-header {
+        height: calc(100vh - 120px);
+    }
+
     .page-header header {
         font-size: 70px;
     }
 
     .page-header p {
         font-size: 20px;
+    }
+}
+
+/* For Desktops and some tablets only */
+@media screen and (min-width: 915px) {
+    .page-header {
+        height: calc(100vh - 140px);
     }
 
     .page-header .mobile {
