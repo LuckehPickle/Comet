@@ -14,10 +14,21 @@
  * limitations under the License.
  */
 
+
+/* BEGIN PJAX STYLES */
 .menu {
     position: fixed;
     box-shadow: 0px 10px 0px rgba(0, 0, 0, 0.15);
 }
+
+@media screen and (min-width: 900px) {
+    .menu-wrapper {
+        margin: 0 auto;
+        max-width: 1200px;
+    }
+}
+/* END PJAX STYLES */
+
 
 body {
     margin: 0;
@@ -143,7 +154,7 @@ body {
     /* Fonts */
     font-family: 'Source Sans Pro', sans-serif;
     font-size: 18px;
-    font-weight: 600;
+    font-weight: 500;
     color: #FEFEFE;
     text-decoration: none;
 

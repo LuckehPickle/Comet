@@ -56,7 +56,7 @@ SUPPORT = Category(
     title = "Support",
     description = "Helping you understand Comet.",
     url = "support",
-    colour = "#5E35B1",
+    colour = "#F45A36",
     db_code = "SU",
 )
 
@@ -64,7 +64,7 @@ DEVELOPER = Category(
     title = "Developer",
     description = "Developer logs, explanations and all things code.",
     url = "developer",
-    colour = "#E91E63",
+    colour = "#F47B36",
     db_code = "DE",
 )
 
@@ -72,7 +72,7 @@ COMMUNITY = Category(
     title = "Community",
     description = "For the community, by the community.",
     url = "community",
-    colour = "#689F38",
+    colour = "#F49336",
     db_code = "CO",
 )
 
@@ -80,7 +80,7 @@ OTHER = Category(
     title = "Other",
     description = "Miscellaneous articles.",
     url = "other",
-    colour = "#2196F3",
+    colour = "#F4A336",
     db_code = "OT",
 )
 

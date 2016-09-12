@@ -22,7 +22,6 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.html import escape
 
 # Messenger Imports
-from comet_socketio import notify
 from messenger.forms import CreateChatForm
 from messenger.identifier import generate
 from messenger.models import Channel, ChannelPermissions, ChannelInvite, ChannelMessage

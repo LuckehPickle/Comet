@@ -47,157 +47,252 @@
             window.channel_url = null;
         {% endif %}
     </script>
+    
+    {% if pjax_req == ".channel-panel" %}
+    
+        {# Toolbar #}
+        <div class="messenger-toolbar">
 
-    {# Wrapper #}
-    <div class="messenger-wrapper">
+            {# Open Channel Tab (Mobile) #}
+            <i class="open-channel-tab material-icons noselect">menu</i>
 
-        {# Section One: Channel List #}
-        <section class="channel-list">
-
-            {# Toolbar #}
-            <div class="messenger-toolbar">
-                <i class="channel-tab-back material-icons noselect">arrow_back</i>
-            </div>
-
-            {# Search #}
-            <div class="search-wrapper">
-                <div class="search">
-                    <i class="material-icons noselect">search</i>
-                    <input class="search-input" type="text" spellcheck="false" placeholder="Search Users">
+            {% if is_group or channel_url == None %}
+                <p class="channel-title">{{ channel_title }}</p>
+            {% else %}
+                <div class="messenger-toolbar-wrapper">
+                    <p class="channel-username">{{ channel_title }}</p>
+                    <!--<input class="channel-nickname" type="text">-->
                 </div>
-            </div>
+            {% endif %}
 
-            {# Friends/Groups #} <!-- TODO Update with AJAX or Sockets -->
-            <div class="channel-list-inner nano">
-                <div class="channel-list-content nano-content">
-                    {% for channel in channels %}
-                        {% if not channel.is_group %}
-                        <a class="chnl-wrapper noselect" href="/messages/user/{{ channel.get_absolute_url|to_external:request.user.user_url }}" data-pjax-m{% if channel_url == channel.channel_url %} active{% endif %}>
-                        {% else %}
-                        <a class="chnl-wrapper noselect" href="{{ channel.get_absolute_url }}" data-pjax-m{% if channel_url == channel.channel_url %} active{% endif %}>
-                        {% endif %}
-                            <div class="chnl-image"></div>
-                            <div class="chnl-info">
-                                <p class="chnl-name">{{ channel.channel_name|to_external:request.user.username }}</p>
-                                <div class="last-message-wrapper">
-                                    <p class="last-message">{{ channel.get_latest_message }}</p>
-                                    <p class="last-message-time">2:30pm</p>
-                                </div>
-                            </div>
-                        </a>
-                    {% empty %}
-                        <p class="search-no-results">There's nothing here!</p>
-                    {% endfor %}
-                </div>
-            </div>
+            {# Open Info Tab (Mobile) #}
+            <i class="open-info-tab material-icons noselect">info_outline</i>
+        </div>
 
-            {# Search Results #}
-            <div class="search-results nano">
-                <div class="search-content nano-content"></div>
-            </div>
-
-        </section>
-
-
-        {# Section Two: Channel Panel #}
-        <section class="channel-panel">
-            {# Toolbar #}
-            <div class="messenger-toolbar">
-
-                {# Open Channel Tab (Mobile) #}
-                <i class="open-channel-tab material-icons noselect">menu</i>
-
-                {% if is_group or channel_url == None %}
-                    <p class="channel-title">{{ channel_title }}</p>
+        {# Messenger Body #}
+        <div class="messenger-body nano">
+            <div class="messenger-content nano-content">
+                {% if channel_messages == None %}
+                    {% if channel_url != None %}
+                        <p class="no-messages">No messages have been sent in this channel yet.</p>
+                    {% endif %}
                 {% else %}
-                    <div class="messenger-toolbar-wrapper">
-                        <p class="channel-username">{{ channel_title }}</p>
-                        <!--<input class="channel-nickname" type="text">-->
-                    </div>
+                    {{ channel_messages|safe }}
                 {% endif %}
+            </div>
+        </div>
 
-                {# Open Info Tab (Mobile) #}
-                <i class="open-info-tab material-icons noselect">info_outline</i>
+        {# Messenger Footer #}
+        <div class="messenger-footer">
+
+            <!-- TODO X is typing... -->
+
+            {# Messenger Input #}
+            <div class="messenger-input-wrapper">
+                <p class="messenger-input-placeholder">Enter a message...</p>
+                <div class="messenger-input" contenteditable></div>
             </div>
 
-            {# Messenger Body #}
-            <div class="messenger-body nano">
-                <div class="messenger-content nano-content">
-                    {% if channel_messages == None %}
-                        {% if channel_url != None %}
-                            <p class="no-messages">No messages have been sent in this channel yet.</p>
+        </div>
+        
+    {% else %}
+            
+        {# User Dropdown #}
+        <div class="user-dropdown-outer">
+            <div class="menu-inner">
+                <a class="menu-item add-friend" data-pjax-messenger>
+                    <i class="material-icons">account_box</i>
+                    <span>Add Friend</span>
+                    <link class="rippleJS">
+                </a>
+                <a class="menu-item request-sent" data-pjax-messenger>
+                    <i class="material-icons">clear</i>
+                    <span>Cancel Friend Request</span>
+                    <link class="rippleJS">
+                </a>
+                <a class="menu-item accept-request" data-pjax-messenger>
+                    <i class="material-icons">add</i>
+                    <span>Accept Request</span>
+                    <link class="rippleJS">
+                </a>            
+                <a class="menu-item deny-request" data-pjax-messenger>
+                    <i class="material-icons">clear</i>
+                    <span>Deny Request</span>
+                    <link class="rippleJS">
+                </a>
+                <a class="menu-item send-message" data-pjax-messenger>
+                    <i class="material-icons">chat</i>
+                    <span>Send Message</span>
+                    <link class="rippleJS">
+                </a>
+                <a class="menu-item view-profile" data-pjax-messenger>
+                    <div class="none"></div>
+                    <span>View Profile</span>
+                    <link class="rippleJS">
+                </a>
+                <a class="menu-item invite-to-group" data-pjax-messenger>
+                    <i class="material-icons">group_add</i>
+                    <span>Invite to Group...</span>
+                    <link class="rippleJS">
+                </a>
+                <a class="menu-item remove-friend" data-pjax-messenger>
+                    <i class="material-icons">delete</i>
+                    <span>Remove Friend</span>
+                    <link class="rippleJS">
+                </a>
+            </div>
+        </div>
+
+        {# Wrapper #}
+        <div class="messenger-wrapper">
+
+            {# Section One: Channel List #}
+            <section class="channel-list">
+
+                {# Toolbar #}
+                <div class="messenger-toolbar">
+                    <i class="channel-tab-back material-icons noselect">arrow_back</i>
+                </div>
+
+                {# Search #}
+                <div class="search-wrapper">
+                    <div class="search">
+                        <i class="material-icons noselect">search</i>
+                        <input class="search-input" type="text" spellcheck="false" placeholder="Search Users">
+                    </div>
+                </div>
+
+                {# Friends/Groups #} <!-- TODO Update with AJAX or Sockets -->
+                <div class="channel-list-inner nano">
+                    <div class="channel-list-content nano-content">
+                        {% for channel in channels %}
+                            {% if not channel.is_group %}
+                            <a class="chnl-wrapper noselect" href="/messages/user/{{ channel.get_absolute_url|to_external:request.user.user_url }}" data-pjax-messenger{% if channel_url == channel.channel_url %} active{% endif %}>
+                            {% else %}
+                            <a class="chnl-wrapper noselect" href="{{ channel.get_absolute_url }}" data-pjax-messenger{% if channel_url == channel.channel_url %} active{% endif %}>
+                            {% endif %}
+                                <div class="chnl-image"></div>
+                                <div class="chnl-info">
+                                    <p class="chnl-name">{{ channel.channel_name|to_external:request.user.username }}</p>
+                                    <div class="last-message-wrapper">
+                                        <p class="last-message">{{ channel.get_latest_message }}</p>
+                                        <p class="last-message-time">2:30pm</p>
+                                    </div>
+                                </div>
+                            </a>
+                        {% empty %}
+                            <p class="search-no-results">There's nothing here!</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                {# Search Results #}
+                <div class="search-results nano">
+                    <div class="search-content nano-content"></div>
+                </div>
+
+            </section>
+
+
+            {# Section Two: Channel Panel #}
+            <section class="channel-panel">
+                {# Toolbar #}
+                <div class="messenger-toolbar">
+
+                    {# Open Channel Tab (Mobile) #}
+                    <i class="open-channel-tab material-icons noselect">menu</i>
+
+                    {% if is_group or channel_url == None %}
+                        <p class="channel-title">{{ channel_title }}</p>
+                    {% else %}
+                        <div class="messenger-toolbar-wrapper">
+                            <p class="channel-username">{{ channel_title }}</p>
+                            <!--<input class="channel-nickname" type="text">-->
+                        </div>
+                    {% endif %}
+
+                    {# Open Info Tab (Mobile) #}
+                    <i class="open-info-tab material-icons noselect">info_outline</i>
+                </div>
+
+                {# Messenger Body #}
+                <div class="messenger-body nano">
+                    <div class="messenger-content nano-content">
+                        {% if channel_messages == None %}
+                            {% if channel_url != None %}
+                                <p class="no-messages">No messages have been sent in this channel yet.</p>
+                            {% endif %}
+                        {% else %}
+                            {{ channel_messages|safe }}
                         {% endif %}
-                    {% else %}
-                        {{ channel_messages|safe }}
-                    {% endif %}
-                </div>
-            </div>
-
-            {# Messenger Footer #}
-            <div class="messenger-footer">
-
-                <!-- TODO X is typing... -->
-
-                {# Messenger Input #}
-                <div class="messenger-input-wrapper">
-                    <p class="messenger-input-placeholder">Enter a message...</p>
-                    <div class="messenger-input" contenteditable></div>
+                    </div>
                 </div>
 
-            </div>
-        </section>
+                {# Messenger Footer #}
+                <div class="messenger-footer">
 
+                    <!-- TODO X is typing... -->
 
-        {# Section Three: Channel Info #}
-        <section class="channel-info">
-
-            {# Toolbar #}
-            <div class="messenger-toolbar">
-                <i class="channel-info-back material-icons noselect">arrow_back</i>
-                <p class="channel-info-title">{{ channel_title }}</p>
-                <i class="channel-info-close material-icons noselect">close</i>
-            </div>
-
-            <div class="channel-info-inner nano">
-                <div class="channel-info-content nano-content">
-                    <!-- TODO Allow this to be PJAXed and AJAXed -->
-                    p
-                    {% if is_group %}
-                        {# Channel Title and Type #}
-
-                        {# Channel URL #}
-
-                        {# Channel Image #}
-
-                        {# Channel Moderators #}
-
-                        {# Channel Members (If not too large) #}
-
-                        {# Creator Info and Date #}
-                    {% else %}
-                        {# Username and Nickname #}
-
-                        {# User Tags and Achievements (In a Modal) #}
-
-                        {# User Image #}
-
-                        {# User Bio #}
-
-                        {# User Links #}
-
-                        {# Friend Status #}
-
-                        {# Private Message (If not in private message) #}
-                    {% endif %}
-                </div>
-            </div>
-
-            <div class="retrieved-info nano">
-                <div class="retrieved-info-content nano-content">
+                    {# Messenger Input #}
+                    <div class="messenger-input-wrapper">
+                        <p class="messenger-input-placeholder">Enter a message...</p>
+                        <div class="messenger-input" contenteditable></div>
+                    </div>
 
                 </div>
-            </div>
-        </section>
+            </section>
 
-    </div>
+
+            {# Section Three: Channel Info #}
+            <section class="channel-info">
+
+                {# Toolbar #}
+                <div class="messenger-toolbar">
+                    <i class="channel-info-back material-icons noselect">arrow_back</i>
+                    <p class="channel-info-title">{{ channel_title }}</p>
+                    <i class="channel-info-close material-icons noselect">close</i>
+                </div>
+
+                <div class="channel-info-inner nano">
+                    <div class="channel-info-content nano-content">
+                        <!-- TODO Allow this to be PJAXed and AJAXed -->
+                        {% if is_group %}
+                            {# Channel Title and Type #}
+
+                            {# Channel URL #}
+
+                            {# Channel Image #}
+
+                            {# Channel Moderators #}
+
+                            {# Channel Members (If not too large) #}
+
+                            {# Creator Info and Date #}
+                        {% else %}
+                            {# Username and Nickname #}
+
+                            {# User Tags and Achievements (In a Modal) #}
+
+                            {# User Image #}
+
+                            {# User Bio #}
+
+                            {# User Links #}
+
+                            {# Friend Status #}
+
+                            {# Private Message (If not in private message) #}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="retrieved-info nano">
+                    <div class="retrieved-info-content nano-content">
+
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    {% endif %}
 {% endblock %}

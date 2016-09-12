@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
-/* BEGIN GENERAL STYLES */
-
+ 
+ 
+/* BEGIN PJAX STYLES */
 .menu {
     box-shadow: none;
     background-color: #3B3B3B;
@@ -26,37 +25,10 @@
     margin: 0;
     max-width: 100%;
 }
-
-.navigation-menu li a {
-    color: #E3E3E3;
-}
-
-@media screen and (max-width: 899px) {
-    .navigation-menu li a {
-        background-color: #3B3B3B;
-        border-top-color: #4B4B4B;
-    }
-}
-
-.mobile-button-wrapper {
-    background-color: #3B3B3B;
-    border-top-color: #4B4B4B;
-}
-
-.nav-dropdown a {
-    color: #EBEBEB;
-    background-color: #3B3B3B;
-}
-
-.nav-dropdown a:hover {
-    background-color: #333333;
-}
-
-/* END GENERAL STYLES */
+/* END PJAX STYLES */
 
 
 /* BEGIN MESSENGER STYLES */
-
 .messenger-wrapper {
     position: absolute;
     top: 50px;
@@ -100,8 +72,32 @@
 .channel-panel {
     background-color: #464646 !important;
 }
-
 /* END MESSENGER STYLES */
+
+
+/* BEGIN USER DROPDOWN */
+.user-dropdown-outer {
+    display: flex;
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 40px;
+    background-color: #FEFEFE;
+    border: thin solid #999;
+    border-radius: 2px;
+    box-shadow: rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.117647) 0px 1px 4px;
+    z-index: 100;
+}
+
+.user-dropdown-outer[active] {
+    display: flex;
+}
+
+.user-dropdown-outer .menu-item:not([active]) {
+    display: flex;
+    display: none;
+}
+/* END USER DROPDOWN */
 
 
 /* BEGIN TOOLBAR STYLES */
@@ -272,14 +268,15 @@ p.search-user-friend-status {
 }
 
 .search-user-more {
+    position: relative;
     color: #EBEBEB;
     font-size: 26px;
     padding: 6px;
     flex-shrink: 0;
     cursor: pointer;
     margin-right: -5px;
+    border-radius: 30px;
 }
-
 /* END SEARCH */
 
 
@@ -781,6 +778,7 @@ p.last-message-time {
     margin-right: 5px;
     position: relative;
     border-radius: 2px;
+    text-decoration: none;
 }
 
 .channel-info-close {

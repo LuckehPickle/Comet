@@ -2,7 +2,9 @@
 
 {% load staticfiles %}
 {% block title %}{{ title }}{% endblock %}
-{% block extra_css %}<link rel="stylesheet" type="text/css" href="{% static 'pages/css/frontpage.css' %}">{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'pages/css/frontpage.css' %}">
+{% endblock %}
 {% block extra_js %}{% endblock %}
 
 {% block content %}
@@ -92,7 +94,7 @@
                     <div class="table-cell" data-mobile="Full Access to Source Code" data-desktop="Yes"></div>
                     <div class="table-cell" data-mobile="We Never Sell User Information" data-desktop="Never"></div>
                     <div class="table-cell" data-mobile="Unlimited Username Changes" data-desktop="Yes"></div>
-                    <div class="table-cell" data-mobile="Two Factor Authentication (Coming Soon)" data-desktop="Coming Soon"></div>
+                    <div class="table-cell" data-mobile="Two Factor Authentication" data-desktop="Coming Soon"></div>
                 </div>
             </div>
         </div>

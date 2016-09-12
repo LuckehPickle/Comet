@@ -29,7 +29,6 @@ from socketio.sdjango import namespace
 # Other Imports
 import re
 from accounts.models import User, FriendInvites
-from comet_socketio import notify
 from comet_socketio.mixins import ChannelMixin
 from messenger.models import Channel, ChannelMessage
 
@@ -202,10 +201,12 @@ class MessengerNamespace(BaseNamespace, ChannelMixin):
                 "message":"Friend request successfully sent to {0}.".format(target.username)
             })
 
+            """
             # Notify the target user
             notify.notify_user(target, messages.INFO,
                 "You have received a friend request from {0}<section><div class=\"button-request-accept\" data-user-id=\"{1}\" data-new>Accept Request<link class=\"rippleJS\"/></div><div class=\"button-request-deny\" data-user-id=\"{1}\" data-new>Deny Request<link class=\"rippleJS\"/></div></section>".format(self.request.user.username, str(self.request.user.user_id))
             )
+            """
         else:
             # There is a pending invite from the recipient, add friends
             self.request.user.friends.add(target)
@@ -215,17 +216,36 @@ class MessengerNamespace(BaseNamespace, ChannelMixin):
             self.emit("message", {
                 "action":"push_message",
                 "type":"info",
-                "message":"You are now friends with {0}. You can now message them here: <div class=\"push-message-well\"><a href=\"{1}\">{1}</a></div>".format(target.username, target.get_absolute_url())
+                "message":"You are now friends with {0}. You can now message them here: <div class=\"push-message-well\"><a href=\"{1}\" data-pjax-messenger>{1}</a></div>".format(target.username, target.get_absolute_url())
             })
 
+            """
             # Notify the target user.
             notify.notify_user(
                 target,
                 messages.INFO,
                 "You are now friends with {0}. You can now message them here: <div class=\"push-message-well\"><a href=\"{1}\">{1}</a></div>".format(self.request.user.username, self.request.user.get_absolute_url())
             )
-
+            """
+            
         # Event Handled
+        return True
+        
+        
+    def on_cancel_friend_request(self, user_id):
+        """
+        Cancels a friend req
+        """
+        target = User.objects.get(user_id=user_id)
+        try:
+            FriendInvites.objects.get(recipient=target, sender_id=self.request.user).delete()
+            self.emit("message", {
+                "action": "push_message",
+                "type": messages.INFO,
+                "message": "Friend request cancelled.",
+            })
+        except:
+            pass
         return True
 
 
@@ -263,13 +283,30 @@ class MessengerNamespace(BaseNamespace, ChannelMixin):
             )
             """
 
+            """
             # Notify target user
             notify.notify_user(
                 target,
                 messages.INFO,
                 "You are now friends with {0}. You can now message them here: <div class=\"push-message-well\"><a href=\"{1}\">{1}</a></div>".format(self.request.user.username, self.request.user.get_absolute_url())
             )
+            """
 
+        return True
+        
+        
+    def on_remove_friend(self, user_id):
+        """
+        Removes a friend.
+        """
+        target = get_object_or_404(User, user_id=user_id)
+        self.request.user.friends.remove(target)
+        self.emit("message", {
+            "action":"push_message",
+            "type":messages.INFO,
+            "message":"You are no longer friends with {0}.".format(target.username)
+        })
+        
         return True
 
 
@@ -300,6 +337,7 @@ class MessengerNamespace(BaseNamespace, ChannelMixin):
             "user_data": {
                 "username": target.username,
                 "user_id": str(target.user_id),
+                "user_url": str(target.user_url),
                 "user_ribbons": ribbons,
                 "user_bio": "Custom user description.",
                 "relationship": relationship,

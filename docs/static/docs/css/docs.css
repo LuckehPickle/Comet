@@ -14,10 +14,21 @@
  * limitations under the License.
  */
 
+
+/* BEGIN PJAX STYLES */
 .menu {
     position: fixed;
     box-shadow: 0px 10px 0px rgba(0, 0, 0, 0.15);
 }
+ 
+@media screen and (min-width: 900px) {
+    .menu-wrapper {
+        margin: 0 auto;
+        max-width: 1200px;
+    }
+}
+/* END PJAX STYLES */
+
 
 body {
     margin: 0;
@@ -58,16 +69,22 @@ body {
 
 
 /* BEGIN PAGE HEADER */
-.page-header {
+.docs-page-header {
     width: 100%;
-    background-color: #353535;
-    background-image: url(/static/docs/pattern.png);
-    background-size: cover;
+    background-color: #424242;
     text-align: center;
     position: relative;
 }
 
-.page-header header {
+.docs-page-header #particles-js {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
+.docs-page-header header {
     font-family: "Bebas Neue", sans-serif;
     font-size: 50px;
     margin: -8px auto;
@@ -75,7 +92,7 @@ body {
     text-transform: uppercase;
 }
 
-.page-header p {
+.docs-page-header p {
     font-family: 'Roboto', sans-serif;
     font-size: 16px;
     color: #FEFEFE;
@@ -84,11 +101,11 @@ body {
 
 /* For Desktops and some tablets only */
 @media screen and (min-width: 40.5em) {
-    .page-header header {
+    .docs-page-header header {
         font-size: 70px;
     }
 
-    .page-header p {
+    .docs-page-header p {
         font-size: 20px;
     }
 }
@@ -100,7 +117,7 @@ body {
     width: 100%;
     padding: 12px 0 !important;
     text-align: center;
-    background-color: #353535;
+    background-color: #424242;
 }
 
 .create-an-article a {
@@ -129,7 +146,6 @@ body {
     width: 100%;
     padding: 8px 5px;
     border: none;
-    outline: none;
     background-color: transparent;
     font-family: 'Roboto', sans-serif;
     font-size: 15px;
@@ -138,13 +154,15 @@ body {
     transition: all 0.3s ease;
 }
 
-.docs-search svg {
-    padding: 0px;
+.docs-search input:focus {
+    outline: none;
+}
+
+.docs-search i {
+    padding: 0;
     padding-left: 8px;
-    fill: #444;
-    height: 28px;
-    width: 28px;
-    shape-rendering: geometricPrecision;
+    color: #444;
+    font-size: 28px;
 }
 
 .docs-search-dropdown {
@@ -194,6 +212,7 @@ body {
 }
 
 .search-dropdown-silent:hover{
+    background-color: rgb(0, 0, 0);
     background-color: rgba(0, 0, 0, 0.1);
 }
 
@@ -247,7 +266,7 @@ body {
 .category > svg {
     width: 40px;
     height: 40px;
-    fill: #757575
+    fill: #757575;
 }
 
 .category:hover > svg {

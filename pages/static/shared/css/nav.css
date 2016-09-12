@@ -14,41 +14,36 @@
  * limitations under the License.
  */
 
-.menu{
+.menu {
     background-color: #353535;
     z-index: 100;
     box-sizing: border-box;
-    position: relative; /* Ensures that box-shadow is shown */
+    position: relative;
     width: 100%;
 }
 
-.menu-wrapper{
+.menu-wrapper {
     margin: 0 auto;
     height: 100%;
     width: 100%;
-    display: -webkit-flex;
-            display: flex;
-    -webkit-align-items: center;
-            align-items: center;
+    display: flex;
+    align-items: center;
 }
 
-.logo-wrapper{
+.logo-wrapper {
     width: 200px;
-    display: -webkit-flex;
-            display: flex;
-    -webkit-flex-direction: column;
-            flex-direction: column;
-    -webkit-align-items: center;
-            align-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     padding: 8px 0;
 }
 
-.logo-wrapper img{
+.logo-wrapper img {
     width: 100%;
     max-height: 30px;
 }
 
-.no-select{
+.no-select {
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none;   /* Chrome/Safari/Opera */
     -khtml-user-select: none;    /* Konqueror */
@@ -61,33 +56,31 @@
     position: relative;
 }
 
-/**
- * Mobile Phones (and other Small Devices)
- */
+
 @media screen and (max-width: 899px){
-    .sign-in, .user-info-container, .user-menu, #more, .nav-dropdown{
+    
+    .sign-in, .user-info-container,
+    .user-menu, #more, .nav-dropdown {
         display: none !important;
     }
 
-    .menu{
+    .menu {
         width: 100%;
         height: 50px;
         padding: 0 8px;
-        padding-left: 48px; /* This centres the logo */
+        padding-left: 48px;
     }
 
-    .menu-wrapper{
-        -webkit-justify-content: space-between;
-                justify-content: space-between;
+    .menu-wrapper {
+        justify-content: space-between;
         text-align: center;
     }
 
-    .logo-wrapper{
-        -webkit-flex-grow: 1;
-                flex-grow: 1;
+    .logo-wrapper {
+        flex-grow: 1;
     }
 
-    .mobile-nav-trigger{
+    .mobile-nav-trigger {
         width: 40px;
         height: 40px;
         cursor: pointer;
@@ -95,7 +88,7 @@
 
     .mobile-nav-trigger div,
     .mobile-nav-trigger div::before,
-    .mobile-nav-trigger div::after{
+    .mobile-nav-trigger div::after {
         content: "";
         position: relative;
         top: calc(50% - 2px);
@@ -107,17 +100,17 @@
         margin: 0 auto;
     }
 
-    .mobile-nav-trigger div::after{
+    .mobile-nav-trigger div::after {
         top: auto;
         bottom: -5px;
     }
 
-    .mobile-nav-trigger div::before{
+    .mobile-nav-trigger div::before {
         top: auto;
         bottom: 8px;
     }
 
-    .navigation-menu{
+    .navigation-menu {
         position: absolute;
         top: 50px;
         left: 0;
@@ -133,16 +126,16 @@
         box-shadow: 0px 10px 0px rgba(0, 0, 0, 0.15);
     }
 
-    .navigation-menu[active]{
+    .navigation-menu[active] {
         height: auto;
     }
 
-    .navigation-menu li{
+    .navigation-menu li {
         width: 100%;
         margin: 0;
     }
 
-    .navigation-menu li a{
+    .navigation-menu li a {
         font-family: 'Source Sans Pro', sans-serif;
         font-weight: bold;
         color: #EBEBEB;
@@ -159,7 +152,7 @@
         margin: 0;
     }
 
-    .mobile-button-wrapper{
+    .mobile-button-wrapper {
         width: 100%;
         padding: 20px 10px;
         box-sizing: border-box;
@@ -172,11 +165,10 @@
         align-items: center;
     }
 
-    .mobile-button-wrapper a{
+    .mobile-button-wrapper a {
         font-family: 'Source Sans Pro', sans-serif;
         text-decoration: none;
-        -webkit-flex-grow: 1;
-                flex-grow: 1;
+        flex-grow: 1;
         margin: 0px 3px;
         text-align: center;
         padding: 8px 0px;
@@ -185,38 +177,90 @@
         color: #EBEBEB;
     }
 
-    .mobile-button-wrapper a:last-child{
+    .mobile-button-wrapper a:last-child {
         background-color: #EBEBEB;
         color: #3B3B3B;
     }
+    
+    .menu-inner {
+        padding: 5px 0;
+        cursor: pointer;
+    }
+
+    .menu-inner > hr {
+        margin: 7px 0px 8px;
+        height: 1px;
+        border: none;
+        opacity: 1;
+        background-color: #999;
+    }
+
+    .nav-dropdown[active] .menu-outer {
+        right: 0;
+    }
+
+    .menu-item {
+        white-space: nowrap;
+        line-height: 1.5;
+        position: relative;
+        display: flex;
+        align-items: center;
+        padding: 0 20px 0 5px;
+        text-decoration: none;
+    }
+
+    .menu-item:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    .menu-item > i {
+        font-size: 22px;
+        color: #555;
+        margin: 10px;
+    }
+
+    .menu-item > .none {
+        width: 24px;
+        height: 24px;
+        margin: 10px;
+    }
+
+    .menu-item > span {
+        color: #555;
+        font-family: "Roboto", "Helvetica", sans-serif;
+        font-size: 15px;
+        margin: 10px 6px;
+    }
+
+    .menu-item .rippleJS .ripple {
+        background: #000;
+    }
 }
 
-/**
- * Desktops (and above)
- */
 @media screen and (min-width: 900px){
-    .mobile-button-wrapper, .mobile-nav-trigger{
+    
+    .mobile-button-wrapper,
+    .mobile-nav-trigger {
         display: none;
     }
 
-    .menu{
+    .menu {
         height: 70px;
         color: #EBEBEB;
     }
 
-    .menu-wrapper{
+    .menu-wrapper {
         max-width: 1200px;
     }
 
-    .navigation-menu{
+    .navigation-menu {
         margin: 0;
         padding: 0;
-        display: -webkit-flex;
-                display: flex;
+        display: flex;
         list-style: none;
     }
 
-    .navigation-menu li a{
+    .navigation-menu li a {
         position: relative;
         padding: 5px;
         font-family: 'Source Sans Pro', sans-serif;
@@ -228,15 +272,15 @@
         color: #E3E3E3;
     }
 
-    .navigation-menu li a:hover{
+    .navigation-menu li a:hover {
         color: white;
     }
 
-    .user-info-container{
+    .user-info-container {
         text-align: right;
     }
 
-    .user-info-container p{
+    .user-info-container p {
         margin: 0;
         font-family: 'Source Sans Pro', sans-serif;
         font-weight: bold;
@@ -244,7 +288,7 @@
         color: #EBEBEB;
     }
 
-    .user-image{
+    .user-image {
         width: 38px;
         min-width: 38px;
         height: 38px;
@@ -286,6 +330,7 @@
 
     .menu-inner {
         padding: 5px 0;
+        cursor: pointer;
     }
 
     .menu-inner > hr {

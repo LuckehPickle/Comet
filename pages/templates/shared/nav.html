@@ -71,7 +71,7 @@ limitations under the License.
                 {# Menu #}
                 <div class="menu-outer">
                     <div class="menu-inner">
-                        <a class="menu-item">
+                        <a class="menu-item" href="{% url 'messages' %}" data-pjax>
                             <i class="material-icons">chat</i>
                             <span>Messenger</span>
                             <link class="rippleJS">
@@ -81,7 +81,7 @@ limitations under the License.
                             <span>Account Settings</span>
                             <link class="rippleJS">
                         </a>
-                        <a href="{% url 'logout' %}" class="menu-item">
+                        <a class="menu-item" href="{% url 'logout' %}">
                             <div class="none"></div>
                             <span>Logout</span>
                             <link class="rippleJS">

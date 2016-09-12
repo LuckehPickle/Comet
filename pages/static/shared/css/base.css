@@ -14,50 +14,47 @@
  * limitations under the License.
  */
 
+
 /* Fonts */
-@font-face {
-    font-family: "Bebas Neue";
-    src: url(/static/shared/BebasNeue.otf) format("opentype");
-}
+@font-face { font-family: "Bebas Neue"; src: url(/static/shared/fonts/BebasNeue.otf) format("opentype"); }
+@font-face { font-family: "Roboto"; src: url(/static/shared/fonts/Roboto-Regular.ttf) format("truetype"); }
+@font-face { font-family: "Roboto"; src: url(/static/shared/fonts/Roboto-Italic.ttf) format("truetype"); font-style: italic; }
+@font-face { font-family: "Roboto"; src: url(/static/shared/fonts/Roboto-Light.ttf) format("truetype"); font-weight: 300; }
+@font-face { font-family: "Roboto"; src: url(/static/shared/fonts/Roboto-LightItalic.ttf) format("truetype"); font-style: italic; font-weight: 300; }
+@font-face { font-family: "Roboto"; src: url(/static/shared/fonts/Roboto-Medium.ttf) format("truetype"); font-weight: 500; }
+@font-face { font-family: "Roboto"; src: url(/static/shared/fonts/Roboto-MediumItalic.ttf) format("truetype"); font-style: italic; font-weight: 500; }
+@font-face { font-family: "Roboto"; src: url(/static/shared/fonts/Roboto-Bold.ttf) format("truetype"); font-weight: 700; }
+@font-face { font-family: "Roboto"; src: url(/static/shared/fonts/Roboto-BoldItalic.ttf) format("truetype"); font-style: italic; font-weight: 700; }
+@font-face { font-family: "Roboto Mono"; src: url(/static/shared/fonts/RobotoMono-Regular.ttf) format("truetype"); }
+@font-face { font-family: "Roboto Mono"; src: url(/static/shared/fonts/RobotoMono-Italic.ttf) format("truetype"); font-style: italic; }
+@font-face { font-family: "Roboto Mono"; src: url(/static/shared/fonts/RobotoMono-Light.ttf) format("truetype"); font-weight: 300; }
+@font-face { font-family: "Roboto Mono"; src: url(/static/shared/fonts/RobotoMono-LightItalic.ttf) format("truetype"); font-style: italic; font-weight: 300; }
+@font-face { font-family: "Roboto Mono"; src: url(/static/shared/fonts/RobotoMono-Medium.ttf) format("truetype"); font-weight: 500; }
+@font-face { font-family: "Roboto Mono"; src: url(/static/shared/fonts/RobotoMono-MediumItalic.ttf) format("truetype"); font-style: italic; font-weight: 500; }
+@font-face { font-family: "Roboto Mono"; src: url(/static/shared/fonts/RobotoMono-Bold.ttf) format("truetype"); font-weight: 700; }
+@font-face { font-family: "Roboto Mono"; src: url(/static/shared/fonts/RobotoMono-BoldItalic.ttf) format("truetype"); font-style: italic; font-weight: 700; }
 
-@font-face {
-    font-family: "Roboto";
-    src: url(/static/shared/Roboto-Regular.ttf) format("truetype");
-}
 
-@font-face {
-    font-family: "Source Sans Pro";
-    src: url(/static/shared/SourceSansPro-Regular.otf) format("opentype");
-}
+/* Text Selection */
+::-moz-selection { background: #F1592B; color:#EBEBEB; }
+::selection { background: #F1592B; color:#EBEBEB; }
 
-@font-face {
-    font-family: "Source Sans Pro";
-    src: url(/static/shared/SourceSansPro-Bold.otf) format("opentype");
-    font-weight: bold;
-}
 
-/**
- * Text selection rules
- */
-::-moz-selection{background: #F1592B;color:#EBEBEB;}
-::selection{background: #F1592B;color:#EBEBEB;}
-
-body{
+/* Base Styles */
+body {
     margin: 0;
     overflow-x: hidden;
 }
 
-.spacer{
-    height: 50px;
+.no-fouc { display: none; }
+
+.spacer { height: 50px; }
+
+@media screen and (min-width: 900px) {
+    .spacer { height: 70px; }
 }
 
-@media screen and (min-width: 900px){
-    .spacer{
-        height: 70px;
-    }
-}
-
-.noselect{
+.noselect {
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none;   /* Chrome/Safari/Opera */
     -khtml-user-select: none;    /* Konqueror */
@@ -67,23 +64,20 @@ body{
                                     not supported by any browser */
 }
 
-/* BEGIN PUSH MESSAGES */
-/* A container for message containers. Yo dawg. */
-.push-messages{
+
+/* Push Messages */
+.push-messages {
     position: fixed;
     bottom: 0;
     right: 0;
     left: 0;
-    -webkit-display: flex;
-            display: flex;
-    -webkit-flex-direction: column;
-            flex-direction: column;
+    display: flex;
+    flex-direction: column;
     z-index: 110;
     pointer-events: none;
 }
 
-/* Contains a messages elements */
-[class^="push-message-container"]{
+[class^="push-message-container"] {
     background-color: #EBEBEB;
     border-color: #F37021;
     border-width: 15px;
@@ -94,15 +88,15 @@ body{
     display: none;
 }
 
-.push-message-container-error, .push-message-container-40{
+.push-message-container-error, .push-message-container-40 {
     border-color: #C0392B;
 }
 
-.push-message-container-warning, .push-message-container-30{
+.push-message-container-warning, .push-message-container-30 {
     border-color: #F1C40F;
 }
 
-[class^="push-message-content"], [class^="push-message-content"] a{
+[class^="push-message-content"], [class^="push-message-content"] a {
     font-family: 'Roboto', sans-serif;
     font-size: 14px;
     margin: 12px;
@@ -110,11 +104,11 @@ body{
     color: #3B3B3B;
 }
 
-[class^="push-message-content"] a{ /* Firefox gives urls margins? */
+[class^="push-message-content"] a {
     margin: 0;
 }
 
-.push-message-well{
+.push-message-well {
     width: calc(100% - 45px);
     background-color: #E0E0E0;
     border-radius: 4px;
@@ -126,7 +120,7 @@ body{
     color: #3B3B3B;
 }
 
-[class^="push-message-close"]{
+[class^="push-message-close"] {
     float: right;
     height: 30px;
     width: 30px;
@@ -137,27 +131,28 @@ body{
     cursor: pointer;
 }
 
-[class^="push-message-container"] path{
+[class^="push-message-container"] path {
     fill: #1B1B1B;
 }
 
-.push-message-content-error::before, .push-message-content-40::before{
+.push-message-content-error::before,
+.push-message-content-40::before {
     content: "Error: ";
 }
 
-.push-message-content-warning::before, .push-message-content-30::before{
+.push-message-content-warning::before,
+.push-message-content-30::before {
     content: "Warning: ";
 }
 
-[class^="push-message-container"] section{
+[class^="push-message-container"] section {
     width: 100%;
     padding: 0 10px;
     box-sizing: border-box;
-    display: -webkit-flex;
-            display: flex;
+    display: flex;
 }
 
-[class^="push-message-container"] [class^="button-request-"]{
+[class^="push-message-container"] [class^="button-request-"] {
     font-family: 'Roboto', sans-serif;
     font-size: 14px;
     padding: 8px 10px;
@@ -166,54 +161,53 @@ body{
     position: relative;
 }
 
-.button-request-accept{
+.button-request-accept {
     background-color: #F37021;
     color: #EBEBEB;
     margin-right: 8px;
 }
 
-.button-request-deny{
+.button-request-deny {
     color: #454545;
 }
 
-.button-request-deny:hover{
+.button-request-deny:hover {
     background-color: rgba(0, 0, 0, 0.1);
 }
 
-/* For landscape mobile phones and up */
-@media screen and (min-width: 28.75em){
-    .push-messages{
+@media screen and (min-width: 28.75em) {
+    .push-messages {
         position: fixed;
-        top: 30px; /* TODO Update this to sit just below menu height */
+        top: 30px;
         left: auto;
         width: 400px;
     }
 
-    [class^="push-message-container"]{
+    [class^="push-message-container"] {
         border-radius: 3px;
         margin: 3px;
     }
 }
 
-/* For Desktops and some tablets only */
-@media screen and (min-width: 40.5em){
-    .push-messages{
+@media screen and (min-width: 40.5em) {
+    .push-messages {
         top: 75px;
         margin-right: 3px;
     }
 
-    [class^="push-message-content"], [class^="push-message-content"] a{
+    [class^="push-message-content"],
+    [class^="push-message-content"] a {
         font-size: 15px;
     }
 }
-/*  END PUSH MESSAGES */
 
-/* BEGIN MODALS */
-body.modal-open{
+
+/* Modals */
+body.modal-open {
     overflow: hidden;
 }
 
-.modals{
+.modals {
     position: fixed;
     top: 0;
     right: 0;
@@ -224,62 +218,58 @@ body.modal-open{
     display: none;
 }
 
-.modals[active]{
-    display: -webkit-flex !important;
-            display: flex !important;
-    -webkit-justify-content: center;
-            justify-content: center;
-    -webkit-align-items: center;
-            align-items: center;
+.modals[active] {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
 }
 
-.modal[active]{
-    display: -webkit-flex;
-            display: flex;
+.modal[active] {
+    display: flex;
 }
 
-.modal:not([active]){
+.modal:not([active]) {
     display: none;
 }
 
-.modal-connecting{
+.modal-connecting {
     width: 95%;
     max-width: 500px;
     text-align: center;
 }
 
-.modal-connecting img{
+.modal-connecting img {
     max-height: 100px;
 }
 
-.modal-connecting p{
+.modal-connecting p {
     font-family: 'Roboto', sans-serif;
     font-size: 15px;
     color: #3B3B3B;
     margin: 0;
 }
 
-.modal-connecting p{
+.modal-connecting p {
     text-align: center;
     font-size: 18px;
     color: #EBEBEB;
     margin: 1em;
 }
 
-.modal-connecting section{
+.modal-connecting section {
     background-color: #F1592B !important;
     font-weight: 600;
     cursor: pointer;
     margin: 10px 0;
 }
 
-.modal-connecting .tooltip-container{
+.modal-connecting .tooltip-container {
     top: 70px !important;
 }
-/* END MODALS */
 
-/* BEGIN DROPDOWN */
-.dropdown{
+
+/* Dropdown */
+.dropdown {
     position: absolute;
     top: 35px;
     right: 0;
@@ -295,7 +285,7 @@ body.modal-open{
     margin: 0;
 }
 
-.dropdown li{
+.dropdown li {
     list-style-type: none;
     width: 100%;
     padding: 8px 12px;
@@ -303,34 +293,33 @@ body.modal-open{
     border-bottom: 1px #E0E0E0 solid;
 }
 
-.dropdown li:first-child{
+.dropdown li:first-child {
     border-radius: 3px 3px 0 0;
 }
 
-.dropdown li:last-child{
+.dropdown li:last-child {
     border-radius: 0 0 3px 3px;
 }
 
-.dropdown li:hover{
+.dropdown li:hover {
     background-color: #E3E3E3;
 }
 
-.dropdown li a{
+.dropdown li a {
     padding: 8px 15px;
     color: #454545;
     text-decoration: none;
     display: block;
 }
-/* END DROPDOWN */
 
-/* BEGIN TOOLTIP */
-.tooltip-trigger{
+/* Tooltips */
+.tooltip-trigger {
     position: relative !important;
     overflow: visible !important;
     cursor: pointer;
 }
 
-.tooltip-container{
+.tooltip-container {
     display: none;
     position: absolute;
     top: 35px;
@@ -341,12 +330,12 @@ body.modal-open{
     pointer-events: none;
 }
 
-.tooltip-container[data-above]{
+.tooltip-container[data-above] {
     top: auto;
     bottom: 40px;
 }
 
-.tooltip-container .tooltip{
+.tooltip-container .tooltip {
     background-color: rgba(0, 0, 0, 0.8);
     padding: 4px 8px;
     border-radius: 3px;
@@ -366,11 +355,11 @@ body.modal-open{
     z-index: 100;
 }
 
-.tooltip-container[data-above] .tooltip{
+.tooltip-container[data-above] .tooltip {
     background-color: rgba(0, 0, 0, 0.6);
 }
 
-.tooltip-container .tooltip::before{
+.tooltip-container .tooltip::before {
     content: "";
     width: 0;
     height: 0;
@@ -382,7 +371,7 @@ body.modal-open{
     border-color: transparent transparent rgba(0, 0, 0, 0.8) transparent;
 }
 
-.tooltip-container[data-above] .tooltip::before{
+.tooltip-container[data-above] .tooltip::before {
     top: auto;
     bottom: -6px;
     border-style: solid;
@@ -390,34 +379,32 @@ body.modal-open{
     border-color: rgba(0, 0, 0, 0.6) transparent transparent transparent;
 }
 
-@media screen and (min-width: 40.5em){
-    /* Only enable on large screens */
-    .tooltip-trigger:hover .tooltip-container{
+@media screen and (min-width: 40.5em) {
+    .tooltip-trigger:hover .tooltip-container {
         display: flex;
     }
 }
-/* END TOOLTIP */
 
 
-/* BEGIN FOOTER TOP */
-.footer-top{
+/* Footer Top */
+.footer-top {
     padding: 10px 0;
     box-sizing: border-box;
     width: 100%;
     background-color: #353535;
 }
 
-.footer-top .footer-wrapper{
+.footer-top .footer-wrapper {
     width: 100%;
 }
 
-.footer-wrapper section{
+.footer-wrapper section {
     flex-grow: 1;
     padding: 5px 0;
     box-sizing: border-box;
 }
 
-.footer-top ul{
+.footer-top ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -425,24 +412,22 @@ body.modal-open{
     overflow: hidden;
 }
 
-.footer-top ul[active]{
+.footer-top ul[active] {
     height: auto;
 }
 
-.footer-top p{
+.footer-top p {
     color: #EBEBEB;
     font-family: 'Source Sans Pro', sans-serif;
     font-size: 16px;
     margin: 0;
     padding: 5px 20px;
     cursor: pointer;
-    display: -webkit-flex;
-            display: flex;
-    -webkit-align-items: center;
-            align-items: center;
+    display: flex;
+    align-items: center;
 }
 
-.footer-top p::after{
+.footer-top p::after {
     content: "";
     width: 0;
     height: 0;
@@ -452,7 +437,7 @@ body.modal-open{
     margin-left: 5px;
 }
 
-.footer-top p[active]::after{
+.footer-top p[active]::after {
     content: "";
     width: 0;
     height: 0;
@@ -461,7 +446,7 @@ body.modal-open{
     border-color: transparent transparent #EBEBEB transparent;
 }
 
-.footer-wrapper a:not(.logo){
+.footer-wrapper a:not(.logo) {
     padding: 5px 20px;
     display: block;
     color: #CBCBCB;
@@ -469,40 +454,38 @@ body.modal-open{
     text-decoration: none;
 }
 
-.footer-wrapper a:not(.logo):hover{
+.footer-wrapper a:not(.logo):hover {
     color: #DBDBDB;
 }
-/* END FOOTER TOP */
 
-/* BEGIN FOOTER BOTTOM */
-.footer-bottom{
+
+/* Footer Bottom */
+.footer-bottom {
     width: 100%;
     height: 60px;
     background-color: #2F2F2F;
     overflow: hidden;
 }
 
-.footer-bottom .footer-wrapper{
+.footer-bottom .footer-wrapper {
     width: 100%;
     height: 100%;
-    display: -webkit-flex;
-            display: flex;
-    -webkit-align-items: center;
-            align-items: center;
+    display: flex;
+    align-items: center;
 }
 
-.footer-wrapper a.logo{
+.footer-wrapper a.logo {
     height: 100%;
 }
 
-.footer-wrapper img{
+.footer-wrapper img {
     height: 100%;
     padding: 16px;
     box-sizing: border-box;
     flex-grow: 1;
 }
 
-.footer-bottom p{
+.footer-bottom p {
     color: #9A9A9A;
     font-family: 'Source Sans Pro', sans-serif;
     font-size: 14px;
@@ -510,187 +493,194 @@ body.modal-open{
     min-width: 200px;
 }
 
-.footer-wrapper a.privacy{
+.footer-wrapper a.privacy {
     display: none;
 }
-/* END FOOTER BOTTOM */
 
-@media screen and (min-width: 900px){
-    /* BEGIN FOOTER TOP */
-    .footer-top .footer-wrapper{
+
+@media screen and (min-width: 900px) {
+    /* Footer Top */
+    .footer-top .footer-wrapper {
         max-width: 1200px;
         margin: 0 auto;
-        display: -webkit-flex;
-                display: flex;
+        display: flex;
     }
 
-    .footer-top ul{
+    .footer-top ul {
         height: auto;
     }
 
-    .footer-wrapper section{
+    .footer-wrapper section {
         padding: 15px 8px;
     }
 
-    .footer-wrapper a:not(.logo), .footer-top p{
+    .footer-wrapper a:not(.logo),
+    .footer-top p {
         padding: 7px;
     }
 
-    .footer-top p{
+    .footer-top p {
         cursor: default;
         display: block;
     }
 
-    .footer-top p::after, .footer-top p[active]::after{
+    .footer-top p::after,
+    .footer-top p[active]::after {
         content: none;
     }
-    /* END FOOTER TOP */
 
-    /* BEGIN FOOTER BOTTOM */
-    .footer-bottom .footer-wrapper{
+    /* Footer Bottom */
+    .footer-bottom .footer-wrapper {
         max-width: 1200px;
         margin: 0 auto;
     }
 
-    .footer-bottom p{
+    .footer-bottom p {
         font-size: 16px;
     }
 
-    .footer-wrapper a.privacy{
+    .footer-wrapper a.privacy {
         color: #EBEBEB;
         margin-left: auto;
         display: block;
     }
-    /* END FOOTER BOTTOM */
 }
 
 /* Thanks to http://tobiasahlin.com/spinkit/ for the loader */
 .spinner {
-  margin: 40px auto;
-  width: 60px;
-  text-align: center;
+    margin: 40px auto;
+    width: 60px;
+    text-align: center;
 }
 
 .spinner > div {
-  width: 16px;
-  height: 16px;
-  background-color: #EBEBEB;
+    width: 16px;
+    height: 16px;
+    background-color: #EBEBEB;
 
-  border-radius: 100%;
-  display: inline-block;
-  -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
-  animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+    border-radius: 100%;
+    display: inline-block;
+    -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+            animation: sk-bouncedelay 1.4s infinite ease-in-out both;
 }
 
 .spinner .bounce1 {
-  -webkit-animation-delay: -0.32s;
-  animation-delay: -0.32s;
+    -webkit-animation-delay: -0.32s;
+    animation-delay: -0.32s;
 }
 
 .spinner .bounce2 {
-  -webkit-animation-delay: -0.16s;
-  animation-delay: -0.16s;
+    -webkit-animation-delay: -0.16s;
+    animation-delay: -0.16s;
 }
 
 @-webkit-keyframes sk-bouncedelay {
-  0%, 80%, 100% { -webkit-transform: scale(0) }
-  40% { -webkit-transform: scale(1.0) }
+    0%, 80%, 100% { -webkit-transform: scale(0) }
+    40% { -webkit-transform: scale(1.0) }
 }
 
 @keyframes sk-bouncedelay {
-  0%, 80%, 100% {
-    -webkit-transform: scale(0);
-    transform: scale(0);
-  } 40% {
-    -webkit-transform: scale(1.0);
-    transform: scale(1.0);
-  }
+    0%, 80%, 100% {
+        -webkit-transform: scale(0);
+                transform: scale(0);
+    } 40% {
+        -webkit-transform: scale(1.0);
+                transform: scale(1.0);
+    }
 }
 
 .sk-folding-cube {
-  margin: 20px auto;
-  width: 40px;
-  height: 40px;
-  position: relative;
-  -webkit-transform: rotateZ(45deg);
-          transform: rotateZ(45deg);
+    margin: 20px auto;
+    width: 40px;
+    height: 40px;
+    position: relative;
+    -webkit-transform: rotateZ(45deg);
+            transform: rotateZ(45deg);
 }
 
 .sk-folding-cube .sk-cube {
-  float: left;
-  width: 50%;
-  height: 50%;
-  position: relative;
-  -webkit-transform: scale(1.1);
-      -ms-transform: scale(1.1);
-          transform: scale(1.1);
+    float: left;
+    width: 50%;
+    height: 50%;
+    position: relative;
+    -webkit-transform: scale(1.1);
+        -ms-transform: scale(1.1);
+            transform: scale(1.1);
 }
+
 .sk-folding-cube .sk-cube:before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #DBDBDB;
-  -webkit-animation: sk-foldCubeAngle 2.4s infinite linear both;
-          animation: sk-foldCubeAngle 2.4s infinite linear both;
-  -webkit-transform-origin: 100% 100%;
-      -ms-transform-origin: 100% 100%;
-          transform-origin: 100% 100%;
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #DBDBDB;
+    -webkit-animation: sk-foldCubeAngle 2.4s infinite linear both;
+            animation: sk-foldCubeAngle 2.4s infinite linear both;
+    -webkit-transform-origin: 100% 100%;
+        -ms-transform-origin: 100% 100%;
+            transform-origin: 100% 100%;
 }
+
 .sk-folding-cube .sk-cube2 {
-  -webkit-transform: scale(1.1) rotateZ(90deg);
-          transform: scale(1.1) rotateZ(90deg);
+    -webkit-transform: scale(1.1) rotateZ(90deg);
+            transform: scale(1.1) rotateZ(90deg);
 }
+
 .sk-folding-cube .sk-cube3 {
-  -webkit-transform: scale(1.1) rotateZ(180deg);
-          transform: scale(1.1) rotateZ(180deg);
+    -webkit-transform: scale(1.1) rotateZ(180deg);
+            transform: scale(1.1) rotateZ(180deg);
 }
+
 .sk-folding-cube .sk-cube4 {
-  -webkit-transform: scale(1.1) rotateZ(270deg);
-          transform: scale(1.1) rotateZ(270deg);
+    -webkit-transform: scale(1.1) rotateZ(270deg);
+            transform: scale(1.1) rotateZ(270deg);
 }
+
 .sk-folding-cube .sk-cube2:before {
-  -webkit-animation-delay: 0.3s;
-          animation-delay: 0.3s;
+    -webkit-animation-delay: 0.3s;
+            animation-delay: 0.3s;
 }
+
 .sk-folding-cube .sk-cube3:before {
-  -webkit-animation-delay: 0.6s;
-          animation-delay: 0.6s;
+    -webkit-animation-delay: 0.6s;
+            animation-delay: 0.6s;
 }
+
 .sk-folding-cube .sk-cube4:before {
-  -webkit-animation-delay: 0.9s;
-          animation-delay: 0.9s;
+    -webkit-animation-delay: 0.9s;
+            animation-delay: 0.9s;
 }
+
 @-webkit-keyframes sk-foldCubeAngle {
-  0%, 10% {
-    -webkit-transform: perspective(140px) rotateX(-180deg);
-            transform: perspective(140px) rotateX(-180deg);
-    opacity: 0;
-  } 25%, 75% {
-    -webkit-transform: perspective(140px) rotateX(0deg);
-            transform: perspective(140px) rotateX(0deg);
-    opacity: 1;
-  } 90%, 100% {
-    -webkit-transform: perspective(140px) rotateY(180deg);
-            transform: perspective(140px) rotateY(180deg);
-    opacity: 0;
-  }
+    0%, 10% {
+        -webkit-transform: perspective(140px) rotateX(-180deg);
+                transform: perspective(140px) rotateX(-180deg);
+        opacity: 0;
+    } 25%, 75% {
+        -webkit-transform: perspective(140px) rotateX(0deg);
+                transform: perspective(140px) rotateX(0deg);
+        opacity: 1;
+    } 90%, 100% {
+        -webkit-transform: perspective(140px) rotateY(180deg);
+                transform: perspective(140px) rotateY(180deg);
+        opacity: 0;
+    }
 }
 
 @keyframes sk-foldCubeAngle {
-  0%, 10% {
-    -webkit-transform: perspective(140px) rotateX(-180deg);
-            transform: perspective(140px) rotateX(-180deg);
-    opacity: 0;
-  } 25%, 75% {
-    -webkit-transform: perspective(140px) rotateX(0deg);
-            transform: perspective(140px) rotateX(0deg);
-    opacity: 1;
-  } 90%, 100% {
-    -webkit-transform: perspective(140px) rotateY(180deg);
-            transform: perspective(140px) rotateY(180deg);
-    opacity: 0;
-  }
+    0%, 10% {
+        -webkit-transform: perspective(140px) rotateX(-180deg);
+                transform: perspective(140px) rotateX(-180deg);
+        opacity: 0;
+    } 25%, 75% {
+        -webkit-transform: perspective(140px) rotateX(0deg);
+                transform: perspective(140px) rotateX(0deg);
+        opacity: 1;
+    } 90%, 100% {
+        -webkit-transform: perspective(140px) rotateY(180deg);
+                transform: perspective(140px) rotateY(180deg);
+        opacity: 0;
+    }
 }

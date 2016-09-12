@@ -21,77 +21,77 @@
 
 
 /** @const */ var DEBUG = true;
-var connectingModal;
 
 
 /**
  * Init
  * Initialises the entire web page.
- * @param {Boolean} fullLoad Determines whether the page was a PJAX load.
+ * @param {Boolean} isFullLoad Determines whether the page was a PJAX load.
  */
-function init(fullLoad){
-    if(connectingModal == null)
-        connectingModal = new Modal("connecting", $(".modal-connecting"));
-
-    if(!fullLoad){ // If this is a PJAX load we only want to add event handlers.
-        addEventListeners(fullLoad);
-        return;
+function init(isFullLoad) {
+    
+    if (isFullLoad) {
+        print("Initialising...");
+        
+        initSocket();
+        $("div[class^='push-message-container']").fadeIn(300);
+        if (!DEBUG) {
+            printWarning();
+        }
     }
-
-    print("Initialising base...");
-
-    initSocket();
-    addEventListeners(fullLoad);
-    $("div[class^='push-message-container']").fadeIn(300);
+    
     $(".nano").nanoScroller();
-    if(!DEBUG)
-        printWarning();
-
-
-    print("Initialised Base.");
+    addEventListeners(isFullLoad);
+    $(".no-fouc").addClass("__nf__");
+    $(".no-fouc").removeClass("no-fouc");
+    
+    var message = isFullLoad ? "Initialised." : "PJAX Load";
+    print(message);
+    
 }
 
 
 /**
  * Add Event Listeners
  * To be run at each page load, initialises any event listeners.
- * @param {Boolean} page Is this a page load?
+ * @param {Boolean} isFullLoad Determines whether the page was a PJAX load.
  */
-function addEventListeners(fullLoad){
-    /* BEGIN PJAX
+function addEventListeners(isFullLoad) {
+    
+    // Remove event listeners.
     $(document).off(".base");
+    
+    /* BEGIN PJAX */
     $(document).pjax("a[data-pjax]", ".pjax-body");
-    $(document).pjax("a[data-pjax-m]", ".chat-right");
-    $(document).on("pjax:start.base", function(){ NProgress.start();});
-    $(document).on("pjax:end.base",   function(){ NProgress.done();});
+    $(document).pjax("a[data-pjax-messenger]", ".channel-panel");
+    $(document).on("pjax:start.base", function() {
+        $(".__nf__").addClass("no-fouc");
+        $(".__nf__").removeClass("__nf__");
+        NProgress.start();
+    });
+    $(document).on("pjax:end.base",   function() { NProgress.done();  });
     NProgress.configure({ showSpinner: false });
     /* END PJAX */
 
-    if(fullLoad){
+    if (isFullLoad) {
+        
         /* BEGIN PUSH MESSAGES */
         var pushMessages = $("[class^='push-message-close'], [class^='button-request-']");
         pushMessages.off(".base");
-        pushMessages.on("click.base", function(){
+        pushMessages.on("click.base", function() {
             // TODO Handle messages from Django
             print("failure", true);
         });
 
         var pushMessageButton = $("[class^=\"button-request-\"][data-user-id]");
         pushMessageButton.off(".base");
-        pushMessageButton.on("click.base", function(event){
+        pushMessageButton.on("click.base", function(event) {
             var accept = $(this).is("[class*='-accept']");
             answerFriendRequest(accept, $(this).attr("data-user-id"));
         });
         /* END PUSH MESSAGES */
+        
     }
-
-    /* BEGIN MODALS */
-    var bgify = $(".bgify");
-    bgify.off(".base");
-    bgify.on("click.base", function(){
-        connectingModal.hide(); // TODO Add some way to let the user know its still connecting
-    });
-    /* END MODALS */
 
     /* BEGIN DROPDOWN */
     var dropdownTrigger = $(".dropdown-trigger[data-dropdown-id]");
@@ -281,6 +281,8 @@ function print(out, error){
  * @param {Object} data Data to send to server
  */
 function send(eventType, data){
+    print("Sending packet... (" + eventType + ":" + data + ")");
+    
     if(!connected){
         queue.push({
             eventType: eventType,
@@ -574,7 +576,6 @@ function openSocketConnection(){
 function handleSocketConnect(){
     print("Connected to socket server");
     clearTimeout(connectionTimer);
-    connectingModal.hide();
     connected = true;
     checkQueue();
     send("connect");

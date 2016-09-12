@@ -22,7 +22,6 @@
 /** @const */ var NAMESPACE = "messenger";
 /** @const */ var SEARCH_TYPING_INTERVAL = 100; // How long should typing last (milliseconds)
 /** @const */ var PUSH_TIMEOUT = 8000;
-var createModal;
 var searchTimer;
 
 /**
@@ -68,23 +67,20 @@ var channelInfoOut = anime ({
 /**
  * Init Messenger
  * Initialises messenger related functions.
- * @param {Boolean} fullLoad Determines whether the page was a PJAX load.
+ * @param {Boolean} isFullLoad Determines whether the page was a PJAX load.
  */
-function initMessenger(fullLoad) {
-    if (createModal == null)
-        createModal = new Modal("create", $(".modal-create"));
-
-    if (!fullLoad) { // If this is a PJAX load we only want to add event handlers.
-        addMessengerEventListeners(fullLoad);
-        return;
+function initMessenger(isFullLoad) {
+    
+    if (isFullLoad) {
+        print("Initialising page with namespace: " + NAMESPACE);
     }
-
-    print("Initialising Messenger...");
-
-    scrollToBottom($(".messenger-content"));
-    addMessengerEventListeners(fullLoad);
-
-    print("Initialised Messenger.");
+    
+    addMessengerEventListeners(isFullLoad);
+    var messengerContent = $(".messenger-content");
+    scrollToBottom(messengerContent);
+    
+    print("Initialised page with namespace: " + NAMESPACE);
+    
 }
 
 
@@ -94,6 +90,9 @@ function initMessenger(fullLoad) {
  * @param {Boolean} fullLoad Determines whether the page was a PJAX load.
  */
 function addMessengerEventListeners(fullLoad) {
+    
+    // Remove event listeners.
+    $(document).off("." + NAMESPACE);
 
     /* BEGIN CREATE MODAL */
     var createTrigger = $(".create-group");
@@ -251,6 +250,56 @@ function addMessengerEventListeners(fullLoad) {
         $(".retrieved-info").hide();
     });
     /* END CHANNEL INFO */
+    
+    /* BEGIN USER DROPDOWN */
+    var userDropdown = $(".user-dropdown-outer");
+    userDropdown.on("click." + NAMESPACE, function() {
+        userDropdown.removeAttr("active");
+        $("body").append(userDropdown);
+    });
+    
+    var addFriend = $(".user-dropdown-outer .add-friend");
+    addFriend.on("click." + NAMESPACE, function() {
+        var wrapper = $(this).closest(".search-user-wrapper");
+        sendFriendRequest(wrapper.attr("data-user-id"));
+        clearSearch();
+    });
+    
+    var acceptRequest = $(".user-dropdown-outer .accept-request");
+    acceptRequest.on("click." + NAMESPACE, function() {
+        var wrapper = $(this).closest(".search-user-wrapper");
+        answerFriendRequest(true, wrapper.attr("data-user-id"));
+        clearSearch();
+    });
+    
+    var denyRequest = $(".user-dropdown-outer .deny-request");
+    denyRequest.on("click." + NAMESPACE, function() {
+        var wrapper = $(this).closest(".search-user-wrapper");
+        answerFriendRequest(false, wrapper.attr("data-user-id"));
+        clearSearch();
+    });
+    
+    var viewProfile = $(".user-dropdown-outer .view-profile");
+    viewProfile.on("click." + NAMESPACE, function() {
+        var wrapper = $(this).closest(".search-user-wrapper");
+        retrieveUserProfile(wrapper.attr("data-user-id"));
+        clearSearch();
+    });
+    
+    var removeFriend = $(".user-dropdown-outer .remove-friend");
+    removeFriend.on("click." + NAMESPACE, function() {
+        var wrapper = $(this).closest(".search-user-wrapper");
+        send("remove_friend", wrapper.attr("data-user-id"));
+        clearSearch();
+    });
+    
+    var cancelRequest = $(".user-dropdown-outer .request-sent");
+    cancelRequest.on("click." + NAMESPACE, function() {
+        var wrapper = $(this).closest(".search-user-wrapper");
+        send("cancel_friend_request", wrapper.attr("data-user-id"));
+        clearSearch();
+    });
+    /* END USER DROPDOWN */
 
     /* BEGIN DOCUMENT */
     $("html").off("." + NAMESPACE);
@@ -268,6 +317,11 @@ function handleMessengerDocumentEvent(event) {
 
     if (!target.closest(".message-content").length && !target.is(".message-content")) {
         $(".message-content").removeAttr("active");
+    }
+    
+    if (!target.closest(".search-user-more").length && !target.is(".search-user-more")) {
+        $(".user-dropdown-outer").removeAttr("active");
+        $("body").append($(".user-dropdown-outer"));
     }
 }
 
@@ -350,6 +404,9 @@ function appendMessage(message, sender, senderID, timeSent) {
  * @param {Object} friends A dict of friend statuses
  */
 function updateSearch(users, friends) {
+    $(".user-dropdown-outer").removeAttr("active");
+    $("body").append($(".user-dropdown-outer"));
+    
     removeStaleSearches();
 
     if (users.length == 0) {
@@ -379,15 +436,55 @@ function updateSearch(users, friends) {
 
         // Add search result
         $(".search-content").append(
-            "<div class=\"search-user-wrapper noselect\" href=\"/messages/user/" + this.fields.user_url + "\" data-pjax-m>" +
+            "<div class=\"search-user-wrapper noselect\" href=\"/messages/user/" + this.fields.user_url + "\" data-pjax-messenger data-relationship=\"" + friends[this.pk] + "\" data-user-id=\"" + this.pk + "\">" +
                 "<div class=\"search-user-image\"></div>" +
                 "<div class=\"search-user-info\">" +
                     "<p class=\"search-user-name\">" + this.fields.username + " (" + this.pk.substring(0, 8).toUpperCase() + ")</p>" +
                     "<p class=\"search-user-friend-status\">" + innerHTML + "</p>" +
                 "</div>" +
-                "<i class=\"search-user-more material-icons\">more_vert</i>" +
+                "<i class=\"search-user-more material-icons\" data-new>more_vert<link class=\"rippleJS\"></i>" +
             "</div>"
         );
+        
+        $(".search-user-more[data-new]").on("click", function(event) {
+            var target = $(event.target);
+            if (target.is(".user-dropdown-outer") || !!target.closest(".user-dropdown-outer").length) {
+                return;
+            }
+            
+            if (!!$(this).children(".user-dropdown-outer").length) {
+                $(".user-dropdown-outer").removeAttr("active");
+                $("body").append($(".user-dropdown-outer"));
+                return;
+            }
+            
+            var userMenu = $(".user-dropdown-outer");
+            var innerMenu = $(".user-dropdown-outer .menu-inner");
+            var userRelationship = $(this).closest(".search-user-wrapper").attr("data-relationship");
+            $(this).append(userMenu);
+            userMenu.attr("active", "");
+            innerMenu.children().removeAttr("active");
+            
+            switch (userRelationship + "") {
+                case "undefined":
+                    innerMenu.children(".add-friend, .view-profile, .invite-to-group").attr("active", "");
+                    break;
+                case "friend":
+                    innerMenu.children(".send-message, .view-profile, .invite-to-group, .remove-friend").attr("active", "");
+                    break;
+                case "request_sent":
+                    innerMenu.children(".request-sent, .view-profile, .invite-to-group").attr("active", "");
+                    break;
+                case "request_received":
+                    innerMenu.children(".accept-request, .deny-request, .view-profile, .invite-to-group").attr("active", "");
+                    break;
+            }
+            
+            var url = userMenu.closest(".search-user-wrapper").attr("href");
+            $(".user-dropdown-outer .send-message").attr("href", url);
+        });
+        
+        $(".search-user-more[data-new]").removeAttr("data-new");
     });
 
     // Add "See all results" button.
@@ -417,13 +514,24 @@ var removeStaleSearches = function() {
  * Function which runs whenever the typing timer runs out. It essentially
  * means the user has finished typing.
  */
-function searchComplete() {
+function searchComplete () {
     var query = $(".search-input").val().trim();
     if (query != "" && query != null && query.length > 1) {
         send("search", query);
         print("Sent a query for users named '" + query + "'");
     }
 };
+
+
+/**
+ * Clear Search
+ */
+function clearSearch () {
+    $(".search-input").val("");
+    $(".search-results").hide();
+    $(".search-results").removeAttr("active");
+    $(".channel-list-inner").fadeIn(100);
+}
 /* END SEARCH */
 
 
@@ -521,36 +629,68 @@ function handleSocketUserProfile(data) {
     out += "<p class=\"user-profile-username\">" + userData.username + "</p>";
     out += "<p class=\"user-profile-userid\">" + userData.user_id + "</p>";
     out += "<div class=\"user-profile-image\"></div>";
-
-    var ribbons = userData.user_ribbons;
-    if (ribbons.length) {
-        out += "<div class=\"ribbon-wrapper\">";
-        for (var i = 0; i < ribbons.length; i++) {
-            out += "<p class=\"user-profile-ribbon-" + ribbons[i] + "\"></p>";
-        }
-        out += "</div>";
-    }
-
     out += "<p class=\"user-profile-bio\"><span>User Bio:</span><br>" + userData.user_bio + "</p>";
 
     switch (userData.relationship) {
         case "none":
-            out += "<div class=\"user-profile-button\">Add Friend<link class=\"rippleJS\"></div>";
+            out += "<div class=\"user-profile-button add-friend\" data-new>Add Friend</div>";
             break;
         case "friend":
-            out += "<div class=\"user-profile-button\">Friends<link class=\"rippleJS\"></div>";
-            out += "<div class=\"user-profile-button\">Message<link class=\"rippleJS\"></div>"
+            out += "<div class=\"user-profile-button remove-friend\" data-new>Remove Friend</div>";
+            out += "<a class=\"user-profile-button send-message\" href=\"" + userData.user_url + "\" data-pjax-messenger data-new>Message</a>"
             break;
         case "request_sent":
-            out += "<div class=\"user-profile-button\">Request Sent<link class=\"rippleJS\"></div>";
+            out += "<div class=\"user-profile-button cancel-request\" data-new>Cancel Request</div>";
             break;
         case "request_received":
-            out += "<div class=\"user-profile-button\">Request Received<link class=\"rippleJS\"></div>";
+            out += "<div class=\"user-profile-button accept-request\" data-new>Accept Request</div>";
+            out += "<div class=\"user-profile-button deny-request\" data-new>Deny Request</div>";
             break;
     }
 
     var panel = $(".retrieved-info-content");
     panel.children().remove();
+    panel.attr("data-user-id", userData.user_id);
     panel.append(out);
+    
+    $(".add-friend[data-new]").on("click", function (){
+        var id = $(this).closest(".retrieved-info-content").attr("data-user-id");
+        sendFriendRequest(id);
+        retrieveUserProfile(id);
+    });
+    $(".add-friend[data-new]").removeAttr("data-new");
+    
+    $(".remove-friend[data-new]").on("click", function (){
+        var id = $(this).closest(".retrieved-info-content").attr("data-user-id");
+        send("remove_friend", id);
+        retrieveUserProfile(id);
+    });
+    $(".remove-friend[data-new]").removeAttr("data-new");
+    
+    $(".accept-request[data-new]").on("click", function (){
+        var id = $(this).closest(".retrieved-info-content").attr("data-user-id");
+        answerFriendRequest(true, id);
+        retrieveUserProfile(id);
+    });
+    $(".accept-request[data-new]").removeAttr("data-new");
+    
+    $(".deny-request[data-new]").on("click", function (){
+        var id = $(this).closest(".retrieved-info-content").attr("data-user-id");
+        answerFriendRequest(false, id);
+        retrieveUserProfile(id);
+    });
+    $(".deny-request[data-new]").removeAttr("data-new");
+    
+    $(".cancel-request[data-new]").on("click", function (){
+        var id = $(this).closest(".retrieved-info-content").attr("data-user-id");
+        send("cancel_friend_request", id);
+        retrieveUserProfile(id);
+    });
+    $(".cancel-request[data-new]").removeAttr("data-new");
+    
+    $(".send-message[data-new]").on("click", function (){
+        $(".channel-info-close").click();
+    });
+    $(".send-message[data-new]").removeAttr("data-new");
 }
 /* END CHANNEL INFO */
