@@ -72,6 +72,7 @@
         {# Messenger Body #}
         <div class="messenger-body nano">
             <div class="messenger-content nano-content">
+                <div class="spacer"></div>
                 {% if channel_messages == None %}
                     {% if channel_url != None %}
                         <p class="no-messages">No messages have been sent in this channel yet.</p>
@@ -176,7 +177,7 @@
                                     <p class="chnl-name">{{ channel.channel_name|to_external:request.user.username }}</p>
                                     <div class="last-message-wrapper">
                                         <p class="last-message">{{ channel.get_latest_message }}</p>
-                                        <p class="last-message-time">2:30pm</p>
+                                        <p class="last-message-time"></p>
                                     </div>
                                 </div>
                             </a>

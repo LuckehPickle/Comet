@@ -65,9 +65,6 @@ def login(request):
                 if user.is_active: # Check if the account is active (not suspended)
                     login_user(request, user) # Log the user in
                     # Redirect to front page
-                    messages.add_message(request, messages.INFO, "This project is still in development. <a href='/beta' target='_blank'>Learn more</a>. Thank you for being a part of the BETA!")
-                    if not user.is_verified:
-                        messages.add_message(request, messages.INFO, "A verification email has been sent to your email address. If you didn't receive an email you can <a href='/verify'>click here to receive another</a>.")
                     if "next" in request.GET:
                         return redirect(request.GET["next"])
                     return redirect("messages")
@@ -147,8 +144,6 @@ def register(request):
             )
             login_user(request, user) # Log the user in.
 
-            messages.add_message(request, messages.INFO, "Your account has been created. <a href='/verify'>Click here to verify your email.</a>")
-            messages.add_message(request, messages.WARNING, "This project is still in development. <a href='/beta' target='_blank'>Find out what this means for you</a>.<br> Thank you for being a part of the BETA!")
             if "next" in request.GET:
                 return redirect(request.GET["next"])
             return redirect("messages")

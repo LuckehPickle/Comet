@@ -32,8 +32,6 @@ limitations under the License.
         <link rel="stylesheet" type="text/css" href="{% static 'shared/css/nprogress.css' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'shared/css/nav.css' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'shared/css/nanoscroller.css' %}">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-        <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700" rel="stylesheet">
         
         {% block extra_css %}{% endblock %}
         <script>
@@ -66,7 +64,7 @@ limitations under the License.
             {% block modals %}{% endblock %}
         </div>
 
-        <div class="pjax-body">{% block content %}{% endblock %}</div>
+        <div class="pjax-body no-fouc">{% block content %}{% endblock %}</div>
 
         {% block extra_inline_js %}{% endblock %}
 

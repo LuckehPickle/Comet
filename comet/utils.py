@@ -24,7 +24,7 @@ def to_external(internal, user_info):
     Matches data conforming to the following syntax:
     `#[dataA][dataB]`
     """
-    pattern = re.compile(r"#\[([\w]+)\]\[([\w]+)\]")
+    pattern = re.compile(r"#\[([\w\s]+)\]\[([\w\s]+)\]")
     match = pattern.findall(internal)
     if not len(match):
         return internal

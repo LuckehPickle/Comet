@@ -32,7 +32,6 @@
 
 body {
     margin: 0;
-    background-color: #FFFFFF;
     overflow-x: hidden;
 }
 
@@ -294,117 +293,29 @@ body {
 /* END SUPPORTED PLATFORMS */
 
 
-/* BEGIN FEATURES */
-.features {
-    background-color: #F4F4F4;
+/* BEGIN ABOUT */
+.about {
+    background-color: #ECECEC;
 }
 
-.table {
-    width: 100%;
-    display: flex;
-    flex-wrap: nowrap;
+.about-alternate {
+    background-color: #FFFFFF;
 }
 
-.table-column-premium {
-    border: 4px solid #4B4B4B;
-    border-top: none;
-    border-radius: 4px;
-}
-
-[class^=table-title] {
-    height: 60px !important;
-}
-
-.table-title-premium > img {
-    height: 45%;
-    max-width: 90%;
-}
-
-[class^="table-column"] > div {
-    height: 30px;
+.about-wrap {
     display: flex;
     align-items: center;
 }
 
-[class^="table-cell"] {
-    border-bottom: thin solid rgba(0, 0, 0, 0.08);
-    font-family: 'Source Sans Pro', sans-serif;
-    font-size: 16px;
-    color: #5F5F5F;
+.about-wrap > .about-text {
+    flex-grow: 1;
+    flex-shrink: 0;
 }
 
-[class^="table-cell"]:last-child {
-    border-bottom: none;
+.large-icon {
+    padding: 30px;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
 }
-
-.table-cell {
-    border-left: thin solid rgba(0, 0, 0, 0.08);
-    justify-content: center;
-}
-
-.table-cell::before {
-    content: attr(data-desktop);
-    max-width: 100%;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-}
-
-
-
-
-.table-title-premium {
-    background-color: #4B4B4B;
-    justify-content: center;
-    text-transform: uppercase;
-}
-
-@media screen and (max-width: 460px) {
-    [class^=table-column]:not(.table-column-premium),
-    .table-title-premium {
-        display: none !important;
-    }
-
-    .table-cell::before {
-        content: attr(data-mobile);
-    }
-
-    .table-column-premium {
-        width: 100%;
-        border: none;
-    }
-
-    .table-cell {
-        border-left: none;
-    }
-}
-
-@media screen and (min-width: 461px) and (max-width: 700px) {
-    [class^="table-column"] {
-        width: 50%;
-        overflow: hidden;
-    }
-
-    .table-column-whatsapp, .table-column-facebook {
-        display: none;
-    }
-}
-
-@media screen and (min-width: 701px) and (max-width: 900px) {
-    [class^="table-column"] {
-        width: 33.3%;
-        overflow: hidden;
-    }
-
-    .table-column-whatsapp {
-        display: none;
-    }
-}
-
-@media screen and (min-width: 901px) {
-    [class^="table-column"] {
-        width: 33.3%;
-        overflow: hidden;
-    }
-}
-/* END FEATURES */
+/* END ABOUT */

@@ -28,9 +28,11 @@ from socketio.sdjango import namespace
 
 # Other Imports
 import re
+import uuid
 from accounts.models import User, FriendInvites
 from comet_socketio.mixins import ChannelMixin
 from messenger.models import Channel, ChannelMessage
+from comet_socketio.models import Notification
 
 
 def create_message(sender, message, channel_url):
@@ -52,17 +54,71 @@ class MessengerNamespace(BaseNamespace, ChannelMixin):
     """
     SocketIO Messenger namespace.
     """
-
-    def on_connect(self):
-        """
-        Event that is fired whenever the user connects to the socket server.
-        """
+    
+    def notify(self, user, message_type, message):
+        message_id = uuid.uuid4()
+        
+        if user.is_online and user.socket_session != None:
+            try:
+                target_socket = self.socket.server.get_socket(sessid=user.socket_session)
+            
+                for namespace in target_socket.active_ns:
+                    packet = dict (
+                        type="event",
+                        name="message",
+                        args=[{
+                            "action": "push_message",
+                            "type": message_type,
+                            "message": message,
+                            "request_confirmation": True,
+                            "message_id": str(message_id),
+                        }],
+                        endpoint=namespace,
+                    )
+                    target_socket.send_packet(packet)          
+            except:
+                raise
+        
+        # Save in the database
+        Notification.objects.create(
+            user = user,
+            message_id = message_id,
+            message_type = message_type,
+            message = message,
+        )
+        
+        
+    def on_message_confirm(self, message_id):
+        try:
+            Notification.objects.get(message_id=message_id).delete()
+        except:
+            raise
+    
+        
+    def recv_connect(self):
         user = self.request.user
         if user.is_authenticated:
             user.socket_session = self.socket.sessid
             user.is_online = True
             user.save()
-        return True
+        print("Connected: {0}".format(user.username))
+        print("Socket Session: {0}".format(user.socket_session))
+    
+        
+    """    
+    def recv_disconnect(self):
+        user = self.request.user
+        if user.is_authenticated:
+            user.socket_session = ""
+            user.is_online = False
+            user.save()
+        print("Disconnected: {0}".format(user.username))
+    """
+        
+    
+    def recv_error(self, packet):
+        print("Error: ")
+        print(packet)
 
 
     def on_message(self, data):
@@ -201,12 +257,12 @@ class MessengerNamespace(BaseNamespace, ChannelMixin):
                 "message":"Friend request successfully sent to {0}.".format(target.username)
             })
 
-            """
-            # Notify the target user
-            notify.notify_user(target, messages.INFO,
+            self.notify (
+                target,
+                messages.INFO,
                 "You have received a friend request from {0}<section><div class=\"button-request-accept\" data-user-id=\"{1}\" data-new>Accept Request<link class=\"rippleJS\"/></div><div class=\"button-request-deny\" data-user-id=\"{1}\" data-new>Deny Request<link class=\"rippleJS\"/></div></section>".format(self.request.user.username, str(self.request.user.user_id))
             )
-            """
+            
         else:
             # There is a pending invite from the recipient, add friends
             self.request.user.friends.add(target)
@@ -218,15 +274,12 @@ class MessengerNamespace(BaseNamespace, ChannelMixin):
                 "type":"info",
                 "message":"You are now friends with {0}. You can now message them here: <div class=\"push-message-well\"><a href=\"{1}\" data-pjax-messenger>{1}</a></div>".format(target.username, target.get_absolute_url())
             })
-
-            """
-            # Notify the target user.
-            notify.notify_user(
+            
+            self.notify (
                 target,
                 messages.INFO,
                 "You are now friends with {0}. You can now message them here: <div class=\"push-message-well\"><a href=\"{1}\">{1}</a></div>".format(self.request.user.username, self.request.user.get_absolute_url())
             )
-            """
             
         # Event Handled
         return True
@@ -270,27 +323,11 @@ class MessengerNamespace(BaseNamespace, ChannelMixin):
                 "message":"You are now friends with {0}. You can now message them here: <div class=\"push-message-well\"><a href=\"{1}\">{1}</a></div>".format(target.username, target.get_absolute_url())
             })
 
-            """
-            pkt = dict(
-                type="event",
-                name="message",
-                args=[{
-                    "action":"push_message",
-                    "type":messages.INFO,
-                    "message":"You are now friends with {0}. You can now message them here: <div class=\"push-message-well\"><a href=\"{1}\">{1}</a></div>".format(self.request.user.username, self.request.user.get_absolute_url()),
-                }],
-                endpoint="/messenger",
-            )
-            """
-
-            """
-            # Notify target user
-            notify.notify_user(
+            self.notify (
                 target,
                 messages.INFO,
                 "You are now friends with {0}. You can now message them here: <div class=\"push-message-well\"><a href=\"{1}\">{1}</a></div>".format(self.request.user.username, self.request.user.get_absolute_url())
             )
-            """
 
         return True
         

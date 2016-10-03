@@ -30,6 +30,7 @@ from messenger.models import Channel, ChannelPermissions, ChannelInvite, Channel
 import cr_config as config
 from accounts.models import User
 from comet.decorators import login_required_message
+from comet_socketio import utils
 
 
 @login_required_message
@@ -173,6 +174,8 @@ def renderMessenger(request, data={}):
     :param request: Django request object.
     :param data: Additional data to pass to the template.
     """
+    
+    utils.check_notifications(request)
 
     # TODO Only get channels from the last week(?)
     channels = Channel.objects.filter(
@@ -219,7 +222,6 @@ def get_latest_messages(request, channel_url, n=25):
     count = 0
 
     for message in reversed(messages):
-        count += 1
         origin = "left" if message.sender != request.user else "right"
         sender_id = str(message.sender.user_id)
         sender_name = str(message.sender.username)
@@ -254,6 +256,7 @@ def get_latest_messages(request, channel_url, n=25):
         previous_sender_name = sender_name
         previous_sender_id = sender_id
         previous_origin = origin
+        count += 1
 
     # Add nametag for the final message
     out += (

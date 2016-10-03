@@ -23,6 +23,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 # Other Imports
 import cr_config as config
 from comet.decorators import login_required_message
+from comet_socketio import utils
 
 
 def frontpage(request):
@@ -49,6 +50,8 @@ def render_page(request, location=None, data={}):
     :param location: String location of the pages template.
     :param data: Additional data to pass to the template.
     """
+    
+    utils.check_notifications(request)
 
     user_id = None
     if request.user.is_authenticated():

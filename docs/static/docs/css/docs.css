@@ -32,7 +32,6 @@
 
 body {
     margin: 0;
-    background-color: #FFFFFF;
     overflow-x: hidden;
 }
 
@@ -227,6 +226,7 @@ body {
 .categories {
     width: 100%;
     padding: 40px 0;
+    background-color: #FFFFFF;
 }
 
 .categories-title {

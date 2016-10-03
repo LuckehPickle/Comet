@@ -21,6 +21,7 @@
 
 
 /** @const */ var DEBUG = true;
+var width = 1900.0;
 
 
 /**
@@ -47,7 +48,7 @@ function init(isFullLoad) {
     
     var message = isFullLoad ? "Initialised." : "PJAX Load";
     print(message);
-    
+        
 }
 
 
@@ -79,8 +80,10 @@ function addEventListeners(isFullLoad) {
         var pushMessages = $("[class^='push-message-close'], [class^='button-request-']");
         pushMessages.off(".base");
         pushMessages.on("click.base", function() {
-            // TODO Handle messages from Django
-            print("failure", true);
+            var container = $(this).closest("[class^='push-message-container']");
+            container.slideUp(200, function(){
+                container.remove();
+            });
         });
 
         var pushMessageButton = $("[class^=\"button-request-\"][data-user-id]");
@@ -132,7 +135,7 @@ function addEventListeners(isFullLoad) {
         if(navDropdown.is("[active]")){
             setTimeout(function() {
                 navDropdown.removeAttr("active");
-            }, 300);
+            }, 100);
         }else{
             navDropdown.attr("active", "");
         }
@@ -423,24 +426,13 @@ PushMessage.prototype.display = function(){
 
     $("[class^='push-message-close']").off(".push");
     $("[class^='push-message-close']").on("click.push", function(){
-        instance.remove();
+        var container = $(this).closest("[class^='push-message-container']");
+        container.slideUp(200, function () {
+            container.remove();
+        });
     });
 
     print("Push message of type '" + this.type + "' created.");
-};
-
-
-/**
- * Remove
- * Removes/deletes this Push Message.
- */
-PushMessage.prototype.remove = function(){
-    var instance = this;
-    instance.element.slideUp(200, function(){
-        instance.element.remove();
-        instance.element = null;
-        print("Push message closed.");
-    });
 };
 /* END PUSH MESSAGES */
 
@@ -578,7 +570,6 @@ function handleSocketConnect(){
     clearTimeout(connectionTimer);
     connected = true;
     checkQueue();
-    send("connect");
 };
 
 
@@ -661,7 +652,10 @@ function handleSocketPushMessage(data){
     buttons.on("click", function(event){
         var accept = $(this).is("[class*='accept']");
         answerFriendRequest(accept, $(this).attr("data-user-id"));
-        instance.remove();
+        var container = $(this).closest("[class^='push-message-container']");
+        container.slideUp(200, function(){
+            container.remove();
+        });
     });
     buttons.removeAttr("data-new");
 

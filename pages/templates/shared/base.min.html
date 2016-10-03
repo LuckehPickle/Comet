@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>{% block title %}Comet{% endblock %}</title>
+{% load staticfiles %}
+<meta charset=UTF-8>
+<meta name=theme-color content=#353535>
+<meta name=msapplication-navbutton-color content=#353535>
+<meta name=apple-mobile-web-app-capable content=yes>
+<meta name=apple-mobile-web-app-status-bar-style content=black-translucent>
+<meta name=viewport content="width=device-width, initial-scale=1, user-scalable=no"/>
+<link rel=icon type=image/ico href="{% static 'shared/favicon.ico' %}">
+{# Synchronous CSS #}
+<link rel=stylesheet type=text/css href="{% static 'shared/css/base.css' %}">
+<link rel=stylesheet type=text/css href="{% static 'shared/css/nprogress.css' %}">
+<link rel=stylesheet type=text/css href="{% static 'shared/css/nav.css' %}">
+<link rel=stylesheet type=text/css href="{% static 'shared/css/nanoscroller.css' %}">
+{% block extra_css %}{% endblock %}
+<script>{%if request.user.is_authenticated%}
+window.username="{{ request.user.username }}";window.user_id="{{ request.user.user_id }}";window.user_url="{{ request.user.user_url }}";{%endif%}</script>
+<script src="{% static 'comet_socketio/js/socket.io.js' %}"></script>
+</head>
+<body>
+{% include 'shared/push-messages.html' %}
+{% include 'shared/nav.html' %}
+{# Modals #}
+<div class=modals>
+{# Connecting Modal #}
+<div class="modal-connecting modal">
+<img src="{% static 'shared/img/logo.svg' %}">
+<p>Connection lost. Attempting to reconnect...</p>
+<div class=spinner>
+<div class=bounce1></div>
+<div class=bounce2></div>
+<div class=bounce3></div>
+</div>
+</div>
+{% block modals %}{% endblock %}
+</div>
+<div class="pjax-body no-fouc">{% block content %}{% endblock %}</div>
+{% block extra_inline_js %}{% endblock %}
+{# Inline Scripts #}
+<script src="{% static 'shared/js/jquery-2.2.2.min.js' %}"></script>
+<script src="{% static 'shared/js/jquery.pjax.js' %}"></script>
+<script src="{% static 'shared/js/nprogress.js' %}"></script>
+<script src="{% static 'shared/js/anime.min.js' %}"></script>
+<script src="{% static 'shared/js/ripple.min.js' %}"></script>
+<script src="{% static 'shared/js/jquery.nanoscroller.min.js' %}"></script>
+<script src="{% static 'shared/js/push.min.js' %}"></script>
+<script src="{% static 'shared/js/base.js' %}"></script>
+<script src="{% static 'shared/js/particles.min.js' %}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>
